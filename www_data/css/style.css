@@ -1,0 +1,19 @@
+/* Drawers Style Sheet V1.0*/
+body{font-family: 'Lato', sans-serif;}
+table{font-family: 'Helvetica', sans-serif;}
+h1,h2,h3{font-family: 'Montserrat', sans-serif;}
+h4,h5,h6{font-family: 'Roboto', sans-serif;}
+.bd-mode-toggle {z-index: 1500;}
+.profile-img1{height: 25px;display: block;-moz-border-radius: 50%;-webkit-border-radius: 50%;border-radius: 50%;}
+.profile-img2{height: 90px;margin: 0 auto 10px;display: block;-moz-border-radius: 50%;-webkit-border-radius: 50%;border-radius: 50%;}
+.footer {position: fixed;left:0;bottom: 0;width: 100%;text-align: center;line-height: 25px; background-color:#6610F2;}
+.card-200{min-height: 200px;max-height: 200px;}
+.card-300{min-height: 330px;max-height: 330px;min-width:300px;max-width: 300px;}
+.navbar {background-color:#6610F2;}
+.dropdown-menu{background-color:#6610F2;color:#fff}
+.dropdown-item{background-color:#6610F2;color:#fff}
+.dropdown-item:hover{background-color:#f31a63;color:#fff;}
+input[type="file"] {display: none;}
+.separador{height:6em}
+.search:focus {outline: none;}
+/* .search{border:none;border-radius: 0px 4px 4px 0px;} */

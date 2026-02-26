@@ -1,0 +1,40 @@
+services:
+  db:
+    # Versión LTS de MariaDB para mayor estabilidad y soporte a largo plazo
+    image: mariadb:10.11
+    container_name: mariadb_db
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - ./db_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=Lasflores506
+      - MARIADB_DATABASE=admin_drawers
+      - MARIADB_USER=juan
+      - MARIADB_PASSWORD=Lasflores506
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "--password=Lasflores506"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "3306:3306"
+
+  drawers_web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: drawers_web
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./www_data:/var/www/html
+      - ./apache_data:/etc/apache2
+      - ./php_data/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "8090:80"
+
+volumes:
+  db_data:

@@ -1,0 +1,10 @@
+.dev/
+www_data/config.php
+www_data/.eslintrc.json
+.htaccess
+www_data/images/item/*
+www_data/images/drawers/*
+www_data/images/usr/*
+www_data/.vscode/settings.json
+GEMINI.md
+db_data/
