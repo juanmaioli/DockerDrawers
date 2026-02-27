@@ -56,16 +56,32 @@ if(empty($_GET['id']))
 <!-- /Container -->
 <?php include("footer.php"); ?>
 <script>
-drawersListTable(<?= $usuarioId ?>,<?=$categoryId?>)
-getStatistics(<?= $usuarioId ?>,5)
+  const switchTableCard = document.querySelector('#switchTableCard')
+  const switchTableCardLabel = document.querySelector('#switchTableCardLabel')
+
+  // Load preference from localStorage
+  const currentView = localStorage.getItem('drawers_view') || 'table'
+  
+  if (currentView === 'cards') {
+    switchTableCard.checked = true
+    switchTableCardLabel.innerHTML = 'Change view to table'
+    drawersListCards(<?= $usuarioId ?>,<?=$categoryId?>)
+  } else {
+    switchTableCard.checked = false
+    switchTableCardLabel.innerHTML = 'Change view to cards'
+    drawersListTable(<?= $usuarioId ?>,<?=$categoryId?>)
+  }
+
+  getStatistics(<?= $usuarioId ?>, 5)
+
   async function changeView() {
-    const switchTableCard = document.querySelector('#switchTableCard')
-    const switchTableCardLabel = document.querySelector('#switchTableCardLabel')
     if (switchTableCard.checked) {
       switchTableCardLabel.innerHTML = 'Change view to table'
+      localStorage.setItem('drawers_view', 'cards')
       drawersListCards(<?= $usuarioId ?>,<?=$categoryId?>)
     } else {
       switchTableCardLabel.innerHTML = 'Change view to cards'
+      localStorage.setItem('drawers_view', 'table')
       drawersListTable(<?= $usuarioId ?>,<?=$categoryId?>)
     }
   }

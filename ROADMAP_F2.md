@@ -15,8 +15,8 @@ Este documento detalla las tareas de optimización, seguridad y mejora de arquit
 - [x] Centralizar la creación de la conexión `$conn` en `config.php`.
 
 ## 3. 📈 Optimización de API y Frontend
-- [ ] Implementar manejo de errores robusto (Try-Catch) en la API.
-- [ ] Persistir la preferencia de vista (Cards/Table) en `localStorage`.
+- [x] Implementar manejo de errores robusto (Try-Catch) en la API.
+- [x] Persistir la preferencia de vista (Cards/Table) en `localStorage`.
 - [ ] Mejorar la carga de assets (minificación opcional).
 
 ## 4. 🐳 Mejora de Infraestructura
