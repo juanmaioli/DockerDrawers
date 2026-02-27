@@ -11,37 +11,46 @@ if (isset($_COOKIE[$site_cookie])) {
   $datosCuenta = explode(":", $datos);
   $usuarioId = $datosCuenta[1];
 } else {
+  $usuarioId = $_SESSION["usuario_id"] ?? 0;
+}
+
+if (!$usuarioId) {
   header("Location: login.php");
   exit();
 }
 
 //User Data
-$usuarioMail = $_SESSION["usuario"];
-$usr_image = $_SESSION["avatar"];
-$usr_right = $_SESSION["right"];
-if ($usr_right == 1) {
-  //Admin Menu
-  $menu_admin = "<a href='admin.php' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;Admin</a>";
-} else {
-  $menu_admin = "<a href='#' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;No Admin</a>";
-}
+$usuarioMail = $_SESSION["usuario"] ?? '';
+$usr_image_session = $_SESSION["avatar"] ?? '';
+$usr_right = $_SESSION["right"] ?? 2;
 
-
-$conn = new mysqli($db_server, $db_user, $db_pass, $db_name, $db_serverport);
-$acentos = $conn->query("SET NAMES 'utf8'");
-mysqli_set_charset($conn, 'utf8');
+$conn = get_db_connection();
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
+
 //Date to work
 $dateShow = new DateTime(date("Y-m-d H:i:s"));
 $dateForm = $dateShow->format('Y-m-d');
 $dateShow = $dateShow->format('Y-m-d H:i:s');
-//Usuario
-$sql = "SELECT * FROM " . $table_pre . "usr where usr_email = '" . $usuarioMail . "'";
-$result = $conn->query($sql);
 
-if (mysqli_num_rows($result) == true) {
-  while ($row = $result->fetch_assoc()) {
+// Initialize variables to avoid warnings
+$usr_id = $usuarioId; 
+$usr_name = '';
+$usr_lastname = '';
+$usr_email = $usuarioMail;
+$usr_image = $usr_image_session;
+$usr_token = '';
+
+//Usuario - Usando Sentencias Preparadas
+if ($usuarioMail) {
+  $sql = "SELECT * FROM " . $table_pre . "usr WHERE usr_email = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("s", $usuarioMail);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
     $usr_id = $row["usr_id"];
     $usr_name = $row["usr_name"];
     $usr_lastname = $row["usr_lastname"];
@@ -51,8 +60,16 @@ if (mysqli_num_rows($result) == true) {
     $usr_token = $row["usr_token"];
     $usr_right = $row["usr_right"];
   }
+  $stmt->close();
 }
 $conn->close();
+
+if ($usr_right == 1) {
+  //Admin Menu
+  $menu_admin = "<a href='admin.php' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;Admin</a>";
+} else {
+  $menu_admin = "<a href='#' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;No Admin</a>";
+}
 ?>
 <html lang="es">
 
