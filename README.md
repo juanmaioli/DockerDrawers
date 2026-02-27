@@ -11,14 +11,14 @@
 - **🖼️ Gestión Visual:** Sube fotos de tus cajones e ítems para no perder nada de vista.
 - **💰 Control de Costos:** Realiza un seguimiento del precio y valor total de tu inventario.
 - **🔐 Sistema de Usuarios:** Gestión de accesos y perfiles personalizada.
-- **🔌 API Integrada:** Endpoint JSON para consultas externas y extensibilidad.
+- **🔌 API Segura:** Endpoint JSON con protección contra SQL Injection mediante sentencias preparadas.
 - **🔖 Marcadores (Bookmarks):** Guarda ítems o búsquedas frecuentes.
 
 ---
 
 ## 🛠️ Tecnologías Utilizadas
 
-- **Backend:** PHP 8.3 (Apache)
+- **Backend:** PHP 8.3 (Apache) con `mysqli` Prepared Statements.
 - **Base de Datos:** MariaDB 10.11
 - **Frontend:** Bootstrap 5.3, jQuery, DataTables, Select2.
 - **Infraestructura:** Docker & Docker Compose.

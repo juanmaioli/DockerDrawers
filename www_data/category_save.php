@@ -17,33 +17,22 @@ $category_color = $conn->escape_string($category_color);
 
 $category_name = ucwords(strtolower($category_name));
 
-
-echo "category_name: $category_name <br>";
-echo "category_color: $category_color <br>";
-echo "category_id_status: $category_id_status <br>";
-
-$sql_Update = "UPDATE drawers_category SET category_name = '$category_name', category_color = '$category_color' WHERE category_id = $category_id_status";
-// echo $sql_Update . "<br>";
-$sql_Add = "INSERT INTO drawers_category (category_name, category_color) VALUES ('$category_name', '$category_color')";
-// echo $sql_Add . "<br>";
-
-
-if($category_id_status== 0){
-  $result = $conn->query($sql_Add);
-  $sql_last = "SELECT max(category_id) as category_id FROM drawers_category";
-  $result = $conn->query($sql_last);
-  if (mysqli_num_rows($result) == true) {
-      while($row = $result->fetch_assoc())
-      {
-      $category_id = $row["category_id"];
-      }
-  }
+if($category_id_status == 0){
+  $sql_Add = "INSERT INTO drawers_category (category_name, category_color) VALUES (?, ?)";
+  $stmt = $conn->prepare($sql_Add);
+  $stmt->bind_param("ss", $category_name, $category_color);
+  $stmt->execute();
+  $category_id = $conn->insert_id;
+  $stmt->close();
   header('Location: category_view.php?id='.$category_id);
 
 }else{
-  $result = $conn->query($sql_Update);
-  echo 'Location: category_view.php?id='.$category_id_status;
-  sleep(1);
+  $sql_Update = "UPDATE drawers_category SET category_name = ?, category_color = ? WHERE category_id = ?";
+  $stmt = $conn->prepare($sql_Update);
+  $stmt->bind_param("ssi", $category_name, $category_color, $category_id_status);
+  $stmt->execute();
+  $stmt->close();
   header('Location: category_view.php?id='.$category_id_status);
 }
+$conn->close();
 ?>

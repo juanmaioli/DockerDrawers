@@ -9,9 +9,11 @@ $conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
 mysqli_set_charset($conn,'utf8');
 $item_id = $_GET['id'];
 
-$sql = "UPDATE drawers_items SET item_delete = 1  WHERE item_id = " . $item_id;
-
-$result = $conn->query($sql);
+$sql = "UPDATE drawers_items SET item_delete = 1 WHERE item_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $item_id);
+$stmt->execute();
+$stmt->close();
 $conn->close();
 
 header('Location: index.php');

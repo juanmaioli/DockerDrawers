@@ -35,36 +35,22 @@ $item_drawer = $conn->escape_string($item_drawer);
 $item_name = ucwords(strtolower($item_name));
 $item_descriptinon  = ucwords(strtolower($item_descriptinon));
 
-// echo "item_id_status: " . $item_id_status . '<br>';
-// echo "item_name: " . $item_name . '<br>';
-// echo "item_amount: " . $item_amount . '<br>';
-// echo "item_descriptinon: " . $item_descriptinon . '<br>';
-// echo "item_category: " . $item_category . '<br>';
-// echo "item_drawer: " . $item_drawer . '<br>';
-
-$sql_Update = "UPDATE drawers_items SET item_name='$item_name', item_amount = '$item_amount', item_descrption = '$item_descriptinon',item_category = '$item_category', item_drawer = '$item_drawer',item_price = $item_price, item_brand=$item_brand, item_model='$item_model' WHERE item_id = " . $item_id_status;
-// echo $sql_Update;
-$sql_Add = "INSERT INTO drawers_items (item_name, item_amount, item_descrption,item_category,item_owner,item_drawer)
-VALUES('$item_name', '$item_amount', '$item_descriptinon',$item_category,$item_owner,$item_drawer)";
-// echo $sql_Add;
-
-
 if($item_id_status == 0){
-  $result = $conn->query($sql_Add);
-  $sql_last = "SELECT max(item_id) as item_id FROM drawers_items";
-  $result = $conn->query($sql_last);
-  if (mysqli_num_rows($result) == true) {
-      while($row = $result->fetch_assoc())
-      {
-      $item_id = $row["item_id"];
-      }
-  }
+  $sql_Add = "INSERT INTO drawers_items (item_name, item_amount, item_descrption, item_category, item_owner, item_drawer, item_price, item_brand, item_model) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  $stmt = $conn->prepare($sql_Add);
+  $stmt->bind_param("sisiiidis", $item_name, $item_amount, $item_descriptinon, $item_category, $item_owner, $item_drawer, $item_price, $item_brand, $item_model);
+  $stmt->execute();
+  $item_id = $conn->insert_id;
+  $stmt->close();
   header('Location: item_view.php?id='.$item_id.'&did='. $item_drawer);
 
 }else{
-  $result = $conn->query($sql_Update);
-  echo 'Location: item_view.php?id='.$item_id_status.'&did='. $item_drawer;
-  sleep(1);
+  $sql_Update = "UPDATE drawers_items SET item_name=?, item_amount = ?, item_descrption = ?, item_category = ?, item_drawer = ?, item_price = ?, item_brand = ?, item_model = ? WHERE item_id = ?";
+  $stmt = $conn->prepare($sql_Update);
+  $stmt->bind_param("sisiiidsi", $item_name, $item_amount, $item_descriptinon, $item_category, $item_drawer, $item_price, $item_brand, $item_model, $item_id_status);
+  $stmt->execute();
+  $stmt->close();
   header('Location: item_view.php?id='.$item_id_status.'&did='. $item_drawer);
 }
+$conn->close();
 ?>

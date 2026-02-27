@@ -24,12 +24,15 @@ exit();
 $usrExiste = "";
 
 $conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
-$usr_email = $conn->escape_string($usr_email);
 
-$sql = "SELECT usr_id, usr_email, usr_pass, usr_right, usr_image FROM " . $table_pre . "usr WHERE usr_email = '" . $usr_email ."' and usr_pass = '" . $usr_passwd ."'";
-$result = $conn->query($sql);
-$usrExiste = mysqli_num_rows($result);
-if($usrExiste == true )
+$sql = "SELECT usr_id, usr_email, usr_pass, usr_right, usr_image FROM " . $table_pre . "usr WHERE usr_email = ? AND usr_pass = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ss", $usr_email, $usr_passwd);
+$stmt->execute();
+$result = $stmt->get_result();
+$usrExiste = $result->num_rows;
+
+if($usrExiste > 0 )
 {
   	while($row = $result->fetch_assoc())
   	{
@@ -53,8 +56,11 @@ if($usrExiste == true )
       echo "sin https";
       setcookie($site_cookie, hash('sha256', $usr_email )  . ":".$usr_id, time()+60*60*24*$usr_remember, '/',  $www_host  , false, true);
     }
-    $sql = "INSERT INTO " . $table_pre . "session(sess_usr,sess_ip,sess_date,sess_action) values('". $usr_id ."','" . $ip . "','" . $dateShow ."',1)";
-    $result = $conn->query($sql);
+    $sql_sess = "INSERT INTO " . $table_pre . "session(sess_usr,sess_ip,sess_date,sess_action) values(?, ?, ?, 1)";
+    $stmt_sess = $conn->prepare($sql_sess);
+    $stmt_sess->bind_param("iss", $usr_id, $ip, $dateShow);
+    $stmt_sess->execute();
+
   	header('Location: index.php');
 }
 else
@@ -62,6 +68,7 @@ else
   header('Location: login.php?id=1');
 }
 
+$stmt->close();
 $conn->close();
 
 ?>
