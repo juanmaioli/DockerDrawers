@@ -6,37 +6,24 @@ if(file_exists("config.php"))
 }
 include("func_img.php");
 
-$nombre = $_FILES['file-upload']['name'];
 $drawer_id = $_POST['drawer_id'];
-$nuevo_nombre = hash('sha256', $nombre ).".jpg";
-$nuevo_nombre_full = hash('sha256', $nombre )."_full.jpg";
-$ruta = "images/drawers/" . $nuevo_nombre;
-$ruta_full = "images/drawers/" . $nuevo_nombre_full;
+$logo_arch = 'images/drawers/minilogo.png';
+$destination_dir = "images/drawers/";
 
-// echo $nombre . "<br>";
-// echo $nuevo_nombre . "<br>";
-// echo $nuevo_nombre_full  . "<br>";
-// echo $drawer_id . "<br>";
-// echo $ruta . "<br>";
-// echo $ruta_full . "<br>";
+$nuevo_nombre = process_image_upload('file-upload', $destination_dir, "drawer_" . $drawer_id, 500, 500, true, $logo_arch, true);
 
-$resultado = @move_uploaded_file($_FILES["file-upload"]["tmp_name"], $ruta);
+if ($nuevo_nombre) {
+    $nuevo_nombre_full = str_replace(".jpg", "_full.jpg", $nuevo_nombre);
+    $conn = new mysqli($db_server, $db_user, $db_pass, $db_name, $db_serverport);
+    mysqli_set_charset($conn, 'utf8');
 
-// echo $resultado;
-
-if (!empty($resultado)){
-    copy($ruta, $ruta_full);
-    mb_internal_encoding('UTF-8');
-    mb_http_output('UTF-8');
-    $conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
-    mysqli_set_charset($conn,'utf8');
-    $sql = "UPDATE drawers_drawer set drawer_image = '" . $nuevo_nombre . "', drawer_image_full = '". $nuevo_nombre_full ."'  WHERE drawer_id=" . $drawer_id;
-    // echo $sql;
-    $result = $conn->query($sql);
+    $sql = "UPDATE drawers_drawer SET drawer_image = ?, drawer_image_full = ? WHERE drawer_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssi", $nuevo_nombre, $nuevo_nombre_full, $drawer_id);
+    $stmt->execute();
+    $stmt->close();
     $conn->close();
-    crop_image_square($ruta);
-    resize_image($ruta,500,500);
-    add_logo_image($ruta,$logo_arch , $ruta);
 }
+
 header('Location: drawer_view.php?id='.$drawer_id);
 ?>

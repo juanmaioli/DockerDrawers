@@ -46,7 +46,7 @@ switch ($tarea) {
         $stmt->bind_param("i", $parametro[1]);
         break;
     case 'itemview':
-        $sql = "SELECT drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_descrption, drawers_items.item_image, drawers_items.item_owner, drawers_items.item_category, drawers_items.item_brand, drawers_items.item_model, drawers_category.category_name, drawers_category.category_color, drawers_drawer.drawer_name FROM drawers_items INNER JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id INNER JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.id WHERE item_id = ?";
+        $sql = "SELECT drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_descrption, drawers_items.item_image, drawers_items.item_owner, drawers_items.item_category, drawers_items.item_brand, drawers_items.item_model, drawers_category.category_name, drawers_category.category_color, drawers_drawer.drawer_name FROM drawers_items LEFT JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id WHERE item_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $parametro[1]);
         break;

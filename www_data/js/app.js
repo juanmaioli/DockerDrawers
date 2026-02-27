@@ -331,8 +331,9 @@ async function itemView(itemId,usuarioId) {
     item_descriptinon.value = item[0].item_descrption
     item_card.classList.add(`shadow-${item[0].category_color}-blur`)
     item_image.classList.add(`border-${item[0].category_color}`)
-    item_image.src = `images/item/${item[0].item_image}`
-    item_image_full_src.src = `images/item/${item[0].item_image}`
+    const timestamp = new Date().getTime()
+    item_image.src = `images/item/${item[0].item_image}?t=${timestamp}`
+    item_image_full_src.src = `images/item/${item[0].item_image}?t=${timestamp}`
     searchImage.href = `https://www.google.com/search?q=${item[0].item_descrption}&source=lnms&tbm=isch`
     searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_descrption}_OrderId_PRICE_NoIndex_True`
     // searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_descrption}#D[A:${item[0].item_descrption}]`

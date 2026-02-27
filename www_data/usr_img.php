@@ -6,26 +6,23 @@ if(file_exists("config.php"))
 }
 include("func_img.php");
 
-$nombre = $_FILES['file-upload']['name'];
 $usr_id = $_POST['image_usr_id'];
-$nombrer = "images/usr/" . $usr_id . "-" . strtolower($nombre);
+$destination_dir = "images/usr/";
 
-$ruta = $nombrer ;// $_FILES['imagen']['name'];
-$resultado = @move_uploaded_file($_FILES["file-upload"]["tmp_name"], $ruta);
+$nuevo_nombre = process_image_upload('file-upload', $destination_dir, "usr_" . $usr_id, 750, 750, false);
 
-if (!empty($resultado)){
-    mb_internal_encoding('UTF-8');
-    mb_http_output('UTF-8');
-    $conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
-    mysqli_set_charset($conn,'utf8');
-    $sql = "UPDATE " . $table_pre . "usr set usr_image = 'images/usr/" . $usr_id . "-" . strtolower($nombre) . "' WHERE usr_id=" . $usr_id;
+if ($nuevo_nombre) {
+    $conn = new mysqli($db_server, $db_user, $db_pass, $db_name, $db_serverport);
+    mysqli_set_charset($conn, 'utf8');
 
-    $result = $conn->query($sql);
+    $sql = "UPDATE " . $table_pre . "usr SET usr_image = ? WHERE usr_id = ?";
+    $stmt = $conn->prepare($sql);
+    $full_path = "images/usr/" . $nuevo_nombre;
+    $stmt->bind_param("si", $full_path, $usr_id);
+    $stmt->execute();
+    $stmt->close();
     $conn->close();
-
-    crop_image_square($nombrer);
-    resize_image($nombrer,750,750);
-    // add_logo_image($nombrer,$logo_arch , $nombrer);
 }
+
 header('Location: index.php');
 ?>
