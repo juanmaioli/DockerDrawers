@@ -114,6 +114,32 @@ try {
             $sql = "SELECT * FROM drawers_brand ORDER BY brand_name";
             $result = $conn->query($sql);
             break;
+        case 'search':
+            $term = "%" . ($parametro[1] ?? '') . "%";
+            $owner = (int)($parametro[2] ?? 0);
+            $rawdata = array();
+
+            // Search Items
+            $sql_items = "SELECT 'item' as type, item_id as id, item_name as name, item_description as description, item_image as image, category_color, category_name, item_drawer as drawer_id, (SELECT drawer_name FROM drawers_drawer WHERE drawer_id = item_drawer) as drawer_name FROM drawers_items LEFT JOIN drawers_category ON item_category = category_id WHERE item_owner = ? AND item_delete = 0 AND (item_name LIKE ? OR item_description LIKE ? OR item_model LIKE ?)";
+            $stmt_items = $conn->prepare($sql_items);
+            $stmt_items->bind_param("isss", $owner, $term, $term, $term);
+            $stmt_items->execute();
+            $res_items = $stmt_items->get_result();
+            while($row = $res_items->fetch_assoc()) $rawdata[] = $row;
+            $stmt_items->close();
+
+            // Search Drawers
+            $sql_drawers = "SELECT 'drawer' as type, drawer_id as id, drawer_name as name, drawer_description as description, drawer_image as image, category_color, category_name, NULL as drawer_id, NULL as drawer_name FROM drawers_drawer LEFT JOIN drawers_category ON drawer_category = category_id WHERE drawer_owner = ? AND drawer_delete = 0 AND (drawer_name LIKE ? OR drawer_description LIKE ? OR drawer_location LIKE ?)";
+            $stmt_drawers = $conn->prepare($sql_drawers);
+            $stmt_drawers->bind_param("isss", $owner, $term, $term, $term);
+            $stmt_drawers->execute();
+            $res_drawers = $stmt_drawers->get_result();
+            while($row = $res_drawers->fetch_assoc()) $rawdata[] = $row;
+            $stmt_drawers->close();
+
+            echo json_encode($rawdata, JSON_UNESCAPED_UNICODE);
+            $conn->close();
+            exit;
         default:
             throw new Exception("Invalid task: " . $tarea);
     }

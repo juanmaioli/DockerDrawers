@@ -196,6 +196,14 @@ if ($usr_right == 1) {
         </li>
       </ul>
       <h2 class="me-auto "><a class="text-white text-decoration-none" href="index.php">Drawers App</a></h2>
+      <ul class="navbar-nav mx-auto d-none d-lg-block" style="width: 30%;">
+        <li class="nav-item">
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-0 text-white"><i class="fas fa-search"></i></span>
+            <input type="text" class="form-control bg-dark text-white border-secondary rounded-pill" id="globalSearchInput" placeholder="Search items or drawers..." onkeyup="if(event.key === 'Enter') startGlobalSearch()">
+          </div>
+        </li>
+      </ul>
       <ul class="navbar-nav ml-auto">
         <li class="nav-item d-none d-lg-block">
           <a class="nav-link" href='#'><img class="profile-img1 border border-primary" src="<?= $usr_image ?>"></a>

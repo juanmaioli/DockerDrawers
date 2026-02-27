@@ -898,3 +898,70 @@ async function addItemAList(){
   }
 
 }
+
+function startGlobalSearch() {
+  const input = document.getElementById('globalSearchInput')
+  const query = input.value.trim()
+  if (query.length > 0) {
+    window.location.href = `search.php?q=${encodeURIComponent(query)}`
+  }
+}
+
+async function executeGlobalSearch(query, usuarioId) {
+  const resultsContainer = document.getElementById('searchResults')
+  const url = `./api/api_drawers.php?id=search-${encodeURIComponent(query)}-${usuarioId}`
+
+  try {
+    const response = await fetch(url)
+    const results = await response.json()
+
+    if (results.error) {
+      throw new Error(results.message || 'API Error')
+    }
+
+    if (results.length === 0) {
+      resultsContainer.innerHTML = `
+                <div class="col text-center mt-5">
+                    <i class="fas fa-search-minus fa-4x text-muted mb-3"></i>
+                    <h3>No results found for "${query}"</h3>
+                    <p class="text-muted">Try searching for something else.</p>
+                </div>`
+      return
+    }
+
+    let html = ''
+    results.forEach(res => {
+      const isItem = res.type === 'item'
+      const link = isItem ? `item_view.php?id=${res.id}&did=${res.drawer_id}` : `drawer_view.php?id=${res.id}`
+      const imgPath = isItem ? `images/item/${res.image}` : `images/drawers/${res.image}`
+      const badgeText = isItem ? 'Item' : 'Drawer'
+      const badgeClass = isItem ? 'bg-info' : 'bg-secondary'
+      const subTitle = isItem ? `<br><small class="text-muted">In: ${res.drawer_name}</small>` : ''
+
+      html += `
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-${res.category_color}-sm border-top border-4 border-${res.category_color}">
+                        <div class="card-body text-center">
+                            <span class="badge ${badgeClass} mb-2">${badgeText}</span>
+                            <div class="mb-3">
+                                <img src="${imgPath}" class="img-fluid rounded-3 border border-2 border-${res.category_color}" style="max-height: 120px; width: 120px; object-fit: cover;" alt="${res.name}">
+                            </div>
+                            <h5 class="card-title"><a href="${link}" class="text-decoration-none text-indigo">${res.name}</a></h5>
+                            <span class="badge rounded-pill bg-${res.category_color} mb-2">${res.category_name}</span>
+                            <p class="card-text small text-muted text-truncate">${res.description || ''}</p>
+                            ${subTitle}
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-center pb-3">
+                            <a href="${link}" class="btn btn-sm btn-outline-primary"><i class="fa-regular fa-eye"></i>&nbsp;View Details</a>
+                        </div>
+                    </div>
+                </div>`
+    })
+    resultsContainer.innerHTML = html
+
+  } catch (error) {
+    console.error('Search error:', error)
+    resultsContainer.innerHTML = `<div class="col text-center mt-5 text-danger"><h3>Error executing search</h3><p>${error.message}</p></div>`
+  }
+}
+
