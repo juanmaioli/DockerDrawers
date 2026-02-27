@@ -4,41 +4,32 @@ mb_http_output('UTF-8');
 
 include("config.php");
 
-$conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
-mysqli_set_charset($conn,'utf8');
+$conn = get_db_connection();
 
 $drawer_id_status = $_POST["drawer_id_status"];
 $drawer_owner = $_POST["drawer_owner"];
 $drawer_name = $_POST["drawer_name"];
 $drawer_location = $_POST["drawer_location"];
-$drawer_descriptinon = $_POST["drawer_descriptinon"];
+$drawer_description = $_POST["drawer_description"] ?? $_POST["drawer_descriptinon"] ?? "";
 $drawer_category = $_POST["drawer_category"];
-
-
-$drawer_id_status = $conn->escape_string($drawer_id_status );
-$drawer_owner = $conn->escape_string($drawer_owner );
-$drawer_name = $conn->escape_string($drawer_name);
-$drawer_location = $conn->escape_string($drawer_location);
-$drawer_descriptinon = $conn->escape_string($drawer_descriptinon);
-$drawer_category = $conn->escape_string($drawer_category);
 
 $drawer_name = ucwords(strtolower($drawer_name));
 $drawer_location = ucwords(strtolower($drawer_location));
-$drawer_descriptinon  = ucwords(strtolower($drawer_descriptinon));
+$drawer_description  = ucwords(strtolower($drawer_description));
 
 if($drawer_id_status == 0){
-  $sql_Add = "INSERT INTO drawers_drawer (drawer_name, drawer_location, drawer_descriptinon, drawer_category, drawer_owner) VALUES(?, ?, ?, ?, ?)";
+  $sql_Add = "INSERT INTO drawers_drawer (drawer_name, drawer_location, drawer_description, drawer_category, drawer_owner) VALUES(?, ?, ?, ?, ?)";
   $stmt = $conn->prepare($sql_Add);
-  $stmt->bind_param("sssii", $drawer_name, $drawer_location, $drawer_descriptinon, $drawer_category, $drawer_owner);
+  $stmt->bind_param("sssii", $drawer_name, $drawer_location, $drawer_description, $drawer_category, $drawer_owner);
   $stmt->execute();
   $drawer_id = $conn->insert_id;
   $stmt->close();
   header('Location: drawer_view.php?id='.$drawer_id);
 
 }else{
-  $sql_Update = "UPDATE drawers_drawer SET drawer_name=?, drawer_location = ?, drawer_descriptinon = ?, drawer_category = ? WHERE drawer_id = ?";
+  $sql_Update = "UPDATE drawers_drawer SET drawer_name=?, drawer_location = ?, drawer_description = ?, drawer_category = ? WHERE drawer_id = ?";
   $stmt = $conn->prepare($sql_Update);
-  $stmt->bind_param("sssii", $drawer_name, $drawer_location, $drawer_descriptinon, $drawer_category, $drawer_id_status);
+  $stmt->bind_param("sssii", $drawer_name, $drawer_location, $drawer_description, $drawer_category, $drawer_id_status);
   $stmt->execute();
   $stmt->close();
   header('Location: drawer_view.php?id='.$drawer_id_status);

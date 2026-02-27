@@ -4,16 +4,11 @@ mb_http_output('UTF-8');
 
 include("config.php");
 
-$conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
-mysqli_set_charset($conn,'utf8');
+$conn = get_db_connection();
 
 $category_id_status = $_POST["category_id_status"];
 $category_name = $_POST["category_name"];
 $category_color = $_POST["category_color"];
-
-$category_id_status = $conn->escape_string($category_id_status);
-$category_name = $conn->escape_string($category_name);
-$category_color = $conn->escape_string($category_color);
 
 $category_name = ucwords(strtolower($category_name));
 

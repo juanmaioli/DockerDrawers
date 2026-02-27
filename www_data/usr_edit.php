@@ -1,16 +1,18 @@
 <?php 
 include("head.php");
 $id = $_POST["id"];
-$conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
+$conn = get_db_connection();
 
-mysqli_set_charset($conn,'utf8');
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
-$sql = "SELECT * FROM " . $table_pre . "usr where usr_id= '". $id . "'";
-$result = $conn->query($sql);
+$sql = "SELECT * FROM " . $table_pre . "usr WHERE usr_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if (mysqli_num_rows($result) == true) {
+if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc())
     {
         $usr_id = $row["usr_id"];

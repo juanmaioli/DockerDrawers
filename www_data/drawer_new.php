@@ -44,8 +44,8 @@ include("head.php");
               <article class="row mb-3">
                 <section class="col">
                 <div class="form-floating">
-                    <textarea id='drawer_descriptinon' class='form-control' name='drawer_descriptinon' rows='5' cols='10' placeholder='drawer_descriptinon' title='drawer_descriptinon'></textarea>
-                    <label class="text-indigo " for="drawer_descriptinon">Description</label>
+                    <textarea id='drawer_description' class='form-control' name='drawer_description' rows='5' cols='10' placeholder='drawer_description' title='drawer_description'></textarea>
+                    <label class="text-indigo " for="drawer_description">Description</label>
                   </div>
                 </section>
               </article>

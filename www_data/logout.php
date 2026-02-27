@@ -9,9 +9,13 @@ session_start();
     $datosCuenta = explode(":", $datos);
     $usuarioId = $datosCuenta[1];
   }
-  $conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
-  $sql = "INSERT INTO " . $table_pre . "session(sess_usr,sess_ip,sess_date,sess_action) values('". $usuarioId ."','" . $ip . "','" . $dateShow ."',2)";
-  $result = $conn->query($sql);
+  $conn = get_db_connection();
+  $sql = "INSERT INTO " . $table_pre . "session(sess_usr, sess_ip, sess_date, sess_action) VALUES(?, ?, ?, 2)";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("iss", $usuarioId, $ip, $dateShow);
+  $stmt->execute();
+  $stmt->close();
+  $conn->close();
   unset ($_SESSION["usuario"]);
   unset ($_SESSION["loggedin"]);
   unset ($_SESSION["usuario_id"]);

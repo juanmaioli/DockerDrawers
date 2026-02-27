@@ -21,7 +21,7 @@ exit();
 }
 $usrExiste = "";
 
-$conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
+$conn = get_db_connection();
 
 $sql = "SELECT usr_id, usr_email, usr_pass, usr_right, usr_image FROM " . $table_pre . "usr WHERE usr_email = ?";
 $stmt = $conn->prepare($sql);

@@ -4,8 +4,7 @@ mb_http_output('UTF-8');
 
 include("config.php");
 
-$conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
-mysqli_set_charset($conn,'utf8');
+$conn = get_db_connection();
 
 $usr_id = $_POST['usr_id_pass'];
 $usr_pass_confirm = $_POST['usr_pass_confirm'];

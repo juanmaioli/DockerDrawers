@@ -12,8 +12,7 @@ $destination_dir = "images/usr/";
 $nuevo_nombre = process_image_upload('file-upload', $destination_dir, "usr_" . $usr_id, 750, 750, false);
 
 if ($nuevo_nombre) {
-    $conn = new mysqli($db_server, $db_user, $db_pass, $db_name, $db_serverport);
-    mysqli_set_charset($conn, 'utf8');
+    $conn = get_db_connection();
 
     $sql = "UPDATE " . $table_pre . "usr SET usr_image = ? WHERE usr_id = ?";
     $stmt = $conn->prepare($sql);

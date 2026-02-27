@@ -14,8 +14,7 @@ $destination_dir = "images/item/";
 $nuevo_nombre = process_image_upload('file-upload', $destination_dir, "item_" . $item_id, 500, 500, true, $logo_arch);
 
 if ($nuevo_nombre) {
-    $conn = new mysqli($db_server, $db_user, $db_pass, $db_name, $db_serverport);
-    mysqli_set_charset($conn, 'utf8');
+    $conn = get_db_connection();
 
     $sql = "UPDATE drawers_items SET item_image = ? WHERE item_id = ?";
     $stmt = $conn->prepare($sql);

@@ -18,7 +18,7 @@ async function drawersListCards(usuarioId,categoryId) {
         <article class="row"><section class="col"><span class="badge rounded-pill bg-${drawer.category_color} ">${drawer.category_name}</span></section></article>
         <article class="row mt-3"><section class="col"><img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-4 border border-2 border-${drawer.category_color} " width="120px" alt="${drawer.drawer_name}"></section></article>
         <article class="row mt-3">
-        <section class="col text-center small fst-italic text-muted">${drawer.drawer_descriptinon}</section>
+        <section class="col text-center small fst-italic text-muted">${drawer.drawer_description}</section>
         </article>
         <article class="row mt-3">
         <section class="col-3"></section>
@@ -76,7 +76,7 @@ async function drawersListTable(usuarioId,categoryId) {
       { 'data': 'drawer_image' , 'width': '10%' , className: 'text-center'},//0
       { 'data': 'drawer_name', 'width': '10%' },//1
       { 'data': 'category_name' , 'width': '10%' },//2
-      { 'data': 'drawer_descriptinon' , 'width': '10%' },//3
+      { 'data': 'drawer_description' , 'width': '10%' },//3
       { 'data': 'items_included', 'width': '40%'  , className: 'text-start'},//4
       { 'data': 'items_total', className: 'text-center'},//5
       { 'data': 'drawer_price' , className: 'text-center'},//6
@@ -116,7 +116,7 @@ async function drawersListTable(usuarioId,categoryId) {
         'targets': 3,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta =  `<span class="fst-italic text-muted">${row['drawer_descriptinon']}</span>`
+          const respuesta =  `<span class="fst-italic text-muted">${row['drawer_description']}</span>`
           return respuesta
         }
       },
@@ -159,7 +159,7 @@ async function drawerView(drawerId) {
   const drawer_location = $('#drawer_location')
   const drawer_image = $('#drawer_image')
   const drawer_image_full_src = $('#drawer_image_full_src')
-  const drawer_descriptinon = $('#drawer_descriptinon')
+  const drawer_description = $('#drawer_description')
   const drawer_category = $('#drawer_category')
   const drawer_card = $('#drawer_card')
   const drawer_card_items = $('#drawer_card_items')
@@ -172,7 +172,7 @@ async function drawerView(drawerId) {
     drawer_image_full_Label.innerHTML = drawer[0].drawer_name
     drawer_name.value = drawer[0].drawer_name
     drawer_location.value = drawer[0].drawer_location
-    drawer_descriptinon.value = drawer[0].drawer_descriptinon
+    drawer_description.value = drawer[0].drawer_description
     drawer_card.classList.add(`shadow-${drawer[0].category_color}-blur`)
     drawer_card_items.classList.add(`shadow-${drawer[0].category_color}-blur`)
     drawer_image.classList.add(`border-${drawer[0].category_color}`)
@@ -235,7 +235,7 @@ async function drawerItems($drawerId, usuarioId) {
       { 'data': 'item_image' , className: 'text-center'},//0
       { 'data': 'item_name' },//1
       { 'data': 'category_name' },//2
-      { 'data': 'item_descrption' },//3
+      { 'data': 'item_description' },//3
       { 'data': 'item_amount' , className: 'text-end'},//4
       { 'data': 'item_price' , className: 'text-end'},//5
       { 'data': 'item_price' , className: 'text-end'},//6
@@ -328,15 +328,15 @@ async function itemView(itemId,usuarioId) {
     item_price.value = item[0].item_price
     item_amount.value = item[0].item_amount
     item_model.value = item[0].item_model
-    item_descriptinon.value = item[0].item_descrption
+    item_descriptinon.value = item[0].item_description
     item_card.classList.add(`shadow-${item[0].category_color}-blur`)
     item_image.classList.add(`border-${item[0].category_color}`)
     const timestamp = new Date().getTime()
     item_image.src = `images/item/${item[0].item_image}?t=${timestamp}`
     item_image_full_src.src = `images/item/${item[0].item_image}?t=${timestamp}`
-    searchImage.href = `https://www.google.com/search?q=${item[0].item_descrption}&source=lnms&tbm=isch`
-    searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_descrption}_OrderId_PRICE_NoIndex_True`
-    // searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_descrption}#D[A:${item[0].item_descrption}]`
+    searchImage.href = `https://www.google.com/search?q=${item[0].item_description}&source=lnms&tbm=isch`
+    searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_description}_OrderId_PRICE_NoIndex_True`
+    // searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_description}#D[A:${item[0].item_description}]`
     item_category.innerHTML = ''
     item_drawer.innerHTML = ''
     const rtaCategories = await fetch(url_category)
@@ -421,7 +421,7 @@ async function itemsAll(usuarioId,categoriaId) {
       // <th>Drawer</th> 5
       { 'data': 'drawer_name' },//5
       // <th>Description</th> 6
-      { 'data': 'item_descrption' },//6
+      { 'data': 'item_description' },//6
       // <th>Amount</th> 7
       { 'data': 'item_amount' , className: 'text-center'},//7
       // <th>Price U$S</th> 8

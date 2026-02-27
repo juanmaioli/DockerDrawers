@@ -14,8 +14,7 @@ $nuevo_nombre = process_image_upload('file-upload', $destination_dir, "drawer_" 
 
 if ($nuevo_nombre) {
     $nuevo_nombre_full = str_replace(".jpg", "_full.jpg", $nuevo_nombre);
-    $conn = new mysqli($db_server, $db_user, $db_pass, $db_name, $db_serverport);
-    mysqli_set_charset($conn, 'utf8');
+    $conn = get_db_connection();
 
     $sql = "UPDATE drawers_drawer SET drawer_image = ?, drawer_image_full = ? WHERE drawer_id = ?";
     $stmt = $conn->prepare($sql);

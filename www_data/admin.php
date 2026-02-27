@@ -9,8 +9,7 @@ if ($usr_right != 1) {
 
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
-$conn = new mysqli($db_server, $db_user,$db_pass,$db_name,$db_serverport);
-mysqli_set_charset($conn,'utf8');
+$conn = get_db_connection();
 
 $sql = "SELECT * FROM " . $table_pre . "usr WHERE usr_delete = 0 ORDER BY usr_lastname ASC";
 $result = $conn->query($sql);
