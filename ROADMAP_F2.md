@@ -8,6 +8,7 @@ Este documento detalla las tareas de optimización, seguridad y mejora de arquit
 - [x] Refactorizar `head.php` para usar Sentencias Preparadas.
 - [x] Implementar verificación de permisos dinámica basada en `usr_right` (eliminar IDs hardcodeados).
 - [x] Unificar la lógica de validación de sesión/cookie en una función centralizada.
+- [x] Reparar y asegurar la funcionalidad "Recordarme en este equipo" (Auto-login).
 
 ## 2. 🧹 Limpieza de Deuda Técnica
 - [x] Corregir typos en la base de datos (`descriptinon` -> `description`).

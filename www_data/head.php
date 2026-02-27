@@ -1,30 +1,53 @@
 <?php
 include("config.php");
 session_start();
-if ($_SESSION["loggedin"] == false) {
-  header('Location: login.php');
-  exit();
-}
-
-if (isset($_COOKIE[$site_cookie])) {
-  $datos = $_COOKIE[$site_cookie];
-  $datosCuenta = explode(":", $datos);
-  $usuarioId = $datosCuenta[1];
-} else {
-  $usuarioId = $_SESSION["usuario_id"] ?? 0;
-}
-
-if (!$usuarioId) {
-  header("Location: login.php");
-  exit();
-}
-
-//User Data
-$usuarioMail = $_SESSION["usuario"] ?? '';
-$usr_image_session = $_SESSION["avatar"] ?? '';
-$usr_right = $_SESSION["right"] ?? 2;
 
 $conn = get_db_connection();
+
+/**
+ * Reconstruct session from "Remember Me" cookie if needed
+ */
+if (empty($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    if (isset($_COOKIE[$site_cookie])) {
+        $parts = explode(":", $_COOKIE[$site_cookie]);
+        if (count($parts) === 2) {
+            $cookie_hash = $parts[0];
+            $cookie_id = (int)$parts[1];
+
+            $sql = "SELECT * FROM " . $table_pre . "usr WHERE usr_id = ? AND usr_delete = 0";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $cookie_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows === 1) {
+                $row = $result->fetch_assoc();
+                // Validate hash
+                if (hash('sha256', $row["usr_email"]) === $cookie_hash) {
+                    $_SESSION["usuario_id"] = $row["usr_id"];
+                    $_SESSION["usuario"] = $row["usr_email"];
+                    $_SESSION["avatar"] = $row["usr_image"];
+                    $_SESSION["right"] = $row["usr_right"];
+                    $_SESSION["loggedin"] = true;
+                }
+            }
+            $stmt->close();
+        }
+    }
+}
+
+// Redirect to login if still not logged in
+if (empty($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    header('Location: login.php');
+    exit();
+}
+
+// Session is active, set variables for the app
+$usuarioId = $_SESSION["usuario_id"];
+$usuarioMail = $_SESSION["usuario"];
+$usr_image_session = $_SESSION["avatar"];
+$usr_right = $_SESSION["right"];
+
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
@@ -41,34 +64,34 @@ $usr_email = $usuarioMail;
 $usr_image = $usr_image_session;
 $usr_token = '';
 
-//Usuario - Usando Sentencias Preparadas
+// Refresh user data from DB to ensure it's up to date (e.g. if profile was edited)
 if ($usuarioMail) {
-  $sql = "SELECT * FROM " . $table_pre . "usr WHERE usr_email = ?";
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param("s", $usuarioMail);
-  $stmt->execute();
-  $result = $stmt->get_result();
+    $sql = "SELECT * FROM " . $table_pre . "usr WHERE usr_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $usuarioId);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-  if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $usr_id = $row["usr_id"];
-    $usr_name = $row["usr_name"];
-    $usr_lastname = $row["usr_lastname"];
-    $usr_email = $row["usr_email"];
-    $usr_image = $row["usr_image"];
-    $usr_pass = $row["usr_pass"];
-    $usr_token = $row["usr_token"];
-    $usr_right = $row["usr_right"];
-  }
-  $stmt->close();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $usr_id = $row["usr_id"];
+        $usr_name = $row["usr_name"];
+        $usr_lastname = $row["usr_lastname"];
+        $usr_email = $row["usr_email"];
+        $usr_image = $row["usr_image"];
+        $usr_pass = $row["usr_pass"];
+        $usr_token = $row["usr_token"];
+        $usr_right = $row["usr_right"];
+    }
+    $stmt->close();
 }
 $conn->close();
 
 if ($usr_right == 1) {
-  //Admin Menu
-  $menu_admin = "<a href='admin.php' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;Admin</a>";
+    //Admin Menu
+    $menu_admin = "<a href='admin.php' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;Admin</a>";
 } else {
-  $menu_admin = "<a href='#' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;No Admin</a>";
+    $menu_admin = "<a href='#' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;No Admin</a>";
 }
 ?>
 <html lang="es">
@@ -192,5 +215,3 @@ if ($usr_right == 1) {
   </nav>
   <!-- /Navigation -->
   <div class="separador"></div>
-
-
