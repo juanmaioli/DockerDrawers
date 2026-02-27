@@ -13,19 +13,20 @@ $usr_lastname = $_POST['usr_lastname'];
 $usr_email = $_POST['usr_email'];
 $usr_email = strtolower($usr_email);
 
-$usr_name = $conn->escape_string($usr_name);
-$usr_lastname = $conn->escape_string($usr_lastname);
-$usr_email = $conn->escape_string($usr_email);
-
-if($usr_id !=0){
-    $sql = "UPDATE " . $table_pre . "usr SET usr_name = '". $usr_name ."', 
-    usr_lastname = '" . $usr_lastname ."', 
-    usr_email = '" .$usr_email ."' WHERE usr_id=" . $usr_id;
+if($usr_id != 0){
+    $sql = "UPDATE " . $table_pre . "usr SET usr_name = ?, usr_lastname = ?, usr_email = ? WHERE usr_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssi", $usr_name, $usr_lastname, $usr_email, $usr_id);
+    $stmt->execute();
+    $stmt->close();
 }else{
-$usr_pass = hash('sha256','123456789');
-    $sql = "INSERT INTO " . $table_pre . "usr(usr_name,usr_lastname,usr_email,usr_pass)
-    Values('". $usr_name ."','" . $usr_lastname ."', '" .$usr_email ."','".$usr_pass."')";
+    $usr_pass = password_hash('123456789', PASSWORD_DEFAULT);
+    $sql = "INSERT INTO " . $table_pre . "usr(usr_name, usr_lastname, usr_email, usr_pass) VALUES(?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssss", $usr_name, $usr_lastname, $usr_email, $usr_pass);
+    $stmt->execute();
+    $stmt->close();
 }
-$result = $conn->query($sql);
+$conn->close();
 header('Location: index.php');
 ?>
