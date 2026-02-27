@@ -20,8 +20,8 @@ Este documento detalla las tareas de optimización, seguridad y mejora de arquit
 - [ ] Mejorar la carga de assets (minificación opcional).
 
 ## 4. 🐳 Mejora de Infraestructura
-- [ ] Migrar credenciales de `config.php` a variables de entorno en Docker.
-- [ ] Documentar el proceso de backup de la base de datos.
+- [x] Migrar credenciales de `config.php` a variables de entorno en Docker.
+- [x] Documentar el proceso de backup de la base de datos.
 
 ---
 *Plan generado por Gemini el 26/02/2026.*

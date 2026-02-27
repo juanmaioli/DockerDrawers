@@ -79,6 +79,22 @@ Las credenciales predeterminadas en `compose.yml` son:
 
 ---
 
+## 💾 Mantenimiento de la Base de Datos
+
+### Realizar un Backup (Dump)
+Para exportar la base de datos actual a un archivo SQL:
+```bash
+docker exec mariadb_db mariadb-dump -u juan -pLasflores506 admin_drawers > backup_drawers.sql
+```
+
+### Restaurar un Backup
+Para importar un archivo SQL a la base de datos:
+```bash
+docker exec -i mariadb_db mariadb -u juan -pLasflores506 admin_drawers < backup_drawers.sql
+```
+
+---
+
 ## 🔌 API
 
 La aplicación expone un endpoint en `api/api_drawers.php`. Las consultas se realizan mediante parámetros GET. 

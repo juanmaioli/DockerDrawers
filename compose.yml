@@ -33,6 +33,12 @@ services:
       - ./www_data:/var/www/html
       - ./apache_data:/etc/apache2
       - ./php_data/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      - DB_SERVER=db
+      - DB_USER=juan
+      - DB_PASS=Lasflores506
+      - DB_NAME=admin_drawers
+      - DB_PORT=3306
     ports:
       - "8090:80"
 
