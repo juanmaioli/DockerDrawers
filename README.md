@@ -30,6 +30,7 @@
 El repositorio está organizado para separar la lógica de la aplicación del entorno de despliegue:
 
 - **`www_data/`**: Contiene el código fuente completo de la aplicación web (PHP, JS, CSS).
+  - `img_proxy.php`: Script para servir imágenes externas HTTP sobre HTTPS de forma segura.
 - **`apache_data/`**: Configuraciones personalizadas para el servidor web Apache.
 - **`db_data/`**: Directorio para la persistencia de datos de MariaDB (ignorado por Git).
 - **`php_data/`**: Archivos de configuración de PHP (`php.ini`).
