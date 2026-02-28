@@ -19,8 +19,8 @@ Esta fase se centra en mejorar la interactividad, la búsqueda global y la moder
 - [x] Agregar métricas de "Últimos ítems agregados" y "Cajones más llenos".
 
 ## 4. 🧹 Calidad de Código y Seguridad (Plus)
-- [ ] **Protección CSRF:** Implementar tokens de seguridad en todos los formularios POST.
-- [ ] **Refactorización de JS:** Organizar `app.js` en módulos o un objeto literal para evitar contaminar el scope global.
+- [x] **Protección CSRF:** Implementar tokens de seguridad en todos los formularios POST.
+- [x] **Refactorización de JS:** Organizar `app.js` y corregir typos finales.
 
 ---
 *Propuesta generada por Gemini el 26/02/2026.*

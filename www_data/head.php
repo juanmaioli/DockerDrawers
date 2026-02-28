@@ -48,6 +48,12 @@ $usuarioMail = $_SESSION["usuario"];
 $usr_image_session = $_SESSION["avatar"];
 $usr_right = $_SESSION["right"];
 
+// CSRF Protection
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 

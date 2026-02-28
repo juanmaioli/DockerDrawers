@@ -24,6 +24,7 @@ $drawerId = $_GET['did'];
             </section>
             <section class="col-md-8">
             <form action="item_save.php" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
               <article class="row mb-3">
                 <section class="col">
                 <input id="item_id_status" name="item_id_status" type="hidden" value="0">
@@ -48,8 +49,8 @@ $drawerId = $_GET['did'];
               <article class="row mb-3">
                 <section class="col">
                 <div class="form-floating">
-                    <textarea id='item_descriptinon' class='form-control' name='item_descriptinon' rows='5' cols='10' placeholder='item_descriptinon' title='item_descriptinon'></textarea>
-                    <label class="text-indigo " for="item_descriptinon">Description</label>
+                    <textarea id='item_description' class='form-control' name='item_description' rows='5' cols='10' placeholder='item_description' title='item_description'></textarea>
+                    <label class="text-indigo " for="item_description">Description</label>
                   </div>
                 </section>
               </article>

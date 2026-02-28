@@ -4,6 +4,13 @@ if(file_exists("config.php"))
 {include("config.php");} else {
   // header( "Location: install.php" );
 }
+session_start();
+
+// CSRF Verification
+if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("CSRF token validation failed.");
+}
+
 include("func_img.php");
 
 $drawer_id = $_POST['drawer_id'];

@@ -25,6 +25,7 @@ $drawerId = $_GET['id'];
               </a>
               <div class="mt-3">
                 <form action="drawer_img.php" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                   <input id="drawer_id" name="drawer_id" type="hidden" value="<?= $drawerId ?>">
                   <label for="file-upload" class="custom-file-upload btn btn-indigo m-2">
                   <i class="fa-regular fa-cloud-upload-alt"></i>&nbsp;Change Image</label>
@@ -34,6 +35,7 @@ $drawerId = $_GET['id'];
             </section>
             <section class="col-md-8">
             <form action="drawer_save.php" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
               <article class="row mb-3">
                 <section class="col">
                 <input id="drawer_id_status" name="drawer_id_status" type="hidden" value="<?= $drawerId ?>">

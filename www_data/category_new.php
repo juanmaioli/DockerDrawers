@@ -18,6 +18,7 @@ include("head.php");
         </section>
         <section class="card-body">
         <form action="category_save.php" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
           <article class="row">
             <section class="col-md-6">
             <input id="category_id_status" name="category_id_status" type="hidden" value="0">

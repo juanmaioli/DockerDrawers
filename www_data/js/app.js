@@ -303,7 +303,7 @@ async function itemView(itemId,usuarioId) {
   const item_amount = $('#item_amount')
   const item_card = $('#item_card')
   const item_category = $('#item_category')
-  const item_descriptinon = $('#item_descriptinon')
+  const item_description = $('#item_description')
   const item_drawer = $('#item_drawer')
   const item_image = $('#item_image')
   const item_image_full_Label = $('#item_image_full_Label')
@@ -328,7 +328,7 @@ async function itemView(itemId,usuarioId) {
     item_price.value = item[0].item_price
     item_amount.value = item[0].item_amount
     item_model.value = item[0].item_model
-    item_descriptinon.value = item[0].item_description
+    item_description.value = item[0].item_description
     item_card.classList.add(`shadow-${item[0].category_color}-blur`)
     item_image.classList.add(`border-${item[0].category_color}`)
     const timestamp = new Date().getTime()

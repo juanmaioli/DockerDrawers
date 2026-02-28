@@ -18,6 +18,7 @@ include("head.php");
         </section>
         <section class="card-body">
         <form action="drawer_save.php" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
         <input id="drawer_owner" name="drawer_owner" type="hidden" value="<?= $usuarioId ?>">
         <input id="drawer_id_status" name="drawer_id_status" type="hidden" value="0">
           <article class="row">

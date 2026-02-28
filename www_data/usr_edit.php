@@ -39,6 +39,7 @@ $conn->close();
                 <div class="card-body text-center">
                 <img src="<?=$usr_image?>" class="img-fluid">
                 <form action="usr_img.php" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                     <input id="image_usr_id" name="image_usr_id" type="hidden" value="<?=$usr_id?>">
                     <label for="file-upload" class="custom-file-upload btn btn-outline-primary m-2">
                     <i class="far fa-cloud-upload-alt"></i> Elegir Imagen</label>
@@ -52,6 +53,7 @@ $conn->close();
                 <div class="card-header"><h3><i class="far fa-edit"></i> Editar Usuario</h3><h5> <span class="text-secondary">(Todos los campos son obligatorios)</span></h5></div>
                 <div class="card-body">
                     <form id='form_data' action='usr_save.php' method='post' >
+                        <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                         <div class="row p-2">			
                             <div class="col-md">
                             <label>Nombre</label>
@@ -82,7 +84,7 @@ $conn->close();
                 <div class="card-header"><h3><i class="far fa-edit"></i> Cambiar Clave</h3></div>
                 <div class="card-body">
                     <form id='form_pass' name='form_pass' action='usr_pass.php' method='post' >
-                    
+                        <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                         <div class="row p-2">			
                             <div class="col-md">
                             <label>Nueva Clave</label>

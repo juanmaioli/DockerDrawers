@@ -27,6 +27,7 @@ $drawerId = $_GET['did'];
               <article class="row mt-3">
                 <section class="col">
                 <form action="item_img.php" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                   <input id="item_id" name="item_id" type="hidden" value="<?= $itemId?>">
                   <input id="item_drawer_img" name="item_drawer_img" type="hidden" value="<?= $drawerId?>">
                   <label for="file-upload" class="custom-file-upload btn btn-indigo">
@@ -50,6 +51,7 @@ $drawerId = $_GET['did'];
             </section>
             <section class="col-md-8">
             <form action="item_save.php" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
               <article class="row mb-3">
                 <section class="col">
                   <input id="item_id_status" name="item_id_status" type="hidden" value="<?= $itemId?>">
@@ -85,8 +87,8 @@ $drawerId = $_GET['did'];
 
               <article class="row mb-3">
                 <section class="col-12">
-                  <label class="text-indigo mb-2" for="item_descriptinon">Description</label>
-                  <textarea id='item_descriptinon' class='form-control' name='item_descriptinon' rows='2' placeholder='Description' title='Description'>Description</textarea>
+                  <label class="text-indigo mb-2" for="item_description">Description</label>
+                  <textarea id='item_description' class='form-control' name='item_description' rows='2' placeholder='Description' title='Description'>Description</textarea>
                 </section>
               </article>
               <article class="row mb-3">

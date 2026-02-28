@@ -18,6 +18,7 @@ include("head.php");
                 <div class="card-header"><h3><i class="far fa-plus-square"></i> Agregar Usuario</h3><h5> <span class="text-secondary">(Todos los campos son obligatorios)</span></h5></div>
                 <div class="card-body">
                     <form id='form_book' name='form_book' action='usr_save.php' method='post' >
+                        <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                         <div class="row p-2">			
                             <div class="col-md">
                             <label>Nombre</label>

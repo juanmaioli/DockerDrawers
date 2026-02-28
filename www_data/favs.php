@@ -64,6 +64,7 @@ include("head.php");
       </div>
       <div class="modal-body text-center">
         <form action="fav_edit.php" name = "bookmarkEdit" id = "bookmarkEdit" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
         <input type='hidden' name='bookmarkID' id='bookmarkID' value=''>
           <article class="row">
             <section class="col-md-8">
