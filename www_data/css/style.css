@@ -8,6 +8,7 @@ h4,h5,h6{font-family: 'Roboto', sans-serif;}
 .profile-img2{height: 90px;margin: 0 auto 10px;display: block;-moz-border-radius: 50%;-webkit-border-radius: 50%;border-radius: 50%;}
 .footer {position: fixed;left:0;bottom: 0;width: 100%;text-align: center;line-height: 25px; background-color:#6610F2;}
 .card-200{min-height: 200px;max-height: 200px;}
+.card-250{min-height: 250px;max-height: 250px;}
 .card-300{min-height: 330px;max-height: 330px;min-width:300px;max-width: 300px;}
 .navbar {background-color:#6610F2;}
 .dropdown-menu{background-color:#6610F2;color:#fff}

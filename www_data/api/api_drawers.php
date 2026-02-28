@@ -114,6 +114,20 @@ try {
             $sql = "SELECT * FROM drawers_brand ORDER BY brand_name";
             $result = $conn->query($sql);
             break;
+        case 'lastitems':
+            $limit = (int)($parametro[1] ?? 5);
+            $owner = (int)($parametro[2] ?? 0);
+            $sql = "SELECT item_id, item_name, item_image, item_date, category_color, item_drawer FROM drawers_items LEFT JOIN drawers_category ON item_category = category_id WHERE item_owner = ? AND item_delete = 0 ORDER BY item_date DESC LIMIT ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ii", $owner, $limit);
+            break;
+        case 'fullestdrawers':
+            $limit = (int)($parametro[1] ?? 5);
+            $owner = (int)($parametro[2] ?? 0);
+            $sql = "SELECT d.drawer_id, d.drawer_name, d.drawer_image, c.category_color, SUM(i.item_amount) as total_items FROM drawers_drawer d LEFT JOIN drawers_items i ON d.drawer_id = i.item_drawer LEFT JOIN drawers_category c ON d.drawer_category = c.category_id WHERE d.drawer_owner = ? AND d.drawer_delete = 0 AND i.item_delete = 0 GROUP BY d.drawer_id ORDER BY total_items DESC LIMIT ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ii", $owner, $limit);
+            break;
         case 'search':
             $term = "%" . ($parametro[1] ?? '') . "%";
             $owner = (int)($parametro[2] ?? 0);

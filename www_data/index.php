@@ -12,19 +12,31 @@ if(empty($_GET['id']))
   <article class="row ms-2 me-2">
     <section class="col">
           <article class="row">
-            <section class="col-md-4 p-4">
-              <article class="card bg-indigo card-200">
+            <section class="col-md-4 p-2">
+              <article class="card bg-indigo card-250 shadow-indigo-sm">
                 <section class="card-body text-center" id="statisticsPrice"></section>
               </article>
             </section>
-            <section class="col-md-4 p-4">
-            <article class="card bg-indigo card-200">
+            <section class="col-md-4 p-2">
+            <article class="card bg-indigo card-250 shadow-indigo-sm">
                 <section class="card-body" id="statisticsCategoryPrice"></section>
               </article>
             </section>
-            <section class="col-md-4 p-4">
-            <article class="card bg-indigo card-200">
+            <section class="col-md-4 p-2">
+            <article class="card bg-indigo card-250 shadow-indigo-sm">
                 <section class="card-body" id="statisticsCategoryTotal"></section>
+              </article>
+            </section>
+          </article>
+          <article class="row">
+            <section class="col-md-6 p-2">
+              <article class="card bg-indigo shadow-indigo-sm">
+                <section class="card-body" id="statisticsLatestItems"></section>
+              </article>
+            </section>
+            <section class="col-md-6 p-2">
+              <article class="card bg-indigo shadow-indigo-sm">
+                <section class="card-body" id="statisticsFullestDrawers"></section>
               </article>
             </section>
           </article>

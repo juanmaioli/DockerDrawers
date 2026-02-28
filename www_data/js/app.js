@@ -704,38 +704,97 @@ async function getStatistics(usuarioId,totalRecords) {
   const statisticsCategoryPrice = $('#statisticsCategoryPrice')
   const statisticsPrice = $('#statisticsPrice')
   const statisticsCategoryTotal = $('#statisticsCategoryTotal')
-  const urlPrice = `./api/api_drawers.php?id=totalprice-${totalRecords}`
+  const statisticsLatestItems = $('#statisticsLatestItems')
+  const statisticsFullestDrawers = $('#statisticsFullestDrawers')
+
+  // Total Price
+  const urlPrice = `./api/api_drawers.php?id=totalprice`
   const responsePrice = await fetch(urlPrice)
   const priceToJson = await responsePrice.json()
-  statisticsPrice.innerHTML = `<h1 class="text-white display-3"><i class="fa-regular fa-sack-dollar"></i>&nbsp;Full Value: <br>$${priceToJson[0].total}</h1>`
+  const fullValue = Number(priceToJson[0].total || 0)
+  statisticsPrice.innerHTML = `<h5 class="text-white mb-2">Total Inventory Value</h5><h1 class="text-white display-4 fw-bold"><i class="fa-regular fa-sack-dollar"></i>&nbsp;${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'})}</h1>`
+
+  // Value by Category
   const urlCategoryPrice  = `./api/api_drawers.php?id=categoryprice-${totalRecords}`
   const responseCategoryPrice = await fetch(urlCategoryPrice)
   const categoryPriceToJson = await responseCategoryPrice.json()
-  let bodyTable = ''
-  bodyTable = `<h5 class="text-white mb-3">Value By Category</h5><table class="bg-indigo text-white text-center" style="width:100%">
-  <thead class="small"><th class="text-start" style="width:80%">Category</th><th class="text-end" colspan="2">Price U$S</th></thead><tbody class="small">`
+  let bodyCategoryPrice = `<h6 class="text-white mb-2 fw-bold">Value By Category</h6>`
+  
+  const maxPrice = categoryPriceToJson.length > 0 ? Math.max(...categoryPriceToJson.map(f => Number(f.category_price))) : 1;
+
   for(const fila of categoryPriceToJson){
-    bodyTable  +=`<tr class="border-bottom"><td class="text-start">
-    <a href='items.php?id=${fila.ID}' class="text-white text-decoration-none">${fila.Categoria}</a>
-    </td><td class="text-start" style="width:5%">$</td><td class="text-end">
-    <a href='items.php?id=${fila.ID}' class="text-white text-decoration-none">${fila.category_price}</a>
-    </td></tr>`
+    const price = Number(fila.category_price)
+    const percent = (price / maxPrice) * 100
+    bodyCategoryPrice += `
+      <div class="mb-2">
+        <div class="d-flex justify-content-between text-white small mb-1">
+          <a href="items.php?id=${fila.ID}" class="text-white text-decoration-none text-truncate" style="max-width: 150px;">${fila.Categoria}</a>
+          <span>$${price.toLocaleString('es-AR')}</span>
+        </div>
+        <div class="progress" style="height: 4px; background-color: rgba(255,255,255,0.1);">
+          <div class="progress-bar bg-white" role="progressbar" style="width: ${percent}%"></div>
+        </div>
+      </div>`
   }
-  statisticsCategoryPrice.innerHTML += `${bodyTable}</tbody></table>`
+  statisticsCategoryPrice.innerHTML = bodyCategoryPrice
+
+  // Items by Category
   const urlCategoryTotal  = `./api/api_drawers.php?id=categorytotal-${totalRecords}`
   const responseCategoryTotal = await fetch(urlCategoryTotal)
   const categoryTotalToJson = await responseCategoryTotal.json()
-  bodyTable = `<h5 class="text-white mb-3">Items By Category</h5>
-  <table class="bg-indigo text-white text-center" style="width:100%">
-  <thead class="small">
-  <th class="text-start">Category</th><th class="text-end">Total Items</th>
-  </thead><tbody class="small">`
+  let bodyCategoryTotal = `<h6 class="text-white mb-2 fw-bold">Items By Category</h6>`
+  
+  const maxItems = categoryTotalToJson.length > 0 ? Math.max(...categoryTotalToJson.map(f => Number(f.Total))) : 1;
+
   for(const fila of categoryTotalToJson){
-    bodyTable  +=`<tr class="border-bottom">
-    <td class="text-start"><a href='items.php?id=${fila.ID}' class="text-white text-decoration-none">${fila.Categoria}</a></td>
-    <td class="text-end"><a href='items.php?id=${fila.ID}' class="text-white text-decoration-none">${fila.Total}</a></td></tr>`
+    const total = Number(fila.Total)
+    const percent = (total / maxItems) * 100
+    bodyCategoryTotal += `
+      <div class="mb-2">
+        <div class="d-flex justify-content-between text-white small mb-1">
+          <a href="items.php?id=${fila.ID}" class="text-white text-decoration-none">${fila.Categoria}</a>
+          <span>${total}</span>
+        </div>
+        <div class="progress" style="height: 4px; background-color: rgba(255,255,255,0.1);">
+          <div class="progress-bar bg-white" role="progressbar" style="width: ${percent}%"></div>
+        </div>
+      </div>`
   }
-  statisticsCategoryTotal.innerHTML += `${bodyTable}</tbody></table>`
+  statisticsCategoryTotal.innerHTML = bodyCategoryTotal
+
+  // Latest Items
+  const urlLatest = `./api/api_drawers.php?id=lastitems-4-${usuarioId}`
+  const responseLatest = await fetch(urlLatest)
+  const latestItems = await responseLatest.json()
+  let bodyLatest = `<h6 class="text-white mb-2 fw-bold">Latest Items Added</h6><div class="row">`
+  
+  latestItems.forEach(item => {
+    bodyLatest += `
+      <div class="col-3 text-center">
+        <a href="item_view.php?id=${item.item_id}&did=${item.item_drawer}" title="${item.item_name}">
+          <img src="images/item/${item.item_image}" class="img-fluid rounded-circle border border-2 border-${item.category_color}" style="width: 85px; height: 85px; object-fit: cover;">
+        </a>
+        <div class="small text-white text-truncate mt-1" style="font-size: 0.7rem;">${item.item_name}</div>
+      </div>`
+  })
+  statisticsLatestItems.innerHTML = bodyLatest + `</div>`
+
+  // Fullest Drawers
+  const urlFullest = `./api/api_drawers.php?id=fullestdrawers-4-${usuarioId}`
+  const responseFullest = await fetch(urlFullest)
+  const fullestDrawers = await responseFullest.json()
+  let bodyFullest = `<h6 class="text-white mb-2 fw-bold">Fullest Drawers</h6><div class="row">`
+  
+  fullestDrawers.forEach(drawer => {
+    bodyFullest += `
+      <div class="col-3 text-center">
+        <a href="drawer_view.php?id=${drawer.drawer_id}" title="${drawer.drawer_name} (${drawer.total_items} items)">
+          <img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-3 border border-2 border-${drawer.category_color}" style="width: 85px; height: 85px; object-fit: cover;">
+        </a>
+        <div class="small text-white text-truncate mt-1" style="font-size: 0.7rem;">${drawer.total_items} items</div>
+      </div>`
+  })
+  statisticsFullestDrawers.innerHTML = bodyFullest + `</div>`
 }
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {

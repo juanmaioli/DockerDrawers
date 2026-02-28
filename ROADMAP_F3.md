@@ -15,8 +15,8 @@ Esta fase se centra en mejorar la interactividad, la búsqueda global y la moder
 - [ ] **Modales de Acción:** Reemplazar el flujo de "Nueva página" por modales para agregar/editar categorías y marcas, evitando recargas innecesarias.
 
 ## 3. 📊 Dashboard y Estadísticas
-- [ ] Mejorar las tarjetas de estadísticas en `index.php` con gráficos simples (ej. Chart.js o barras CSS).
-- [ ] Agregar métricas de "Últimos ítems agregados" y "Cajones más llenos".
+- [x] Mejorar las tarjetas de estadísticas en `index.php` con gráficos simples (barras CSS).
+- [x] Agregar métricas de "Últimos ítems agregados" y "Cajones más llenos".
 
 ## 4. 🧹 Calidad de Código y Seguridad (Plus)
 - [ ] **Protección CSRF:** Implementar tokens de seguridad en todos los formularios POST.
