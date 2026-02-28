@@ -40,7 +40,7 @@ if (empty($_GET['id'])) {
       height: 100%;
     }
     body {
-      background-image: url("http://pikapp.com.ar/rnd_img/index.php?id=anime");
+      background-image: url("https://pikapp.com.ar/rnd_img/index.php?id=anime");
       background-position: center center;
       background-repeat: no-repeat;
       background-attachment: fixed;
