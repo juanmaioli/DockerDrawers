@@ -708,11 +708,16 @@ async function getStatistics(usuarioId,totalRecords) {
   const statisticsFullestDrawers = $('#statisticsFullestDrawers')
 
   // Total Price
-  const urlPrice = `./api/api_drawers.php?id=totalprice`
+  const urlPrice = `./api/api_drawers.php?id=totalprice-${usuarioId}`
   const responsePrice = await fetch(urlPrice)
   const priceToJson = await responsePrice.json()
   const fullValue = Number(priceToJson[0].total || 0)
-  statisticsPrice.innerHTML = `<h5 class="text-white mb-2">Total Inventory Value</h5><h1 class="text-white display-4 fw-bold"><i class="fa-regular fa-sack-dollar"></i>&nbsp;${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'})}</h1>`
+  const totalItems = Number(priceToJson[0].total_items || 0)
+  statisticsPrice.innerHTML = `
+    <h5 class="text-white mb-2">Total Inventory Value</h5>
+    <h1 class="text-white display-4 fw-bold"><i class="fa-regular fa-sack-dollar"></i>&nbsp;${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'})}</h1>
+    <h5 class="text-white mb-2">Total Inventory</h5>
+    <h1 class="text-white display-4 fw-bold"><i class="fa-regular fa-boxes-stacked"></i>&nbsp;${totalItems.toLocaleString('es-AR')} Items</h1>`
 
   // Value by Category
   const urlCategoryPrice  = `./api/api_drawers.php?id=categoryprice-${totalRecords}`

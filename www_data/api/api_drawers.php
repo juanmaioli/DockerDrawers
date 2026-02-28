@@ -70,8 +70,10 @@ try {
             }
             break;
         case 'totalprice':
-            $sql = "SELECT sum(total_price) as total FROM total_price";
-            $result = $conn->query($sql);
+            $owner = (int)($parametro[1] ?? 0);
+            $sql = "SELECT SUM(i.item_amount * i.item_price) as total, SUM(i.item_amount) as total_items FROM drawers_items i WHERE i.item_owner = ? AND i.item_delete = 0";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $owner);
             break;
         case 'categoryprice':
             $sql = "SELECT drawers_category.category_name AS Categoria, drawers_category.category_id AS ID, ( SELECT sum( total_price ) FROM total_price WHERE category = drawers_category.category_id GROUP BY category ) AS category_price FROM drawers_items INNER JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id GROUP BY item_category ORDER BY category_price DESC LIMIT ?";
