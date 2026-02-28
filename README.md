@@ -12,6 +12,7 @@
 - **💰 Control de Costos:** Realiza un seguimiento del precio y valor total de tu inventario.
 - **🔐 Sistema de Usuarios:** Gestión de accesos y perfiles personalizada.
 - **🔌 API Segura:** Endpoint JSON con protección contra SQL Injection mediante sentencias preparadas.
+- **🔍 Búsqueda Inteligente:** Buscador global con autocompletado dinámico basado en nombres y descripciones.
 - **🔖 Marcadores (Bookmarks):** Guarda ítems o búsquedas frecuentes.
 
 ---

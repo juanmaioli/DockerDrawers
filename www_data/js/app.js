@@ -971,6 +971,67 @@ function startGlobalSearch() {
   }
 }
 
+let autocompleteTimeout = null
+function handleSearchKeyUp(event) {
+  if (event.key === 'Enter') {
+    startGlobalSearch()
+    return
+  }
+
+  const query = event.target.value.trim()
+  const resultsContainer = document.getElementById('autocomplete-results')
+
+  if (query.length < 2) {
+    resultsContainer.classList.add('d-none')
+    return
+  }
+
+  clearTimeout(autocompleteTimeout)
+  autocompleteTimeout = setTimeout(async () => {
+    // Current user ID is globally available in index.php or can be passed
+    // For simplicity, we'll try to find it or use a default (though it should be available)
+    const usuarioId = typeof window.usuarioId !== 'undefined' ? window.usuarioId : (document.querySelector('input[name="id"]') ? document.querySelector('input[name="id"]').value : 0)
+    
+    // We get usuarioId from the session variable in head.php usually, but here we can pass it from the call if needed
+    // In this project, usuarioId is often injected in the scripts. Let's use a dynamic way.
+    const url = `./api/api_drawers.php?id=autocomplete-${encodeURIComponent(query)}-${window.usuarioId || 0}`
+
+    try {
+      const response = await fetch(url)
+      const suggestions = await response.json()
+
+      if (suggestions.length > 0) {
+        resultsContainer.innerHTML = suggestions.map(s => `
+          <button type="button" class="list-group-item list-group-item-action py-2 px-3" onclick="selectAutocomplete('${s.replace(/'/g, "\\'")}')">
+            ${s}
+          </button>
+        `).join('')
+        resultsContainer.classList.remove('d-none')
+      } else {
+        resultsContainer.classList.add('d-none')
+      }
+    } catch (e) {
+      console.error('Autocomplete error:', e)
+    }
+  }, 300)
+}
+
+function selectAutocomplete(value) {
+  const input = document.getElementById('globalSearchInput')
+  input.value = value
+  document.getElementById('autocomplete-results').classList.add('d-none')
+  startGlobalSearch()
+}
+
+// Hide autocomplete when clicking outside
+document.addEventListener('click', function(e) {
+  const container = document.getElementById('autocomplete-results')
+  const input = document.getElementById('globalSearchInput')
+  if (container && !container.contains(e.target) && e.target !== input) {
+    container.classList.add('d-none')
+  }
+})
+
 async function executeGlobalSearch(query, usuarioId) {
   const resultsContainer = document.getElementById('searchResults')
   const url = `./api/api_drawers.php?id=search-${encodeURIComponent(query)}-${usuarioId}`

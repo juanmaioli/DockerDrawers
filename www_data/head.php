@@ -152,6 +152,9 @@ if ($usr_right == 1) {
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="images/ms-icon-144x144.png">
   <meta name="theme-color" content="#ffffff">
+  <script>
+    window.usuarioId = <?= $usuarioId ?>;
+  </script>
 </head>
 
 <body>
@@ -203,11 +206,12 @@ if ($usr_right == 1) {
       </ul>
       <h2 class="me-auto "><a class="text-white text-decoration-none" href="index.php">Drawers App</a></h2>
       <ul class="navbar-nav mx-auto d-none d-lg-block" style="width: 30%;">
-        <li class="nav-item">
+        <li class="nav-item position-relative">
           <div class="input-group">
             <span class="input-group-text bg-transparent border-0 text-white"><i class="fas fa-search"></i></span>
-            <input type="text" class="form-control bg-dark text-white border-secondary rounded-pill" id="globalSearchInput" placeholder="Search items or drawers..." onkeyup="if(event.key === 'Enter') startGlobalSearch()">
+            <input type="text" class="form-control bg-dark text-white border-secondary rounded-pill" id="globalSearchInput" placeholder="Search items or drawers..." onkeyup="handleSearchKeyUp(event)" autocomplete="off">
           </div>
+          <div id="autocomplete-results" class="list-group position-absolute w-100 shadow-lg d-none" style="z-index: 2000; top: 100%;"></div>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">

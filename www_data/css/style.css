@@ -18,3 +18,26 @@ input[type="file"] {display: none;}
 .separador{height:6em}
 .search:focus {outline: none;}
 /* .search{border:none;border-radius: 0px 4px 4px 0px;} */
+
+/* Autocomplete Styles */
+#autocomplete-results {
+    background-color: var(--bs-body-bg) !important;
+    opacity: 1 !important;
+}
+
+#autocomplete-results .list-group-item {
+    cursor: pointer;
+    background-color: var(--bs-tertiary-bg) !important;
+    border-color: var(--bs-border-color);
+    color: var(--bs-body-color);
+    opacity: 1 !important;
+}
+
+#autocomplete-results .list-group-item:hover,
+#autocomplete-results .list-group-item:active,
+#autocomplete-results .list-group-item:focus {
+    background-color: var(--drawers-brand) !important;
+    color: #fff !important;
+    opacity: 1 !important;
+    filter: none !important;
+}

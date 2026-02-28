@@ -156,6 +156,26 @@ try {
             echo json_encode($rawdata, JSON_UNESCAPED_UNICODE);
             $conn->close();
             exit;
+        case 'autocomplete':
+            $term = "%" . ($parametro[1] ?? '') . "%";
+            $owner = (int)($parametro[2] ?? 0);
+            $rawdata = array();
+
+            $sql = "SELECT DISTINCT name FROM (
+                        SELECT item_name as name FROM drawers_items WHERE item_owner = ? AND item_delete = 0 AND (item_name LIKE ? OR item_description LIKE ?)
+                        UNION
+                        SELECT drawer_name as name FROM drawers_drawer WHERE drawer_owner = ? AND drawer_delete = 0 AND (drawer_name LIKE ? OR drawer_description LIKE ?)
+                    ) AS combined ORDER BY name LIMIT 10";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("isssss", $owner, $term, $term, $owner, $term, $term);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while($row = $result->fetch_assoc()) $rawdata[] = $row['name'];
+            
+            echo json_encode($rawdata, JSON_UNESCAPED_UNICODE);
+            $conn->close();
+            exit;
         default:
             throw new Exception("Invalid task: " . $tarea);
     }
