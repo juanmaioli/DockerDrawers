@@ -768,16 +768,16 @@ async function getStatistics(usuarioId,totalRecords) {
   statisticsCategoryTotal.innerHTML = bodyCategoryTotal
 
   // Latest Items
-  const urlLatest = `./api/api_drawers.php?id=lastitems-4-${usuarioId}`
+  const urlLatest = `./api/api_drawers.php?id=lastitems-6-${usuarioId}`
   const responseLatest = await fetch(urlLatest)
   const latestItems = await responseLatest.json()
-  let bodyLatest = `<h6 class="text-white mb-2 fw-bold">Latest Items Added</h6><div class="row">`
+  let bodyLatest = `<h6 class="text-white mb-2 fw-bold">Latest Items Added</h6><div class="row row-cols-6">`
   
   latestItems.forEach(item => {
     bodyLatest += `
-      <div class="col-3 text-center">
+      <div class="col text-center">
         <a href="item_view.php?id=${item.item_id}&did=${item.item_drawer}" title="${item.item_name}">
-          <img src="images/item/${item.item_image}" class="img-fluid rounded-circle border border-2 border-${item.category_color}" style="width: 85px; height: 85px; object-fit: cover;">
+          <img src="images/item/${item.item_image}" class="img-fluid rounded-circle border border-2 border-${item.category_color}" style="width: 75px; height: 75px; object-fit: cover;">
         </a>
         <div class="small text-white text-truncate mt-1" style="font-size: 0.7rem;">${item.item_name}</div>
       </div>`
@@ -785,16 +785,16 @@ async function getStatistics(usuarioId,totalRecords) {
   statisticsLatestItems.innerHTML = bodyLatest + `</div>`
 
   // Fullest Drawers
-  const urlFullest = `./api/api_drawers.php?id=fullestdrawers-4-${usuarioId}`
+  const urlFullest = `./api/api_drawers.php?id=fullestdrawers-6-${usuarioId}`
   const responseFullest = await fetch(urlFullest)
   const fullestDrawers = await responseFullest.json()
-  let bodyFullest = `<h6 class="text-white mb-2 fw-bold">Fullest Drawers</h6><div class="row">`
+  let bodyFullest = `<h6 class="text-white mb-2 fw-bold">Fullest Drawers</h6><div class="row row-cols-6">`
   
   fullestDrawers.forEach(drawer => {
     bodyFullest += `
-      <div class="col-3 text-center">
+      <div class="col text-center">
         <a href="drawer_view.php?id=${drawer.drawer_id}" title="${drawer.drawer_name} (${drawer.total_items} items)">
-          <img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-3 border border-2 border-${drawer.category_color}" style="width: 85px; height: 85px; object-fit: cover;">
+          <img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-3 border border-2 border-${drawer.category_color}" style="width: 75px; height: 75px; object-fit: cover;">
         </a>
         <div class="small text-white text-truncate mt-1" style="font-size: 0.7rem;">${drawer.total_items} items</div>
       </div>`

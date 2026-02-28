@@ -42,7 +42,7 @@ if(empty($_GET['id']))
           </article>
     </section>
   </article>
-  <article class="row ms-2 me-2">
+  <article class="row ms-2 me-2 mt-2">
     <section class="col">
       <article class="card shadow-indigo-sm">
         <section class="card-header">
