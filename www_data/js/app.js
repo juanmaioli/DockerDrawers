@@ -1061,7 +1061,7 @@ async function executeGlobalSearch(query, usuarioId) {
       const imgPath = isItem ? `images/item/${res.image}` : `images/drawers/${res.image}`
       const badgeText = isItem ? 'Item' : 'Drawer'
       const badgeClass = isItem ? 'bg-info' : 'bg-secondary'
-      const subTitle = isItem ? `<br><small class="text-muted">In: ${res.drawer_name}</small>` : ''
+      const subTitle = isItem ? `<br><h5 class="text-white">In: ${res.drawer_name}</h5>` : ''
 
       html += `
                 <div class="col-md-3 mb-4">

@@ -124,7 +124,7 @@ $drawerId = $_GET['id'];
 <!-- /Container -->
 <!-- Modal Full Image-->
 <div class="modal fade" id="drawer_image_full" tabindex="-1" aria-labelledby="drawer_image_full_Label" aria-hidden="true">
-  <div class="modal-dialog  modal-fullscreen">
+  <div class="modal-dialog  modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5 text-indigo" id="drawer_image_full_Label"></h1>
