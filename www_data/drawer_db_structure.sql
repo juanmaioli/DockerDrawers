@@ -54,7 +54,10 @@ CREATE TABLE `drawers_drawer`  (
   `drawer_date` datetime NULL DEFAULT NULL,
   `drawer_update` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `drawer_delete` int(11) NULL DEFAULT 0,
-  PRIMARY KEY (`drawer_id`) USING BTREE
+  PRIMARY KEY (`drawer_id`) USING BTREE,
+  INDEX `idx_drawer_category`(`drawer_category`) USING BTREE,
+  INDEX `idx_drawer_owner`(`drawer_owner`) USING BTREE,
+  INDEX `idx_drawer_delete`(`drawer_delete`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 130 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -102,7 +105,11 @@ CREATE TABLE `drawers_items`  (
   `item_update` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `item_delete` int(11) NULL DEFAULT 0,
   `item_price` float(10, 2) NULL DEFAULT 0.00,
-  PRIMARY KEY (`item_id`) USING BTREE
+  PRIMARY KEY (`item_id`) USING BTREE,
+  INDEX `idx_item_drawer`(`item_drawer`) USING BTREE,
+  INDEX `idx_item_category`(`item_category`) USING BTREE,
+  INDEX `idx_item_owner`(`item_owner`) USING BTREE,
+  INDEX `idx_item_delete`(`item_delete`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 629 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -115,7 +122,8 @@ CREATE TABLE `drawers_session`  (
   `sess_ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NULL DEFAULT NULL,
   `sess_date` datetime NULL DEFAULT NULL,
   `sess_action` int(255) NULL DEFAULT 0 COMMENT '1 in 2 out',
-  PRIMARY KEY (`sess_id`) USING BTREE
+  PRIMARY KEY (`sess_id`) USING BTREE,
+  INDEX `idx_sess_usr`(`sess_usr`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 72 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------

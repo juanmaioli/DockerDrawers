@@ -1,113 +1,67 @@
-# 🗄️ Drawers - Gestión de Inventario
+# 🗄️ Proyecto Drawers - Gestión de Inventario
 
-**Drawers** es una aplicación web robusta y ligera diseñada para la gestión de inventarios físicos organizados en "cajones". Permite a los usuarios catalogar objetos, asignarles ubicaciones precisas, registrar precios, cantidades y adjuntar imágenes para una identificación visual rápida.
-
----
-
-## 🚀 Características Principales
-
-- **📦 Organización por Cajones:** Clasifica tus pertenencias en contenedores físicos (drawers).
-- **🏷️ Categorización Inteligente:** Agrupa ítems por categorías con colores personalizados.
-- **🖼️ Gestión Visual:** Sube fotos de tus cajones e ítems para no perder nada de vista.
-- **💰 Control de Costos:** Realiza un seguimiento del precio y valor total de tu inventario.
-- **🔐 Sistema de Usuarios:** Gestión de accesos y perfiles personalizada.
-- **🔌 API Segura:** Endpoint JSON con protección contra SQL Injection mediante sentencias preparadas.
-- **🔍 Búsqueda Inteligente:** Buscador global con autocompletado dinámico basado en nombres y descripciones.
-- **🔖 Marcadores (Bookmarks):** Guarda ítems o búsquedas frecuentes.
+¡Bienvenido a **Drawers**! Una solución moderna para la gestión de inventarios físicos organizada en "cajones" digitales.
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## 1. 🚀 Características Principales
 
-- **Backend:** PHP 8.3 (Apache) con `mysqli` Prepared Statements.
-- **Base de Datos:** MariaDB 10.11
-- **Frontend:** Bootstrap 5.3, jQuery, DataTables, Select2.
-- **Infraestructura:** Docker & Docker Compose.
-
----
-
-## 📂 Estructura del Proyecto
-
-El repositorio está organizado para separar la lógica de la aplicación del entorno de despliegue:
-
-- **`www_data/`**: Contiene el código fuente completo de la aplicación web (PHP, JS, CSS).
-  - `img_proxy.php`: Script para servir imágenes externas HTTP sobre HTTPS de forma segura.
-- **`apache_data/`**: Configuraciones personalizadas para el servidor web Apache.
-- **`db_data/`**: Directorio para la persistencia de datos de MariaDB (ignorado por Git).
-- **`php_data/`**: Archivos de configuración de PHP (`php.ini`).
-- **`Dockerfile` & `compose.yml`**: Orquestación y definición de contenedores.
+-   **📦 Organización por Cajones:** Gestioná tus ítems de forma visual y jerárquica.
+-   **🎨 Categorización con Colores:** Identificá rápidamente tus herramientas, componentes o materiales.
+-   **📈 Optimización de Rendimiento:** API refactorizada con `JOINs` complejos e índices `FULLTEXT` para búsquedas instantáneas.
+-   **⚡ Alta Velocidad:** Habilitación de OPcache en PHP y optimizaciones en la base de datos MariaDB.
+-   **🔐 Seguridad SSL:** Soporte para dominios locales `*.drawers.docker` en el puerto `8443`.
+-   **📸 Gestión de Imágenes:** Soporte para fotos de cajones e ítems.
 
 ---
 
-## ⚙️ Instalación y Despliegue
+## 2. ⚙️ Requisitos y Despliegue
 
-### Requisitos Previos
-- [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+### Requisitos:
+-   [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
+-   Un navegador moderno (Chrome, Brave, Firefox)
 
-### Pasos para el Despliegue
-
-1. **Clonar el repositorio:**
-   ```bash
-   git clone <url-del-repositorio>
-   cd Drawers
-   ```
-
-2. **Configurar la base de datos:**
-   Copia el archivo de ejemplo y ajusta las credenciales si es necesario (por defecto están configuradas para funcionar con el `compose.yml` incluido):
-   ```bash
-   cp www_data/config_example.php www_data/config.php
-   ```
-
-3. **Levantar los servicios:**
-   ```bash
-   docker compose up -d
-   ```
-
-4. **Acceder a la aplicación:**
-   Abre tu navegador en `http://localhost:8090`.
-
----
-
-## 📝 Configuración de la Base de Datos
-
-Si necesitas importar la estructura manualmente, encontrarás el archivo SQL en:
-`www_data/drawer_db_structure.sql`
-
-Las credenciales predeterminadas en `compose.yml` son:
-- **Database:** `admin_drawers`
-- **User:** `juan`
-- **Password:** `Lasflores506`
-
----
-
-## 💾 Mantenimiento de la Base de Datos
-
-### Realizar un Backup (Dump)
-Para exportar la base de datos actual a un archivo SQL:
+### Inicio Rápido:
 ```bash
-docker exec mariadb_db mariadb-dump -u juan -pLasflores506 admin_drawers > backup_drawers.sql
+# Iniciar todos los servicios
+docker compose up -d
+
+# Detener los servicios
+docker compose down
 ```
 
-### Restaurar un Backup
-Para importar un archivo SQL a la base de datos:
-```bash
-docker exec -i mariadb_db mariadb -u juan -pLasflores506 admin_drawers < backup_drawers.sql
-```
+### Acceso al Sistema:
+-   **HTTP:** [http://localhost:8090](http://localhost:8090)
+-   **HTTPS:** [https://drawers.docker:8443](https://drawers.docker:8443)
+
+> **Nota:** Recordá configurar tu archivo de hosts (`/etc/hosts`) para el dominio `drawers.docker`.
 
 ---
 
-## 🔌 API
+## 3. 🛠️ Arquitectura Técnica
 
-La aplicación expone un endpoint en `api/api_drawers.php`. Las consultas se realizan mediante parámetros GET. 
-Ejemplo para listar cajones:
-`http://localhost:8090/api/api_drawers.php?id=list-1-0`
+-   **Backend:** PHP 8.3 (Apache) con OPcache habilitado.
+-   **Base de Datos:** MariaDB 10.11 (LTS).
+-   **Frontend:** Bootstrap 5.3, JavaScript (DataTables, jQuery).
+-   **Infraestructura:** Dockerizado para un despliegue sin fricciones.
+
+---
+
+## 4. 📂 Estructura del Proyecto
+
+-   `www_data/`: Código fuente de la aplicación (PHP/JS/CSS).
+-   `apache_data/`: Configuraciones de Apache y certificados SSL.
+-   `php_data/`: Archivo `php.ini` optimizado.
+-   `db_data/`: Persistencia de la base de datos MariaDB.
 
 ---
 
-## 📄 Licencia
+## 5. 🏗️ Guía de Desarrollo
 
-Este proyecto está bajo la licencia **GNU General Public License v3.0**. Consulta el archivo [LICENSE](www_data/LICENSE) para más detalles.
+Para contribuir o modificar el sistema:
+1.  **SSL:** Consultá `SSL_CONFIG.md` para regenerar certificados.
+2.  **Base de Datos:** El esquema se encuentra en `www_data/drawer_db_structure.sql`.
+3.  **API:** Las consultas se manejan en `www_data/api/api_drawers.php`.
 
 ---
-Desarrollado con ❤️ por **Juan Gabriel Maioli**.
+*Mantenido por Juan Gabriel Maioli - Marzo 2026*

@@ -1,8 +1,8 @@
 services:
-  db:
+  drawers_mariadb:
     # Versión LTS de MariaDB para mayor estabilidad y soporte a largo plazo
     image: mariadb:10.11
-    container_name: mariadb_db
+    container_name: drawers_mariadb
     command: '--default-authentication-plugin=mysql_native_password'
     volumes:
       - ./db_data:/var/lib/mysql
@@ -17,9 +17,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    ports:
-      - "3306:3306"
-
+#    ports:
+#      - "3306:3306"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
   drawers_web:
     build:
       context: .
@@ -27,14 +31,14 @@ services:
     container_name: drawers_web
     restart: always
     depends_on:
-      db:
+      drawers_mariadb:
         condition: service_healthy
     volumes:
       - ./www_data:/var/www/html
       - ./apache_data:/etc/apache2
       - ./php_data/php.ini:/usr/local/etc/php/php.ini
     environment:
-      - DB_SERVER=db
+      - DB_SERVER=drawers_mariadb
       - DB_USER=juan
       - DB_PASS=Lasflores506
       - DB_NAME=admin_drawers
@@ -42,6 +46,10 @@ services:
     ports:
       - "8090:80"
       - "8443:443"
-
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
 volumes:
   db_data:
