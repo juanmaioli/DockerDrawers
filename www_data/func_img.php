@@ -123,11 +123,28 @@ function process_image_upload($file_input_name, $destination_dir, $new_name_pref
 
     $tmp_name = $_FILES[$file_input_name]['tmp_name'];
     $original_name = $_FILES[$file_input_name]['name'];
-    $extension = "jpg"; 
-    
-    $hash = hash('crc32', $original_name . time());
-    $unique_name = $new_name_prefix . "_" . $hash . "." . $extension;
-    
+
+    // Security check: Verify if it's a real image and allowed type
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime_type = finfo_file($finfo, $tmp_name);
+    finfo_close($finfo);
+
+    if (!in_array($mime_type, $allowed_types)) {
+        return false;
+    }
+
+    // Determine extension based on mime type
+    switch ($mime_type) {
+        case 'image/jpeg': $extension = "jpg"; break;
+        case 'image/png':  $extension = "png"; break;
+        case 'image/gif':  $extension = "gif"; break;
+        case 'image/webp': $extension = "webp"; break;
+        default: $extension = "jpg";
+    }
+
+    $hash = hash('crc32', $original_name . microtime());
+    $unique_name = $new_name_prefix . "_" . $hash . "." . $extension;    
     // Ensure destination dir has trailing slash and is absolute if possible
     $destination_dir = rtrim($destination_dir, '/') . '/';
     $full_path = $destination_dir . $unique_name;

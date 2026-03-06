@@ -44,7 +44,6 @@ services:
       - DB_NAME=admin_drawers
       - DB_PORT=3306
     ports:
-      - "8090:80"
       - "8443:443"
     deploy:
       resources:

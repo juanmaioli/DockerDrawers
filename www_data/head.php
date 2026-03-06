@@ -57,6 +57,13 @@ $csrf_token = $_SESSION['csrf_token'];
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
+/**
+ * Global HTML Escaping Function (Anti-XSS)
+ */
+function h($string) {
+    return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+}
+
 //Date to work
 $dateShow = new DateTime(date("Y-m-d H:i:s"));
 $dateForm = $dateShow->format('Y-m-d');

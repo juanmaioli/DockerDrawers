@@ -1,5 +1,19 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
+
+/**
+ * Global HTML Escaping Function (Anti-XSS)
+ */
+function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 //List Drawers
 async function drawersListCards(usuarioId,categoryId) {
   const $ = selector => document.querySelector(selector)
@@ -11,14 +25,18 @@ async function drawersListCards(usuarioId,categoryId) {
   let drawersListText = `<article class="row">`
   if(drawers.length){
     for(const drawer of drawers){
+      const dName = escapeHTML(drawer.drawer_name);
+      const dDesc = escapeHTML(drawer.drawer_description);
+      const cName = escapeHTML(drawer.category_name);
+
       drawersListText += `<section class="col card-300">
       <article class="card text-center shadow-${drawer.category_color}-md">
         <section class="card-body text-center">
-        <article class="row"><section class="col"><h4><a href="drawer_view.php?id=${drawer.drawer_id}" class="text-decoration-none text-indigo">${drawer.drawer_name}</h4></a></section></article>
-        <article class="row"><section class="col"><span class="badge rounded-pill bg-${drawer.category_color} ">${drawer.category_name}</span></section></article>
-        <article class="row mt-3"><section class="col"><img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-4 border border-2 border-${drawer.category_color} " width="120px" alt="${drawer.drawer_name}"></section></article>
+        <article class="row"><section class="col"><h4><a href="drawer_view.php?id=${drawer.drawer_id}" class="text-decoration-none text-indigo">${dName}</h4></a></section></article>
+        <article class="row"><section class="col"><span class="badge rounded-pill bg-${drawer.category_color} ">${cName}</span></section></article>
+        <article class="row mt-3"><section class="col"><img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-4 border border-2 border-${drawer.category_color} " width="120px" alt="${dName}"></section></article>
         <article class="row mt-3">
-        <section class="col text-center small fst-italic text-muted">${drawer.drawer_description}</section>
+        <section class="col text-center small fst-italic text-muted">${dDesc}</section>
         </article>
         <article class="row mt-3">
         <section class="col-3"></section>
@@ -97,9 +115,11 @@ async function drawersListTable(usuarioId,categoryId) {
         'targets': 1,
         'data': 'download_link',
         'render': function ( data, type, row ) {
+          const dName = escapeHTML(row['drawer_name']);
+          const dLoc = escapeHTML(row['drawer_location']);
           const respuesta =  `
-          <a href="drawer_view.php?id=${row['drawer_id']}" class=" text-${row['category_color']}">${row['drawer_name']}</a><br>
-          <span class="fst-italic text-muted small">(${row['drawer_location']})</span>
+          <a href="drawer_view.php?id=${row['drawer_id']}" class=" text-${row['category_color']}">${dName}</a><br>
+          <span class="fst-italic text-muted small">(${dLoc})</span>
           `
           return respuesta
         }
@@ -108,7 +128,8 @@ async function drawersListTable(usuarioId,categoryId) {
         'targets': 2,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta =  `<span class="badge rounded-pill bg-${row['category_color']}">${row['category_name']}</span>`
+          const cName = escapeHTML(row['category_name']);
+          const respuesta =  `<span class="badge rounded-pill bg-${row['category_color']}">${cName}</span>`
           return respuesta
         }
       },
@@ -116,7 +137,8 @@ async function drawersListTable(usuarioId,categoryId) {
         'targets': 3,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta =  `<span class="fst-italic text-muted">${row['drawer_description']}</span>`
+          const dDesc = escapeHTML(row['drawer_description']);
+          const respuesta =  `<span class="fst-italic text-muted">${dDesc}</span>`
           return respuesta
         }
       },
@@ -124,7 +146,7 @@ async function drawersListTable(usuarioId,categoryId) {
         'targets': 4,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const drawerContent = row['items_included'] == null ? 'Empty':row['items_included']
+          const drawerContent = row['items_included'] == null ? 'Empty': escapeHTML(row['items_included'])
           const respuesta = `<span class="small fst-italic text-muted">${drawerContent}</span>`
           return respuesta
         }

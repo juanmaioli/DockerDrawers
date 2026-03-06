@@ -10,6 +10,10 @@
 -   **🎨 Categorización con Colores:** Identificá rápidamente tus herramientas, componentes o materiales.
 -   **📈 Optimización de Rendimiento:** API refactorizada con `JOINs` complejos e índices `FULLTEXT` para búsquedas instantáneas.
 -   **⚡ Alta Velocidad:** Habilitación de OPcache en PHP y optimizaciones en la base de datos MariaDB.
+-   **🛡️ Seguridad Reforzada:** 
+    -   Validación estricta de tipos MIME en subida de archivos (prevención de RCE).
+    -   Capa global de escape Anti-XSS en frontend (JS) y backend (PHP).
+    -   Consultas protegidas con sentencias preparadas (PDO/MySQLi).
 -   **🔐 Seguridad SSL:** Soporte para dominios locales `*.drawers.docker` en el puerto `8443`.
 -   **📸 Gestión de Imágenes:** Soporte para fotos de cajones e ítems.
 
