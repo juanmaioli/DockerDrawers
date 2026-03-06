@@ -161,6 +161,7 @@ if ($usr_right == 1) {
   <meta name="theme-color" content="#ffffff">
   <script>
     window.usuarioId = <?= $usuarioId ?>;
+    window.csrfToken = "<?= $csrf_token ?>";
   </script>
 </head>
 

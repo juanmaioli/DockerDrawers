@@ -3,7 +3,7 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 include("config.php");
-
+validate_csrf();
 $conn = get_db_connection();
 
 $dateShow = new DateTime(date("Y-m-d H:i:s"));

@@ -15,6 +15,29 @@ function escapeHTML(str) {
 }
 
 //List Drawers
+function safeDelete(url, id) {
+    if (confirm('Are you sure you want to delete this item?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'id';
+        idInput.value = id;
+        form.appendChild(idInput);
+
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrf_token';
+        csrfInput.value = window.csrfToken;
+        form.appendChild(csrfInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
 async function drawersListCards(usuarioId,categoryId) {
   const $ = selector => document.querySelector(selector)
   const drawersList = $('#drawersList')
@@ -41,7 +64,7 @@ async function drawersListCards(usuarioId,categoryId) {
         <article class="row mt-3">
         <section class="col-3"></section>
         <section class="col-3 d-grid gap-2"><a href="drawer_view.php?id=${drawer.drawer_id}" class="btn btn-outline-success"><i class="fa-regular fa-eye"></i></a></section>
-        <section class="col-3 d-grid gap-2"><a href="drawer_del.php?id=${drawer.drawer_id}" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></a></section>
+        <section class="col-3 d-grid gap-2"><button onclick="safeDelete('drawer_del.php', ${drawer.drawer_id})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button></section>
         <section class="col-3"></section>pi/api_dra
         </article>
         </section>
@@ -164,8 +187,9 @@ async function drawersListTable(usuarioId,categoryId) {
         'targets': 7,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta = `<a href="drawer_view.php?id=${row['drawer_id']}" class="btn btn-outline-success m-2" title="View ${row['drawer_name']}"><i class="fa-regular fa-eye"></i></a>
-          <a href="drawer_del.php?id=${row['drawer_id']}" class="btn btn-outline-danger m-2" title="Delete ${row['drawer_name']}"><i class="fa-solid fa-trash-can"></i></a>`
+          const dName = escapeHTML(row['drawer_name']);
+          const respuesta = `<a href="drawer_view.php?id=${row['drawer_id']}" class="btn btn-outline-success m-2" title="View ${dName}"><i class="fa-regular fa-eye"></i></a>
+          <button onclick="safeDelete('drawer_del.php', ${row['drawer_id']})" class="btn btn-outline-danger m-2" title="Delete ${dName}"><i class="fa-solid fa-trash-can"></i></button>`
           return respuesta
         }
       }
@@ -312,7 +336,7 @@ async function drawerItems($drawerId, usuarioId) {
         'targets': 8,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta = `<a href="item_del.php?id=${row['item_id']}" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></a>`
+          const respuesta = `<button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button>`
           return respuesta
         }
       }
@@ -500,7 +524,7 @@ async function itemsAll(usuarioId,categoriaId) {
         'targets': 9,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta = `<div class="d-grid gap-2"><a href="item_del.php?id=${row['item_id']}" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></a></div>`
+          const respuesta = `<div class="d-grid gap-2"><button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button></div>`
           return respuesta
         }
       }
@@ -970,7 +994,10 @@ async function addItemAList(){
 
   const responseNewItem = await fetch(urlAddItem, {
     method: 'POST',
-    body: JSON.stringify({newItem:newItemName})
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `newItem=${encodeURIComponent(newItemName)}&csrf_token=${window.csrfToken}`
   })
   const newItemID =  await responseNewItem.json()
   console.log('newItemID: ', newItemID)

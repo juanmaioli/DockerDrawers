@@ -3,13 +3,7 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 include("config.php");
-session_start();
-
-// CSRF Verification
-if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die("CSRF token validation failed.");
-}
-
+validate_csrf();
 $conn = get_db_connection();
 
 $item_id_status = $_POST["item_id_status"];
