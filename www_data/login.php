@@ -1,5 +1,10 @@
 <?php
-//unset($_COOKIE['reloginID']);
+session_start();
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+
 if (empty($_GET['id'])) {
   $id = 0;
   $msg = "";
@@ -40,7 +45,8 @@ if (empty($_GET['id'])) {
       height: 100%;
     }
     body {
-      background-image: url("img_proxy.php?t=<?= time() ?>");
+      /*background-image: url("img_proxy.php?t=<?= time() ?>");*/
+      background-image: url("https://webserver.docker:5443/rnd_img/index.php?id=anime");
       background-position: center center;
       background-repeat: no-repeat;
       background-attachment: fixed;
@@ -65,7 +71,8 @@ if (empty($_GET['id'])) {
     <div class="row h-100 m-0">
       <div class="col-md-3 h-100 p-0">
         <fieldset>
-        <form ACTION="validate_login.php" name="form1" method="POST">
+        <form action="validate_login.php" name="form1" method="POST">
+          <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
           <article class="row mb-3">
             <section class="col text-center">
             <img class="img-fluid" src="images/logo.png" width="" alt="">

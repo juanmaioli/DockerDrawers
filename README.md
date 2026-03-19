@@ -13,7 +13,7 @@
 -   **🛡️ Seguridad Reforzada:** 
     -   Validación estricta de tipos MIME en subida de archivos (prevención de RCE).
     -   Capa global de escape Anti-XSS en frontend (JS) y backend (PHP).
-    -   Protección completa contra ataques CSRF en todos los formularios y acciones AJAX.
+    -   Protección completa contra ataques CSRF en todos los formularios (incluyendo Login) y acciones AJAX.
     -   Sistema de borrado seguro mediante peticiones POST validadas.
     -   Consultas protegidas con sentencias preparadas (PDO/MySQLi).
 -   **🔐 Seguridad SSL:** Soporte para dominios locales `*.drawers.docker` en el puerto `8443`.

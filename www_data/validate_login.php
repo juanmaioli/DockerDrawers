@@ -1,5 +1,6 @@
 <?php
 include("config.php");
+validate_csrf();
 
 $usr_email	= $_POST['usr_email'];
 $usr_passwd = $_POST['usr_passwd'];
