@@ -41,3 +41,56 @@ input[type="file"] {display: none;}
     opacity: 1 !important;
     filter: none !important;
 }
+
+/* =============================================
+   Select2 - Adaptación al tema Bootstrap 5.3
+   ============================================= */
+
+/* Contenedor del input (el "botón" de select2) */
+.select2-container--bootstrap-5 .select2-selection {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+/* Texto mostrado en el select cerrado */
+.select2-container--bootstrap-5 .select2-selection__rendered {
+    color: var(--bs-body-color) !important;
+}
+
+/* Placeholder del select */
+.select2-container--bootstrap-5 .select2-selection__placeholder {
+    color: var(--bs-secondary-color) !important;
+}
+
+/* Dropdown abierto - contenedor */
+.select2-container--bootstrap-5 .select2-dropdown {
+    background-color: var(--bs-body-bg) !important;
+    border-color: var(--bs-border-color) !important;
+    color: var(--bs-body-color) !important;
+}
+
+/* Campo de búsqueda dentro del dropdown */
+.select2-container--bootstrap-5 .select2-search__field {
+    background-color: var(--bs-tertiary-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+/* Opciones del listado */
+.select2-container--bootstrap-5 .select2-results__option {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+
+/* Opción hover/resaltada */
+.select2-container--bootstrap-5 .select2-results__option--highlighted {
+    background-color: var(--bs-primary) !important;
+    color: #fff !important;
+}
+
+/* Opción seleccionada actualmente */
+.select2-container--bootstrap-5 .select2-results__option--selected {
+    background-color: var(--bs-secondary-bg) !important;
+    color: var(--bs-body-color) !important;
+}

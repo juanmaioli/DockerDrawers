@@ -16,6 +16,7 @@
     -   Panel en `admin.php` para el control de la cotización del dólar blue venta, con sincronización automática desde **DolarAPI** y actualización manual.
     -   Calculadora interactiva en pesos/dólares en `item_new.php` con conversión reactiva en tiempo real y persistencia del precio final en dólares.
 -   **🎨 Categorización con Colores:** Identificá rápidamente tus herramientas, componentes o materiales.
+-   **🌗 Modo Oscuro/Claro Completo:** Switch de tema que aplica a todos los componentes, incluyendo selects de Select2 (brand, cajón y categoría), cuya paleta de colores se adapta automáticamente a través de variables CSS de Bootstrap 5.3.
 -   **📈 Optimización de Rendimiento:** API refactorizada con `JOINs` complejos e índices `FULLTEXT` para búsquedas instantáneas.
 -   **⚡ Alta Velocidad:** Habilitación de OPcache en PHP y optimizaciones en la base de datos MariaDB.
 -   **🛡️ Seguridad Reforzada:** 
@@ -56,7 +57,7 @@ docker compose down
 
 -   **Backend:** PHP 8.3 (Apache) con OPcache habilitado.
 -   **Base de Datos:** MariaDB 10.11 (LTS).
--   **Frontend:** Bootstrap 5.3, JavaScript (DataTables, jQuery).
+-   **Frontend:** Bootstrap 5.3, JavaScript (DataTables, jQuery, Select2).
 -   **Infraestructura:** Dockerizado para un despliegue sin fricciones.
 
 ---
@@ -78,4 +79,17 @@ Para contribuir o modificar el sistema:
 3.  **API:** Las consultas se manejan en `www_data/api/api_drawers.php`.
 
 ---
-*Mantenido por Juan Gabriel Maioli - Marzo 2026*
+
+## 6. 📋 Historial de Versiones
+
+| Versión | Descripción |
+| :--- | :--- |
+| `v0.8.5` | 🎨 Select2 adaptado al tema claro/oscuro con variables CSS de Bootstrap |
+| `v0.8.4` | 🐛 Corrección de guardado de marcas y mejoras en modal de marcas |
+| `v0.8.3` | 🐛 Corrección crítica de decimales en precios (`bind_param`) y carga de modelo |
+| `v0.8.2` | 🎨 Formateo visual de 2 decimales en tablas y vistas |
+| `v0.8.1` | 🐛 Corrección de CSRF en borrado de ítems |
+| `v0.8.0` | 🚀 Integración de cotización del dólar blue y calculadora de divisas |
+
+---
+*Mantenido por Juan Gabriel Maioli - Julio 2026*
