@@ -292,7 +292,7 @@ async function drawerItems($drawerId, usuarioId) {
         'targets': 8,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta = `<a href="item_del.php?id=${row['item_id']}" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></a>`
+          const respuesta = `<button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button>`
           return respuesta
         }
       }
@@ -457,7 +457,7 @@ async function itemsAll(usuarioId,categoriaId) {
         'targets': 8,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta = `<a href="item_del.php?id=${row['item_id']}" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></a>`
+          const respuesta = `<button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button>`
           return respuesta
         }
       }

@@ -105,7 +105,7 @@ $drawerId = $_GET['did'];
               </article>
               <article class="row mb-3">
                 <section class="col-md-6 text-start p-3">
-                  <a href="item_del.php?id=<?= $itemId?>" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i>&nbsp;Delete Item</a>
+                  <button type="button" onclick="safeDelete('item_del.php', <?= $itemId ?>)" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i>&nbsp;Delete Item</button>
                 </section>
                 <section class="col-md-6 text-end p-3">
                   <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Save</button>
