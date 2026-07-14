@@ -12,6 +12,9 @@
     -   Visualización de isotipo de Mercado Libre y enlace de acceso rápido a la publicación original en compras para evitar bloqueos del firewall (`PolicyAgent`).
     -   Paginación ilimitada en el backend procesada en el navegador por **DataTables**, compartiendo el mismo diseño visual de botones y exportación que la lista de ítems.
     -   Botón de **creación rápida de ítems** en el inventario prellenado con los datos del producto comprado (Nombre, cantidad, descripción y precio).
+-   **💵 Gestión de Divisas y Dólar Blue:**
+    -   Panel en `admin.php` para el control de la cotización del dólar blue venta, con sincronización automática desde **DolarAPI** y actualización manual.
+    -   Calculadora interactiva en pesos/dólares en `item_new.php` con conversión reactiva en tiempo real y persistencia del precio final en dólares.
 -   **🎨 Categorización con Colores:** Identificá rápidamente tus herramientas, componentes o materiales.
 -   **📈 Optimización de Rendimiento:** API refactorizada con `JOINs` complejos e índices `FULLTEXT` para búsquedas instantáneas.
 -   **⚡ Alta Velocidad:** Habilitación de OPcache en PHP y optimizaciones en la base de datos MariaDB.

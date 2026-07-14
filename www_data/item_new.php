@@ -6,6 +6,21 @@ $pre_name = $_GET['name'] ?? '';
 $pre_amount = isset($_GET['amount']) ? (int)$_GET['amount'] : 0;
 $pre_desc = $_GET['desc'] ?? '';
 $pre_price = isset($_GET['price']) ? (float)$_GET['price'] : 0.0;
+
+// Cargar cotización del dólar blue venta
+$conn_cfg = get_db_connection();
+$res_cfg = $conn_cfg->query("SELECT cfg_value FROM drawers_config WHERE cfg_key = 'dolar_venta'");
+$row_cfg = $res_cfg->fetch_assoc();
+$dolar_venta = (float)($row_cfg['cfg_value'] ?? 1000.00);
+$conn_cfg->close();
+
+$pre_price_usd = 0.0;
+$pre_price_ars = 0.0;
+if ($pre_price > 0) {
+    // Si viene de compras, se asume que viene en ARS.
+    $pre_price_ars = $pre_price;
+    $pre_price_usd = round($pre_price_ars / $dolar_venta, 2);
+}
 ?>
 
 <!-- Container -->
@@ -52,10 +67,16 @@ $pre_price = isset($_GET['price']) ? (float)$_GET['price'] : 0.0;
                 </section>
               </article>
               <article class="row mb-3">
-                <section class="col">
+                <section class="col-md-6 mb-3 mb-md-0">
                   <div class="form-floating">
-                    <input type='number' step='0.01' class='form-control' id='item_price' name='item_price' value='<?= h($pre_price) ?>' placeholder='item_price' title='item_price'>
-                    <label class="text-indigo " for="item_price">Price</label>
+                    <input type='number' step='0.01' class='form-control' id='item_price_ars' value='<?= $pre_price_ars > 0 ? h($pre_price_ars) : "" ?>' placeholder='Precio en Pesos (ARS)' title='Precio en Pesos (ARS)'>
+                    <label class="text-indigo " for="item_price_ars">Price (ARS)</label>
+                  </div>
+                </section>
+                <section class="col-md-6">
+                  <div class="form-floating">
+                    <input type='number' step='0.01' class='form-control' id='item_price' name='item_price' value='<?= $pre_price_usd > 0 ? h($pre_price_usd) : "" ?>' placeholder='Price in Dollars (USD)' title='Price in Dollars (USD)'>
+                    <label class="text-indigo " for="item_price">Price (USD) - Se guarda</label>
                   </div>
                 </section>
               </article>
@@ -121,4 +142,30 @@ $pre_price = isset($_GET['price']) ? (float)$_GET['price'] : 0.0;
 <script>
   categoryList('item_category')
   drawerListSelect('item_drawer',<?= $usuarioId ?>)
+
+  const valorDolar = <?= $dolar_venta ?>;
+
+  $(document).ready(function() {
+    // Escuchar cambios en pesos (ARS) para calcular dólares (USD)
+    $('#item_price_ars').on('input', function() {
+      let ars = parseFloat($(this).val());
+      if (!isNaN(ars) && ars >= 0) {
+        let usd = (ars / valorDolar).toFixed(2);
+        $('#item_price').val(usd);
+      } else {
+        $('#item_price').val('');
+      }
+    });
+
+    // Escuchar cambios en dólares (USD) para calcular pesos (ARS)
+    $('#item_price').on('input', function() {
+      let usd = parseFloat($(this).val());
+      if (!isNaN(usd) && usd >= 0) {
+        let ars = (usd * valorDolar).toFixed(2);
+        $('#item_price_ars').val(ars);
+      } else {
+        $('#item_price_ars').val('');
+      }
+    });
+  });
 </script>

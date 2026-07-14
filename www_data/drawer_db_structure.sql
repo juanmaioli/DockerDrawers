@@ -163,6 +163,18 @@ CREATE TABLE `drawers_ml_auth` (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for drawers_config
+-- ----------------------------
+DROP TABLE IF EXISTS `drawers_config`;
+CREATE TABLE `drawers_config` (
+  `cfg_key` varchar(50) NOT NULL,
+  `cfg_value` varchar(255) NULL,
+  PRIMARY KEY (`cfg_key`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
+
+INSERT INTO `drawers_config` (`cfg_key`, `cfg_value`) VALUES ('dolar_venta', '1000.00');
+
+-- ----------------------------
 -- View structure for total_price
 -- ----------------------------
 DROP VIEW IF EXISTS `total_price`;
