@@ -65,7 +65,7 @@ $drawerId = $_GET['did'];
                 </section>
                 <section class="col-2">
                   <label class="text-indigo mb-2" for="item_price">Price U$S</label>
-                  <input type='number' class='form-control text-end' id='item_price' name='item_price' value='item_price' placeholder='item_price' title='Price' min="0" value="0" step="0.01">
+                  <input type='number' class='form-control text-end' id='item_price' name='item_price' value='' placeholder='0.00' title='Price' min="0" step="0.01">
                 </section>
               </article>
               <article class="row mb-3">

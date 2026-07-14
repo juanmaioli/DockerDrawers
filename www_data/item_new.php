@@ -69,13 +69,13 @@ if ($pre_price > 0) {
               <article class="row mb-3">
                 <section class="col-md-6 mb-3 mb-md-0">
                   <div class="form-floating">
-                    <input type='number' step='0.01' class='form-control' id='item_price_ars' value='<?= $pre_price_ars > 0 ? h($pre_price_ars) : "" ?>' placeholder='Precio en Pesos (ARS)' title='Precio en Pesos (ARS)'>
+                    <input type='number' step='0.01' class='form-control' id='item_price_ars' value='<?= $pre_price_ars > 0 ? number_format($pre_price_ars, 2, '.', '') : "" ?>' placeholder='Precio en Pesos (ARS)' title='Precio en Pesos (ARS)'>
                     <label class="text-indigo " for="item_price_ars">Price (ARS)</label>
                   </div>
                 </section>
                 <section class="col-md-6">
                   <div class="form-floating">
-                    <input type='number' step='0.01' class='form-control' id='item_price' name='item_price' value='<?= $pre_price_usd > 0 ? h($pre_price_usd) : "" ?>' placeholder='Price in Dollars (USD)' title='Price in Dollars (USD)'>
+                    <input type='number' step='0.01' class='form-control' id='item_price' name='item_price' value='<?= $pre_price_usd > 0 ? number_format($pre_price_usd, 2, '.', '') : "" ?>' placeholder='Price in Dollars (USD)' title='Price in Dollars (USD)'>
                     <label class="text-indigo " for="item_price">Price (USD) - Se guarda</label>
                   </div>
                 </section>

@@ -372,6 +372,7 @@ async function itemView(itemId,usuarioId) {
     item_image_full_Label.innerHTML = item[0].item_name
     item_name.value = item[0].item_name
     item_price.value = item[0].item_price
+    console.log(item[0].item_price)
     item_amount.value = item[0].item_amount
     item_model.value = item[0].item_model
     item_description.value = item[0].item_description
@@ -518,6 +519,14 @@ async function itemsAll(usuarioId,categoriaId) {
         'render': function ( data, type, row) {
           const respuesta =  `<a href="drawer_view.php?id=${row['item_drawer']}" class="text-${row['category_color']}">${row['drawer_name']}</a>`
           return respuesta
+        }
+      },
+      {
+        'targets': 8,
+        'data': 'download_link',
+        'render': function ( data, type, row) {
+          const price = Number(row['item_price'] || 0)
+          return `$ ${price.toFixed(2)}`
         }
       },
       {
@@ -1012,7 +1021,9 @@ async function addItemAList(){
     const selectedTag = brand.brand_id== newItemID[0].newItemID ? ' selected':''
     item_brand.innerHTML += `<option class='text-muted' value="${brand.brand_id}" ${selectedTag}>${brand.brand_name}</option>`
   }
-
+  if (typeof jQuery !== 'undefined' && jQuery().select2) {
+    jQuery('#item_brand').trigger('change');
+  }
 }
 
 function startGlobalSearch() {

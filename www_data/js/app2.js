@@ -273,6 +273,14 @@ async function drawerItems($drawerId, usuarioId) {
         }
       },
       {
+        'targets': 5,
+        'data': 'download_link',
+        'render': function ( data, type, row) {
+          const price = Number(row['item_price'] || 0)
+          return `$ ${price.toFixed(2)}`
+        }
+      },
+      {
         'targets': 6,
         'data': 'download_link',
         'render': function ( data, type, row) {
@@ -314,6 +322,7 @@ async function itemView(itemId,usuarioId) {
   const item_name = $('#item_name')
   const item_price = $('#item_price')
   const item_title = $('#item_title')
+  const item_model = $('#item_model')
   const searchImage = $('#searchImage')
   const searchML = $('#searchML')
   const url = `./api/itemview-${itemId}`
@@ -327,9 +336,12 @@ async function itemView(itemId,usuarioId) {
     item_title.innerHTML = item[0].item_name
     item_image_full_Label.innerHTML = item[0].item_name
     item_name.value = item[0].item_name
-    item_price.value = item[0].item_price
+    item_price.value = parseFloat(item[0].item_price || 0).toFixed(2)
     item_amount.value = item[0].item_amount
     item_description.value = item[0].item_description
+    if (item_model) {
+      item_model.value = item[0].item_model || ''
+    }
     item_card.classList.add(`shadow-${item[0].category_color}-blur`)
     item_image.classList.add(`border-${item[0].category_color}`)
     item_image.src = `images/item/${item[0].item_image}`
@@ -352,6 +364,20 @@ async function itemView(itemId,usuarioId) {
     for(const drawer of listDrawers ){
       const selectedTag = drawer.drawer_id == item[0].item_drawer ? ' selected':''
       item_drawer.innerHTML += `<option class='text-${drawer.category_color}' value="${drawer.drawer_id}" ${selectedTag}>${drawer.drawer_name}</option>`
+    }
+
+    const rtaBrands = await fetch(`./api/api_drawers.php?id=brandlist-0`)
+    const listBrands = await rtaBrands.json()
+    const item_brand = $('#item_brand')
+    if (item_brand) {
+      item_brand.innerHTML = ''
+      for (const brand of listBrands) {
+        const selectedTag = brand.brand_id == item[0].item_brand ? ' selected' : ''
+        item_brand.innerHTML += `<option value="${brand.brand_id}" ${selectedTag}>${brand.brand_name}</option>`
+      }
+      if (typeof jQuery !== 'undefined' && jQuery().select2) {
+        jQuery('#item_brand').trigger('change')
+      }
     }
   }else{
     // window.location.href ='index.php'
@@ -443,6 +469,14 @@ async function itemsAll(usuarioId,categoriaId) {
         'render': function ( data, type, row) {
           const respuesta =  `<a href="drawer_view.php?id=${row['item_drawer']}" class="text-${row['category_color']}">${row['drawer_name']}</a>`
           return respuesta
+        }
+      },
+      {
+        'targets': 6,
+        'data': 'download_link',
+        'render': function ( data, type, row) {
+          const price = Number(row['item_price'] || 0)
+          return `$ ${price.toFixed(2)}`
         }
       },
       {

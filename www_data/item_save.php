@@ -17,9 +17,10 @@ $item_brand = $_POST["item_brand"];
 $item_model = $_POST["item_model"];
 
 if(empty($_POST['item_price'])){
-  $item_price = 0;
+  $item_price = 0.0;
 }else{
-  $item_price =$_POST["item_price"];
+  $raw_price = str_replace(',', '.', $_POST["item_price"]);
+  $item_price = (float)$raw_price;
 }
 
 $item_name = ucwords(strtolower($item_name));
@@ -37,9 +38,10 @@ if($item_id_status == 0){
 }else{
   $sql_Update = "UPDATE drawers_items SET item_name=?, item_amount = ?, item_description = ?, item_category = ?, item_drawer = ?, item_price = ?, item_brand = ?, item_model = ? WHERE item_id = ?";
   $stmt = $conn->prepare($sql_Update);
-  $stmt->bind_param("sisiiidsi", $item_name, $item_amount, $item_description, $item_category, $item_drawer, $item_price, $item_brand, $item_model, $item_id_status);
+  $stmt->bind_param("sisiidisi", $item_name, $item_amount, $item_description, $item_category, $item_drawer, $item_price, $item_brand, $item_model, $item_id_status);
   $stmt->execute();
   $stmt->close();
+
   header('Location: item_view.php?id='.$item_id_status.'&did='. $item_drawer);
 }
 $conn->close();
