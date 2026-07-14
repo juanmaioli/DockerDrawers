@@ -6,15 +6,12 @@ include("config.php");
 validate_csrf();
 $conn = get_db_connection();
 
-// Verificar si se ha enviado una solicitud POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Leer el cuerpo de la solicitud
+$newItem = $_POST['newItem'] ?? '';
+
+// Fallback por si se envía como JSON en el cuerpo de la solicitud
+if (empty($newItem) && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = file_get_contents("php://input");
-
-  // Decodificar los datos JSON
   $jsonData = json_decode($data, true);
-
-  // Acceder al valor enviado desde JavaScript
   $newItem = $jsonData['newItem'] ?? '';
 }
 

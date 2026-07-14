@@ -140,15 +140,15 @@ $drawerId = $_GET['did'];
   <div class="modal fade" id="addItemToList">
     <div class="modal-dialog ">
       <div class="modal-content">
-        <div class="modal-header alert-indigo">
-          <h5 class="modal-title" id="addItemToListTitle">Add New Item to Brand List</h5>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addItemToListTitle">Add New Brand to List</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <article class="row">
             <section class="col">
               <div class="form-group">
-                <label for="newItemName" id="labelNewItem">New Item</label>
+                <label for="newItemName" id="labelNewItem">New Brand</label>
                 <input type="text" class="form-control" id="newItemName" name="newItemName" value="" required >
               </div>
             </section>
@@ -177,6 +177,11 @@ $drawerId = $_GET['did'];
     $('#item_brand').select2({theme: 'bootstrap-5'})
     $('#item_drawer').select2({theme: 'bootstrap-5' })
     $('#item_category').select2({theme: 'bootstrap-5'})
+    
+    // Autofocus en el input 'New Item' al abrir el modal de marcas
+    $('#addItemToList').on('shown.bs.modal', function () {
+      $('#newItemName').trigger('focus');
+    });
     // $('#empleadoBaja').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevaSolicitudBajaModal') })
     // $('#empleadoAusencia').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevaAusenciaModal') })
     // $('#obraAusencia').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevaAusenciaModal') })

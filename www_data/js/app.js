@@ -372,7 +372,7 @@ async function itemView(itemId,usuarioId) {
     item_image_full_Label.innerHTML = item[0].item_name
     item_name.value = item[0].item_name
     item_price.value = item[0].item_price
-    console.log(item[0].item_price)
+    // console.log(item[0].item_price)
     item_amount.value = item[0].item_amount
     item_model.value = item[0].item_model
     item_description.value = item[0].item_description
