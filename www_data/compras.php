@@ -1,6 +1,22 @@
 <?php
 ob_start();
 include("head.php");
+?>
+<style>
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .table-responsive {
+    overflow-x: hidden !important;
+  }
+  #comprasTable th, #comprasTable td {
+    white-space: normal !important;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+</style>
+<?php
 $conn = get_db_connection();
 
 $error_msg = "";
@@ -184,7 +200,7 @@ function ml_curl_get($url, $access_token) {
         <section class="card-header">
           <article class="row align-items-center">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo mb-0"><i class="fa-brands fa-laravel text-warning me-2"></i>Compras de Mercado Libre</h3>
+              <h3 class="text-indigo mb-0">  <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="40px"> Shopping Mercado Libre</h3>
             </section>
             <section class="col-md-6 text-end">
               <?php if ($connected): ?>
@@ -194,7 +210,6 @@ function ml_curl_get($url, $access_token) {
           </article>
         </section>
         <section class="card-body">
-          
           <?php if (!empty($error_msg)): ?>
             <div class="alert alert-danger" role="alert">
               <i class="fa-solid fa-triangle-exclamation me-2"></i><?= h($error_msg) ?>
@@ -208,7 +223,7 @@ function ml_curl_get($url, $access_token) {
             </div>
           <?php elseif (!$connected): ?>
             <div class="text-center py-5">
-              <i class="fa-brands fa-shopify text-secondary fa-5x mb-4"></i>
+              <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="90px">
               <h4>Vinculá tu cuenta de Mercado Libre</h4>
               <p class="text-muted mb-4">Conectate para visualizar el listado completo de tus compras en tiempo real.</p>
               <a href="https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=<?= urlencode($ml_client_id) ?>&redirect_uri=<?= urlencode($ml_redirect_uri) ?>" class="btn btn-indigo btn-lg shadow-indigo-sm">
@@ -216,26 +231,24 @@ function ml_curl_get($url, $access_token) {
               </a>
             </div>
           <?php else: ?>
-            <div class="table-responsive">
-              <table id="comprasTable" class="table table-sm table-hover align-middle">
+              <table id="comprasTable" class="table table-sm table-hover" style="width:100%">
                 <thead class="small">
                   <tr>
-                    <th style="width: 60px;">Foto</th>
-                    <th>Producto</th>
-                    <th>Fecha</th>
-                    <th class="text-center">Cant.</th>
-                    <th class="text-end">Precio Unit.</th>
+                    <th style="width: 60px;">Photo</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th class="text-center">Qty.</th>
+                    <th class="text-end">Unit Price</th>
                     <th class="text-end">Total</th>
-                    <th class="text-center">Estado</th>
-                    <th class="text-center" style="width: 50px;">Acción</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center" style="width: 50px;">Action</th>
                   </tr>
                 </thead>
                 <tbody class="small">
                   <?php foreach ($orders as $order): ?>
-                    <?php 
+                    <?php
                       $date = new DateTime($order['date_created']);
                       $date_formatted = $date->format('Y/m/d');
-                      
                       foreach ($order['order_items'] as $oi):
                         $item_id = $oi['item']['id'] ?? '';
                         $item_link_id = $item_id;
@@ -246,12 +259,11 @@ function ml_curl_get($url, $access_token) {
                         $quantity = $oi['quantity'] ?? 1;
                         $price = $oi['unit_price'] ?? 0;
                         $total = $quantity * $price;
-                        
                     ?>
                       <tr>
                         <td class="text-center">
-                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" class="btn btn-sm btn-yellow rounded-pill shadow-sm" style="width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;" title="Ver en Mercado Libre">
-                            <i class="fa-brands fa-shopify"></i>
+                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" title="View  Mercado Libre">
+                          <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="90px">
                           </a>
                         </td>
                         <td>
@@ -288,8 +300,8 @@ function ml_curl_get($url, $access_token) {
                           ?>
                           <span class="badge <?= $badge_class ?>"><?= $status_text ?></span>
                         </td>
-                        <td class="text-center">
-                          <a href="item_new.php?did=0&name=<?= urlencode($item_title) ?>&amount=<?= urlencode($quantity) ?>&price=<?= urlencode($price) ?>&desc=<?= urlencode($item_title . ' - Compra de Mercado Libre (' . $item_id . ')') ?>" class="btn btn-success btn-sm rounded-pill shadow-sm" title="Agregar al Inventario">
+                        <td>
+                          <a href="item_new.php?did=0&name=<?= urlencode($item_title) ?>&amount=<?= urlencode($quantity) ?>&price=<?= urlencode($price) ?>&desc=<?= urlencode($item_title . ' - Compra de Mercado Libre (' . $item_id . ')') ?>" class="btn btn-outline-success w-100" title="Agregar al Inventario">
                             <i class="fa-solid fa-plus"></i>
                           </a>
                         </td>
@@ -298,7 +310,6 @@ function ml_curl_get($url, $access_token) {
                   <?php endforeach; ?>
                 </tbody>
               </table>
-            </div>
           <?php endif; ?>
 
         </section>
@@ -315,14 +326,21 @@ function ml_curl_get($url, $access_token) {
     if ($('#comprasTable').length) {
       $('#comprasTable').DataTable({
         destroy: true,
-        deferRender: false,
-        stateSave: false,
+        deferRender: true,
+        stateSave: true,
+        stateDuration: 120,
         pageLength: 20,
         order: [[2, 'desc']], // Ordenar por fecha desc por defecto
         paging: true,
         responsive: true,
         dom: 'Bfrtip',
-        buttons: ['copy', 'excel', 'print']
+        orderCellsTop: true,
+        buttons: [
+          {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
+          {extend: 'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
+          {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
+          {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
+        ]
       });
     }
   });
