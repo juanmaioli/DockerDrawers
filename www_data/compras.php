@@ -247,11 +247,12 @@ function ml_curl_get($url, $access_token) {
                         $price = $oi['unit_price'] ?? 0;
                         $total = $quantity * $price;
                         
-                        $img_url = 'images/item/default.png';
                     ?>
                       <tr>
                         <td class="text-center">
-                          <img src="<?= $img_url ?>" class="img-thumbnail item-thumb" data-item-id="<?= h($item_id) ?>" style="max-height: 45px; max-width: 45px; object-fit: contain;" alt="Thumbnail">
+                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" class="btn btn-sm btn-yellow rounded-pill shadow-sm" style="width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;" title="Ver en Mercado Libre">
+                            <i class="fa-brands fa-shopify"></i>
+                          </a>
                         </td>
                         <td>
                           <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" class="text-indigo fw-bold text-decoration-none">
@@ -323,38 +324,6 @@ function ml_curl_get($url, $access_token) {
         dom: 'Bfrtip',
         buttons: ['copy', 'excel', 'print']
       });
-
-      // Cargar imágenes asíncronamente desde el navegador del usuario (evita bloqueos de IP de servidor)
-      let itemIds = [];
-      $('.item-thumb').each(function() {
-        let itemId = $(this).data('item-id');
-        if (itemId && !itemIds.includes(itemId)) {
-          itemIds.push(itemId);
-        }
-      });
-
-      if (itemIds.length > 0) {
-        let chunks = [];
-        for (let i = 0; i < itemIds.length; i += 20) {
-          chunks.push(itemIds.slice(i, i + 20));
-        }
-
-        chunks.forEach(chunk => {
-          fetch('https://api.mercadolibre.com/items?ids=' + chunk.join(','))
-            .then(response => response.json())
-            .then(data => {
-              if (Array.isArray(data)) {
-                data.forEach(itemResult => {
-                  if (itemResult.code === 200 && itemResult.body && itemResult.body.thumbnail) {
-                    let secureThumbnail = itemResult.body.thumbnail.replace('http://', 'https://');
-                    $('.item-thumb[data-item-id="' + itemResult.body.id + '"]').attr('src', secureThumbnail);
-                  }
-                });
-              }
-            })
-            .catch(err => console.error('Error al cargar imágenes:', err));
-        });
-      }
     }
   });
 </script>

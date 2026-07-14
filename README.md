@@ -9,7 +9,7 @@
 -   **📦 Organización por Cajones:** Gestioná tus ítems de forma visual y jerárquica.
 -   **🛒 Integración con Mercado Libre:**
     -   Sincronización en tiempo real de tus compras de los últimos 90 días mediante la **API Oficial de Mercado Libre (OAuth 2.0)**.
-    -   Renderizado asíncrono de imágenes desde el frontend (JS) para evitar el bloqueo del firewall de Mercado Libre (`PolicyAgent`).
+    -   Visualización de isotipo de Mercado Libre y enlace de acceso rápido a la publicación original en compras para evitar bloqueos del firewall (`PolicyAgent`).
     -   Paginación ilimitada en el backend procesada en el navegador por **DataTables**.
     -   Botón de **creación rápida de ítems** en el inventario prellenado con los datos del producto comprado (Nombre, cantidad, descripción y precio).
 -   **🎨 Categorización con Colores:** Identificá rápidamente tus herramientas, componentes o materiales.
