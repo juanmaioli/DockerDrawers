@@ -759,11 +759,14 @@ async function getStatistics(usuarioId,totalRecords) {
   const priceToJson = await responsePrice.json()
   const fullValue = Number(priceToJson[0].total || 0)
   const totalItems = Number(priceToJson[0].total_items || 0)
+  const fullValuePesos = fullValue * (window.valorDolar || 1000.00)
+  
   statisticsPrice.innerHTML = `
-    <h5 class="text-white mb-2">Total Inventory Value</h5>
-    <h1 class="text-white display-4 fw-bold"><i class="fa-regular fa-sack-dollar"></i>&nbsp;${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'})}</h1>
-    <h5 class="text-white mb-2">Total Inventory</h5>
-    <h1 class="text-white display-4 fw-bold"><i class="fa-regular fa-boxes-stacked"></i>&nbsp;${totalItems.toLocaleString('es-AR')} Items</h1>`
+    <h5 class="text-white mb-1">Total Inventory Value</h5>
+    <h1 class="text-white display-4 fw-bold mb-1"><i class="fa-regular fa-sack-dollar"></i>&nbsp;${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'USD'})}</h1>
+    <h5 class="text-white-75 mb-2">AR${fullValuePesos.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'})}</h5>
+    <h5 class="text-white mb-1">Total Inventory</h5>
+    <h2 class="text-white display-5 fw-bold"><i class="fa-regular fa-boxes-stacked"></i>&nbsp;${totalItems.toLocaleString('es-AR')} Items</h2>`
 
   // Value by Category
   const urlCategoryPrice  = `./api/api_drawers.php?id=categoryprice-${totalRecords}`

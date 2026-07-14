@@ -98,6 +98,10 @@ if ($usuarioMail) {
     }
     $stmt->close();
 }
+$res_cfg = $conn->query("SELECT cfg_value FROM drawers_config WHERE cfg_key = 'dolar_venta'");
+$row_cfg = $res_cfg->fetch_assoc();
+$dolar_venta_global = (float)($row_cfg['cfg_value'] ?? 1000.00);
+
 $conn->close();
 
 if ($usr_right == 1) {
@@ -159,9 +163,11 @@ if ($usr_right == 1) {
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="images/ms-icon-144x144.png">
   <meta name="theme-color" content="#ffffff">
+
   <script>
     window.usuarioId = <?= $usuarioId ?>;
     window.csrfToken = "<?= $csrf_token ?>";
+    window.valorDolar = <?= $dolar_venta_global ?>;
   </script>
 </head>
 
