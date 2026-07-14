@@ -17,6 +17,11 @@
 	$site_cookie = "drawersID";
 	$contact_mail = "contact@example.com";
 
+	// Mercado Libre API Configuration
+	$ml_client_id = getenv('ML_CLIENT_ID') ?: "YOUR_ML_CLIENT_ID";
+	$ml_client_secret = getenv('ML_CLIENT_SECRET') ?: "YOUR_ML_CLIENT_SECRET";
+	$ml_redirect_uri = getenv('ML_REDIRECT_URI') ?: "https://localhost/compras.php";
+
 	/**
 	 * Centralized database connection function
 	 */

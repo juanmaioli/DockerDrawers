@@ -146,6 +146,23 @@ CREATE TABLE `drawers_usr`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for drawers_ml_auth
+-- ----------------------------
+DROP TABLE IF EXISTS `drawers_ml_auth`;
+CREATE TABLE `drawers_ml_auth` (
+  `ml_id` int(11) NOT NULL AUTO_INCREMENT,
+  `usr_id` int(11) NOT NULL,
+  `access_token` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NULL,
+  `refresh_token` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NULL,
+  `expires_at` datetime NULL DEFAULT NULL,
+  `ml_user_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ml_id`) USING BTREE,
+  INDEX `idx_ml_usr`(`usr_id`) USING BTREE,
+  CONSTRAINT `fk_ml_usr` FOREIGN KEY (`usr_id`) REFERENCES `drawers_usr` (`usr_id`) ON DELETE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- View structure for total_price
 -- ----------------------------
 DROP VIEW IF EXISTS `total_price`;

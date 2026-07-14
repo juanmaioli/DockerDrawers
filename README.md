@@ -7,6 +7,11 @@
 ## 1. 🚀 Características Principales
 
 -   **📦 Organización por Cajones:** Gestioná tus ítems de forma visual y jerárquica.
+-   **🛒 Integración con Mercado Libre:**
+    -   Sincronización en tiempo real de tus compras de los últimos 90 días mediante la **API Oficial de Mercado Libre (OAuth 2.0)**.
+    -   Renderizado asíncrono de imágenes desde el frontend (JS) para evitar el bloqueo del firewall de Mercado Libre (`PolicyAgent`).
+    -   Paginación ilimitada en el backend procesada en el navegador por **DataTables**.
+    -   Botón de **creación rápida de ítems** en el inventario prellenado con los datos del producto comprado (Nombre, cantidad, descripción y precio).
 -   **🎨 Categorización con Colores:** Identificá rápidamente tus herramientas, componentes o materiales.
 -   **📈 Optimización de Rendimiento:** API refactorizada con `JOINs` complejos e índices `FULLTEXT` para búsquedas instantáneas.
 -   **⚡ Alta Velocidad:** Habilitación de OPcache en PHP y optimizaciones en la base de datos MariaDB.

@@ -1,6 +1,11 @@
 <?php
 include("head.php");
-$drawerId = $_GET['did'];
+$drawerId = isset($_GET['did']) ? (int)$_GET['did'] : 0;
+
+$pre_name = $_GET['name'] ?? '';
+$pre_amount = isset($_GET['amount']) ? (int)$_GET['amount'] : 0;
+$pre_desc = $_GET['desc'] ?? '';
+$pre_price = isset($_GET['price']) ? (float)$_GET['price'] : 0.0;
 ?>
 
 <!-- Container -->
@@ -33,7 +38,7 @@ $drawerId = $_GET['did'];
 
                 <input id="item_owner" name="item_owner" type="hidden" value="<?= $usuarioId ?>">
                   <div class="form-floating">
-                    <input type='text' class='form-control' id='item_name' name='item_name' value='' placeholder='item_name' title='item_name'>
+                    <input type='text' class='form-control' id='item_name' name='item_name' value='<?= h($pre_name) ?>' placeholder='item_name' title='item_name'>
                     <label class="text-indigo " for="item_name">Item Name</label>
                   </div>
                 </section>
@@ -41,15 +46,23 @@ $drawerId = $_GET['did'];
               <article class="row mb-3">
                 <section class="col">
                   <div class="form-floating">
-                    <input type='number' class='form-control' id='item_amount' name='item_amount' value='0' placeholder='item_amount' title='item_amount'>
+                    <input type='number' class='form-control' id='item_amount' name='item_amount' value='<?= h($pre_amount) ?>' placeholder='item_amount' title='item_amount'>
                     <label class="text-indigo " for="item_amount">Amount</label>
                   </div>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
+                  <div class="form-floating">
+                    <input type='number' step='0.01' class='form-control' id='item_price' name='item_price' value='<?= h($pre_price) ?>' placeholder='item_price' title='item_price'>
+                    <label class="text-indigo " for="item_price">Price</label>
+                  </div>
+                </section>
+              </article>
+              <article class="row mb-3">
+                <section class="col">
                 <div class="form-floating">
-                    <textarea id='item_description' class='form-control' name='item_description' rows='5' cols='10' placeholder='item_description' title='item_description'></textarea>
+                    <textarea id='item_description' class='form-control' name='item_description' rows='5' cols='10' placeholder='item_description' title='item_description'><?= h($pre_desc) ?></textarea>
                     <label class="text-indigo " for="item_description">Description</label>
                   </div>
                 </section>
