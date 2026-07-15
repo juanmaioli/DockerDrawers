@@ -20,7 +20,7 @@
     -   Sistema de 1 a 5 estrellas interactivas en la ficha de edición del ítem (`item_view.php`).
     -   Nueva columna "Ranking" en el listado de ítems (`items.php`) totalmente ordenable para ver de forma rápida las valoraciones.
 -   **🎨 Categorización con Colores:** Identificá rápidamente tus herramientas, componentes o materiales.
--   **🌗 Modo Oscuro/Claro Completo:** Switch de tema que aplica a todos los componentes, incluyendo selects de Select2 (brand, cajón y categoría), cuya paleta de colores se adapta automáticamente a través de variables CSS de Bootstrap 5.3.
+-   **🌓 Modo Oscuro/Claro Completo:** Switch directo claro/oscuro con íconos de FontAwesome en la barra de navegación (navbar) sin menús desplegables ni textos, con memoria persistente y adaptación automática para todos los componentes (incluyendo Select2 y DataTables).
 -   **🔄 Navegación Dinámica:** Botón de regreso ("Back") inteligente en la vista de ítem, detectando el origen de la llamada para retornar adecuadamente (ya sea al cajón, al listado general o a favoritos).
 -   **📈 Optimización de Rendimiento:** API refactorizada con `JOINs` complejos e índices `FULLTEXT` para búsquedas instantáneas.
 -   **⚡ Alta Velocidad:** Habilitación de OPcache en PHP y optimizaciones en la base de datos MariaDB.
@@ -89,6 +89,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.10.0` | 🚀 Rediseño de switch de tema en navbar, integración de fondo homogéneo en cards y tablas, y insignias full-width |
 | `v0.9.1` | 🚀 Guardado automático de calificación al hacer clic y unificación de tamaño de estrellas |
 | `v0.9.0` | 🚀 Implementación de seguimiento de carga en compras, ranking de estrellas y navegación Back dinámica |
 | `v0.8.6` | 🧹 Remoción de la clase `text-indigo` de todo el proyecto para consistencia visual |

@@ -172,22 +172,6 @@ if ($usr_right == 1) {
 </head>
 
 <body>
-  <!-- Inicio Toggle modo dark -->
-  <nav class="dropdown position-fixed bottom-0 end-0 mb-5 me-3 bd-mode-toggle">
-    <button class="btn btn-indigo py-2 dropdown-toggle d-flex align-items-center" id="btn-theme" type="button" data-bs-toggle="dropdown"><i class="fa-regular fa-circle-half-stroke fa-fw"></i></button>
-    <ul class="dropdown-menu dropdown-menu-end shadow">
-      <li>
-        <button type="button" class="dropdown-item d-flex align-items-center text-white" onclick="changeTheme('light')"><i class="fa-regular fa-sun fa-fw"></i>&nbsp;Claro</button>
-      </li>
-      <li>
-        <button type="button" class="dropdown-item d-flex align-items-center text-white" onclick="changeTheme('dark')"><i class="fa-regular fa-moon-stars fa-fw"></i>&nbsp;Oscuro</button>
-      </li>
-      <li>
-        <button type="button" class="dropdown-item d-flex align-items-center text-white" onclick="changeTheme('auto')"><i class="fa-regular fa-circle-half-stroke fa-fw"></i>&nbsp;Auto</button>
-      </li>
-    </ul>
-  </nav>
-  <!-- Fin Toggle modo dark -->
   <!-- Logo -->
   <div class="d-none d-lg-block" style="width:25px;height:75px;position:fixed;left:20px;bottom:25px;z-index:10000">
     <a class="navbar-brand" href="index.php">
@@ -229,7 +213,12 @@ if ($usr_right == 1) {
           <div id="autocomplete-results" class="list-group position-absolute w-100 shadow-lg d-none" style="z-index: 2000; top: 100%;"></div>
         </li>
       </ul>
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav ml-auto align-items-center">
+        <li class="nav-item me-3" title="Cambiar tema claro/oscuro">
+          <button type="button" class="btn btn-link nav-link text-white border-0 p-0" id="btn-theme" onclick="toggleTheme()">
+            <i class="fa-regular fa-sun fa-fw fs-5"></i>
+          </button>
+        </li>
         <li class="nav-item d-none d-lg-block">
           <a class="nav-link" href='#'><img class="profile-img1 border border-primary" src="<?= $usr_image ?>"></a>
         </li>

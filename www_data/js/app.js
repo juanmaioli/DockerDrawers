@@ -512,7 +512,7 @@ async function itemsAll(usuarioId,categoriaId) {
         'targets': 4,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta =  `<span class="badge rounded-pill bg-${row['category_color']}">${row['category_name']}</span>`
+          const respuesta =  `<span class="badge rounded-pill bg-${row['category_color']} d-block w-100">${row['category_name']}</span>`
           return respuesta
         }
       },

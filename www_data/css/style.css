@@ -94,3 +94,17 @@ input[type="file"] {display: none;}
     background-color: var(--bs-secondary-bg) !important;
     color: var(--bs-body-color) !important;
 }
+
+/* =============================================
+   Card Body - Fondo igual al Card Header
+   ============================================= */
+.card-body {
+    background-color: var(--bs-card-cap-bg) !important;
+}
+
+/* Tablas dentro de card-body con el mismo fondo */
+.card-body .table,
+.card-body .table th,
+.card-body .table td {
+    background-color: var(--bs-card-cap-bg) !important;
+}
