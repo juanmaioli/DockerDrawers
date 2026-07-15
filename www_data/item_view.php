@@ -2,6 +2,21 @@
 include("head.php");
 $itemId= $_GET['id'];
 $drawerId = $_GET['did'];
+
+$back_url = "drawer_view.php?id=" . urlencode($drawerId);
+if (isset($_SERVER['HTTP_REFERER'])) {
+    $referer = $_SERVER['HTTP_REFERER'];
+    $referer_path = parse_url($referer, PHP_URL_PATH);
+    $referer_filename = basename($referer_path);
+
+    if ($referer_filename && !in_array($referer_filename, ['item_view.php', 'item_save.php', 'item_img.php'])) {
+        $_SESSION['item_view_back_url'] = $referer;
+    }
+}
+
+if (isset($_SESSION['item_view_back_url'])) {
+    $back_url = $_SESSION['item_view_back_url'];
+}
 ?>
 
 <!-- Container -->
@@ -15,7 +30,7 @@ $drawerId = $_GET['did'];
             <section class="col-md-6 text-start">
               <h3 class="" id="item_title">Drawers</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="drawer_view.php?id=<?=$drawerId?>" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
+            <section class="col-md-6 text-end"><a href="<?= h($back_url) ?>" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
           </article>
         </section>
         <section class="card-body">
@@ -103,6 +118,19 @@ $drawerId = $_GET['did'];
                   </select>
                 </section>
               </article>
+              <article class="row mb-3 align-items-center">
+                <section class="col">
+                  <label class="mb-2">Rating</label>
+                  <div class="d-flex align-items-center gap-1" id="star-rating-container">
+                    <input type="hidden" id="item_rating" name="item_rating" value="0">
+                    <?php for ($s = 1; $s <= 5; $s++): ?>
+                    <i class="fa-star fa-xl star-btn" data-value="<?= $s ?>" id="star-<?= $s ?>"
+                       style="cursor:pointer; color: #ccc;" title="<?= $s ?> estrella<?= $s > 1 ? 's' : '' ?>"></i>
+                    <?php endfor; ?>
+                    <span class="ms-2 small text-muted" id="star-label">Sin calificar</span>
+                  </div>
+                </section>
+              </article>
               <article class="row mb-3">
                 <section class="col-md-6 text-start p-3">
                   <button type="button" onclick="safeDelete('item_del.php', <?= $itemId ?>)" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i>&nbsp;Delete Item</button>
@@ -173,21 +201,51 @@ $drawerId = $_GET['did'];
   // drawerListSelect('item_drawer',<?= $usuarioId ?>)
   itemView(<?= $itemId?>,<?= $usuarioId ?>)
   // fillSelectBrand('item_brand')
+
+  // ── Star Rating (global para que app2.js pueda llamarla) ──────
+  window.setStars = function(value) {
+    value = parseInt(value) || 0;
+    $('#item_rating').val(value);
+    $('.star-btn').each(function() {
+      const v = parseInt($(this).data('value'));
+      $(this)
+        .removeClass('fa-regular fa-solid')
+        .addClass(v <= value ? 'fa-solid' : 'fa-regular')
+        .css('color', v <= value ? '#f5a623' : '#ccc');
+    });
+    $('#star-label').text(value === 0 ? 'Sin calificar' : value + ' estrella' + (value > 1 ? 's' : ''));
+  };
+
   $(document).ready(function() {
     $('#item_brand').select2({theme: 'bootstrap-5'})
     $('#item_drawer').select2({theme: 'bootstrap-5' })
     $('#item_category').select2({theme: 'bootstrap-5'})
-    
+
     // Autofocus en el input 'New Item' al abrir el modal de marcas
     $('#addItemToList').on('shown.bs.modal', function () {
       $('#newItemName').trigger('focus');
     });
-    // $('#empleadoBaja').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevaSolicitudBajaModal') })
-    // $('#empleadoAusencia').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevaAusenciaModal') })
-    // $('#obraAusencia').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevaAusenciaModal') })
-    // $('#empleadoAdicional').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevoAdicionalesModal') })
-    // $('#obraAdicional').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevoAdicionalesModal') })
-    // $('#empleadoFichada').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevaFichadaModal') })
-    // $('#obraFichada').select2({theme: 'bootstrap-5',dropdownParent: $('#nuevaFichadaModal') })
+
+    // Hover: preview
+    $(document).on('mouseenter', '.star-btn', function() {
+      const v = parseInt($(this).data('value'));
+      $('.star-btn').each(function() {
+        const sv = parseInt($(this).data('value'));
+        $(this).css('color', sv <= v ? '#f5a623' : '#ccc');
+      });
+    });
+
+    // Mouse leave: volver al valor actual
+    $('#star-rating-container').on('mouseleave', function() {
+      window.setStars($('#item_rating').val());
+    });
+
+    // Click: fijar valor
+    $(document).on('click', '.star-btn', function() {
+      const v = parseInt($(this).data('value'));
+      const current = parseInt($('#item_rating').val()) || 0;
+      // Click en la misma estrella seleccionada = reset a 0
+      window.setStars(v === current ? 0 : v);
+    });
   })
 </script>

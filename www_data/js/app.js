@@ -469,12 +469,14 @@ async function itemsAll(usuarioId,categoriaId) {
       { 'data': 'drawer_name' },//5
       // <th>Description</th> 6
       { 'data': 'item_description' },//6
-      // <th>Amount</th> 7
-      { 'data': 'item_amount' , className: 'text-center'},//7
-      // <th>Price U$S</th> 8
-      { 'data': 'item_price' , className: 'text-center'},//8
-      // <th>Delete</th> 9
-      { 'data': 'item_id' , className: 'text-center'},//9
+      // <th>Ranking</th> 7
+      { 'data': 'item_rating' , className: 'text-center'},//7
+      // <th>Amount</th> 8
+      { 'data': 'item_amount' , className: 'text-center'},//8
+      // <th>Price U$S</th> 9
+      { 'data': 'item_price' , className: 'text-center'},//9
+      // <th>Delete</th> 10
+      { 'data': 'item_id' , className: 'text-center'},//10
     ],
     columnDefs: [
       { 'width': '5%', 'targets': 0 },
@@ -484,9 +486,10 @@ async function itemsAll(usuarioId,categoriaId) {
       { 'width': '7%', 'targets': 4 },
       { 'width': '5%', 'targets': 5 },
       // { 'width': '13%', 'targets': 6 },
-      { 'width': '5%', 'targets': 7 },
+      { 'width': '8%', 'targets': 7 },
       { 'width': '5%', 'targets': 8 },
-      { 'width': '3%', 'targets': 9 },
+      { 'width': '5%', 'targets': 9 },
+      { 'width': '3%', 'targets': 10 },
       {
         'targets': 0,
         'data': 'download_link',
@@ -522,7 +525,24 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 8,
+        'targets': 7,
+        'data': 'download_link',
+        'render': function ( data, type, row ) {
+          const rating = parseInt(row['item_rating']) || 0;
+          let starsHtml = '<span style="white-space: nowrap;">';
+          for (let s = 1; s <= 5; s++) {
+            if (s <= rating) {
+              starsHtml += '<i class="fa-solid fa-star" style="color: #f5a623;"></i>';
+            } else {
+              starsHtml += '<i class="fa-regular fa-star" style="color: #ccc;"></i>';
+            }
+          }
+          starsHtml += '</span>';
+          return starsHtml;
+        }
+      },
+      {
+        'targets': 9,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const price = Number(row['item_price'] || 0)
@@ -530,7 +550,7 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 9,
+        'targets': 10,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const respuesta = `<div class="d-grid gap-2"><button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button></div>`

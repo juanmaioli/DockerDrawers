@@ -186,4 +186,20 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `total_price` AS select `
 DROP VIEW IF EXISTS `total_price_drawer`;
 CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `total_price_drawer` AS select `drawers_items`.`item_amount` * `drawers_items`.`item_price` AS `total_price`,`drawers_items`.`item_drawer` AS `drawer` from `drawers_items` where `drawers_items`.`item_delete` = 0;
 
+-- ----------------------------
+-- Table structure for drawers_compras_check
+-- ----------------------------
+DROP TABLE IF EXISTS `drawers_compras_check`;
+CREATE TABLE `drawers_compras_check` (
+  `check_id`    INT(11)      NOT NULL AUTO_INCREMENT,
+  `usr_id`      INT(11)      NOT NULL,
+  `ml_order_id` VARCHAR(64)  NOT NULL,
+  `ml_item_id`  VARCHAR(64)  NOT NULL,
+  `checked`     TINYINT(1)   NOT NULL DEFAULT 1,
+  `checked_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`check_id`),
+  UNIQUE KEY `uq_usr_order_item` (`usr_id`, `ml_order_id`, `ml_item_id`),
+  KEY `idx_cc_usr` (`usr_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;

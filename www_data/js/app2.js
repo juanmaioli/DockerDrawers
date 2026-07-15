@@ -342,6 +342,13 @@ async function itemView(itemId,usuarioId) {
     if (item_model) {
       item_model.value = item[0].item_model || ''
     }
+    // Inicializar rating: setStars es global (definida en item_view.php)
+    const ratingValue = parseInt(item[0].item_rating) || 0
+    const ratingInput = document.querySelector('#item_rating')
+    if (ratingInput) ratingInput.value = ratingValue
+    if (typeof window.setStars === 'function') {
+      window.setStars(ratingValue)
+    }
     item_card.classList.add(`shadow-${item[0].category_color}-blur`)
     item_image.classList.add(`border-${item[0].category_color}`)
     item_image.src = `images/item/${item[0].item_image}`
@@ -429,10 +436,11 @@ async function itemsAll(usuarioId,categoriaId) {
       { 'data': 'category_name' },//2
       { 'data': 'drawer_name' },//3
       { 'data': 'item_description' },//4
-      { 'data': 'item_amount' , className: 'text-center'},//5
-      { 'data': 'item_price' , className: 'text-center'},//6
-      { 'data': 'item_id' , className: 'text-center'},//7
+      { 'data': 'item_rating' , className: 'text-center'},//5
+      { 'data': 'item_amount' , className: 'text-center'},//6
+      { 'data': 'item_price' , className: 'text-center'},//7
       { 'data': 'item_id' , className: 'text-center'},//8
+      { 'data': 'item_id' , className: 'text-center'},//9
 
     ],
     columnDefs: [
@@ -472,7 +480,24 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 6,
+        'targets': 5,
+        'data': 'download_link',
+        'render': function ( data, type, row ) {
+          const rating = parseInt(row['item_rating']) || 0;
+          let starsHtml = '<span style="white-space: nowrap;">';
+          for (let s = 1; s <= 5; s++) {
+            if (s <= rating) {
+              starsHtml += '<i class="fa-solid fa-star" style="color: #f5a623;"></i>';
+            } else {
+              starsHtml += '<i class="fa-regular fa-star" style="color: #ccc;"></i>';
+            }
+          }
+          starsHtml += '</span>';
+          return starsHtml;
+        }
+      },
+      {
+        'targets': 7,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const price = Number(row['item_price'] || 0)
@@ -480,7 +505,7 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 7,
+        'targets': 8,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const respuesta = `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="btn btn-outline-success"><i class="fa-regular fa-eye"></i></a>`
@@ -488,7 +513,7 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 8,
+        'targets': 9,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const respuesta = `<button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button>`

@@ -33,6 +33,7 @@ if(empty($_GET['id']))
               <th>Category</th>
               <th>Drawer</th>
               <th>Description</th>
+              <th>Ranking</th>
               <th>Amount</th>
               <th>Price U$S</th>
               <th>Delete</th>

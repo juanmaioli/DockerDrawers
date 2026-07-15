@@ -160,6 +160,20 @@ if ($auth && $config_ready) {
     }
 }
 
+// Cargar estados de checkbox para el usuario actual
+$checked_map = [];
+if ($connected) {
+    $stmt_chk = $conn->prepare("SELECT ml_order_id, ml_item_id FROM drawers_compras_check WHERE usr_id = ? AND checked = 1");
+    $stmt_chk->bind_param("i", $usuarioId);
+    $stmt_chk->execute();
+    $res_chk = $stmt_chk->get_result();
+    while ($row_chk = $res_chk->fetch_assoc()) {
+        $map_key = $row_chk['ml_order_id'] . '_' . $row_chk['ml_item_id'];
+        $checked_map[$map_key] = true;
+    }
+    $stmt_chk->close();
+}
+
 $conn->close();
 
 // Auxiliares Curl
@@ -202,8 +216,12 @@ function ml_curl_get($url, $access_token) {
             <section class="col-md-6 text-start">
               <h3 class="mb-0">  <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="40px"> Shopping Mercado Libre</h3>
             </section>
-            <section class="col-md-6 text-end">
+            <section class="col-md-6 text-end d-flex align-items-center justify-content-end gap-3">
               <?php if ($connected): ?>
+                <div class="form-check form-switch mb-0" title="Mostrar/ocultar compras ya cargadas en inventario">
+                  <input class="form-check-input" type="checkbox" id="switchOcultarCargados" role="switch">
+                  <label class="form-check-label small" for="switchOcultarCargados">Ocultar cargados</label>
+                </div>
                 <a href="compras.php?action=disconnect" class="btn btn-danger btn-sm"><i class="fa-solid fa-link-slash me-1"></i>Desconectar Cuenta</a>
               <?php endif; ?>
             </section>
@@ -235,13 +253,14 @@ function ml_curl_get($url, $access_token) {
                 <thead class="small">
                   <tr>
                     <th style="width: 60px;">Photo</th>
+                    <th class="text-center" style="width: 70px;">Cargado</th>
+                    <th class="text-center" style="width: 50px;">Action</th>
                     <th>Product</th>
                     <th>Date</th>
                     <th class="text-center">Qty.</th>
                     <th class="text-end">Unit Price</th>
                     <th class="text-end">Total</th>
                     <th class="text-center">Status</th>
-                    <th class="text-center" style="width: 50px;">Action</th>
                   </tr>
                 </thead>
                 <tbody class="small">
@@ -266,6 +285,24 @@ function ml_curl_get($url, $access_token) {
                           <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="90px">
                           </a>
                         </td>
+                        <?php
+                          $map_key = $order['id'] . '_' . $item_id;
+                          $is_checked = isset($checked_map[$map_key]);
+                        ?>
+                        <td class="text-center">
+                          <div class="form-check d-flex justify-content-center">
+                            <input class="form-check-input compra-check fs-5" type="checkbox"
+                              data-order-id="<?= h((string)$order['id']) ?>"
+                              data-item-id="<?= h($item_id) ?>"
+                              <?= $is_checked ? 'checked' : '' ?>
+                              title="Marcar como cargado en inventario">
+                          </div>
+                        </td>
+                        <td>
+                          <a href="item_new.php?did=0&name=<?= urlencode($item_title) ?>&amount=<?= urlencode($quantity) ?>&price=<?= urlencode($price) ?>&desc=<?= urlencode($item_title . ' - Compra de Mercado Libre (' . $item_id . ')') ?>" class="btn btn-outline-success w-100" title="Agregar al Inventario">
+                            <i class="fa-solid fa-plus"></i>
+                          </a>
+                        </td>
                         <td>
                           <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" class="fw-bold text-decoration-none">
                             <?= h($item_title) ?>
@@ -282,7 +319,6 @@ function ml_curl_get($url, $access_token) {
                             $status = $order['status'] ?? 'unknown';
                             $badge_class = 'bg-secondary';
                             $status_text = $status;
-                            
                             switch ($status) {
                                 case 'paid':
                                     $badge_class = 'bg-success-subtle text-success';
@@ -299,11 +335,6 @@ function ml_curl_get($url, $access_token) {
                             }
                           ?>
                           <span class="badge <?= $badge_class ?>"><?= $status_text ?></span>
-                        </td>
-                        <td>
-                          <a href="item_new.php?did=0&name=<?= urlencode($item_title) ?>&amount=<?= urlencode($quantity) ?>&price=<?= urlencode($price) ?>&desc=<?= urlencode($item_title . ' - Compra de Mercado Libre (' . $item_id . ')') ?>" class="btn btn-outline-success w-100" title="Agregar al Inventario">
-                            <i class="fa-solid fa-plus"></i>
-                          </a>
                         </td>
                       </tr>
                     <?php endforeach; ?>
@@ -324,23 +355,67 @@ function ml_curl_get($url, $access_token) {
 <script>
   $(document).ready(function() {
     if ($('#comprasTable').length) {
-      $('#comprasTable').DataTable({
+
+      // Filtro personalizado: oculta filas con checkbox marcado
+      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex, rowData, counter) {
+        if (settings.nTable.id !== 'comprasTable') return true;
+        if (!$('#switchOcultarCargados').is(':checked')) return true;
+        const $row = $(settings.aoData[dataIndex].nTr);
+        const isChecked = $row.find('.compra-check').is(':checked');
+        return !isChecked;
+      });
+
+      const table = $('#comprasTable').DataTable({
         destroy: true,
         deferRender: true,
         stateSave: true,
         stateDuration: 120,
         pageLength: 20,
-        order: [[2, 'desc']], // Ordenar por fecha desc por defecto
+        order: [[3, 'desc']],
         paging: true,
         responsive: true,
         dom: 'Bfrtip',
         orderCellsTop: true,
+        columnDefs: [{ orderable: false, targets: [0, 1, 2] }],
         buttons: [
           {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
           {extend: 'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
           {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
-          {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
+          {extend:'print',className: 'btn btn-outline-secondary',text:'<i class="fa-regular fa-print"></i> Print'}
         ]
+      });
+
+      // Persistir estado del switch en localStorage
+      const switchEl = $('#switchOcultarCargados');
+      const savedSwitch = localStorage.getItem('compras_ocultar_cargados');
+      if (savedSwitch === '1') switchEl.prop('checked', true);
+
+      switchEl.on('change', function() {
+        localStorage.setItem('compras_ocultar_cargados', $(this).is(':checked') ? '1' : '0');
+        table.draw();
+      });
+
+      // Toggle checkbox de compra cargada
+      $(document).on('change', '.compra-check', function() {
+        const $cb     = $(this);
+        const orderId = $cb.data('order-id');
+        const itemId  = $cb.data('item-id');
+        const checked = $cb.is(':checked') ? 1 : 0;
+
+        $.post('api/compras_check.php', {
+          csrf_token:  window.csrfToken,
+          ml_order_id: orderId,
+          ml_item_id:  itemId,
+          checked:     checked
+        })
+        .done(function() {
+          // Si el switch está activo, redibujar para ocultar la fila recién marcada
+          if (switchEl.is(':checked')) table.draw();
+        })
+        .fail(function() {
+          $cb.prop('checked', !$cb.is(':checked'));
+          alert('Error al guardar el estado. Intentá nuevamente.');
+        });
       });
     }
   });

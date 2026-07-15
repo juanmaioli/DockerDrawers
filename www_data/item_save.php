@@ -15,6 +15,7 @@ $item_category = $_POST["item_category"];
 $item_drawer = $_POST["item_drawer"];
 $item_brand = $_POST["item_brand"];
 $item_model = $_POST["item_model"];
+$item_rating = max(0, min(5, (int)($_POST['item_rating'] ?? 0)));
 
 if(empty($_POST['item_price'])){
   $item_price = 0.0;
@@ -27,18 +28,18 @@ $item_name = ucwords(strtolower($item_name));
 $item_description  = ucwords(strtolower($item_description));
 
 if($item_id_status == 0){
-  $sql_Add = "INSERT INTO drawers_items (item_name, item_amount, item_description, item_category, item_owner, item_drawer, item_price, item_brand, item_model) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  $sql_Add = "INSERT INTO drawers_items (item_name, item_amount, item_description, item_category, item_owner, item_drawer, item_price, item_brand, item_model, item_rating) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   $stmt = $conn->prepare($sql_Add);
-  $stmt->bind_param("sisiiidis", $item_name, $item_amount, $item_description, $item_category, $item_owner, $item_drawer, $item_price, $item_brand, $item_model);
+  $stmt->bind_param("sisiiidisi", $item_name, $item_amount, $item_description, $item_category, $item_owner, $item_drawer, $item_price, $item_brand, $item_model, $item_rating);
   $stmt->execute();
   $item_id = $conn->insert_id;
   $stmt->close();
   header('Location: item_view.php?id='.$item_id.'&did='. $item_drawer);
 
 }else{
-  $sql_Update = "UPDATE drawers_items SET item_name=?, item_amount = ?, item_description = ?, item_category = ?, item_drawer = ?, item_price = ?, item_brand = ?, item_model = ? WHERE item_id = ?";
+  $sql_Update = "UPDATE drawers_items SET item_name=?, item_amount = ?, item_description = ?, item_category = ?, item_drawer = ?, item_price = ?, item_brand = ?, item_model = ?, item_rating = ? WHERE item_id = ?";
   $stmt = $conn->prepare($sql_Update);
-  $stmt->bind_param("sisiidisi", $item_name, $item_amount, $item_description, $item_category, $item_drawer, $item_price, $item_brand, $item_model, $item_id_status);
+  $stmt->bind_param("sisiidisii", $item_name, $item_amount, $item_description, $item_category, $item_drawer, $item_price, $item_brand, $item_model, $item_rating, $item_id_status);
   $stmt->execute();
   $stmt->close();
 
