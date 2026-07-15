@@ -10,7 +10,7 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-3 text-start">
-              <h3 class="text-indigo">Paste HTML Code</h3>
+              <h3 class="">Paste HTML Code</h3>
             </section>
           </article>
         </section>

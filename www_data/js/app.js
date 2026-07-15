@@ -55,7 +55,7 @@ async function drawersListCards(usuarioId,categoryId) {
       drawersListText += `<section class="col card-300">
       <article class="card text-center shadow-${drawer.category_color}-md">
         <section class="card-body text-center">
-        <article class="row"><section class="col"><h4><a href="drawer_view.php?id=${drawer.drawer_id}" class="text-decoration-none text-indigo">${dName}</h4></a></section></article>
+        <article class="row"><section class="col"><h4><a href="drawer_view.php?id=${drawer.drawer_id}" class="text-decoration-none">${dName}</h4></a></section></article>
         <article class="row"><section class="col"><span class="badge rounded-pill bg-${drawer.category_color} ">${cName}</span></section></article>
         <article class="row mt-3"><section class="col"><img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-4 border border-2 border-${drawer.category_color} " width="120px" alt="${dName}"></section></article>
         <article class="row mt-3">
@@ -953,8 +953,8 @@ function mmToFractionInches(mm) {
   const thousandthsOut = document.querySelector('#thousandthsOut')
   const fractionOut = document.querySelector('#fractionOut')
   const inches = mm / 25.4
-  thousandthsOut.innerHTML = `Thousandths of an Inch: <span class="text-indigo">${inches.toFixed(3) } "<span class="text-indigo">`
-  fractionOut.innerHTML = `Inches Fraction: <span class="text-indigo">${mminch(mm).toInch()} "<span class="text-indigo">`
+  thousandthsOut.innerHTML = `Thousandths of an Inch: <span class="">${inches.toFixed(3) } "<span class="">`
+  fractionOut.innerHTML = `Inches Fraction: <span class="">${mminch(mm).toInch()} "<span class="">`
 }
 async function deleteBookmark(article) {
   const url = `./api/api_drawers.php?id=deleteBookmark-${article}`
@@ -1134,7 +1134,7 @@ async function executeGlobalSearch(query, usuarioId) {
                             <div class="mb-3">
                                 <img src="${imgPath}" class="img-fluid rounded-3 border border-2 border-${res.category_color}" style="max-height: 120px; width: 120px; object-fit: cover;" alt="${res.name}">
                             </div>
-                            <h5 class="card-title"><a href="${link}" class="text-decoration-none text-indigo">${res.name}</a></h5>
+                            <h5 class="card-title"><a href="${link}" class="text-decoration-none">${res.name}</a></h5>
                             <span class="badge rounded-pill bg-${res.category_color} mb-2">${res.category_name}</span>
                             <p class="card-text small text-muted text-truncate">${res.description || ''}</p>
                             ${subTitle}

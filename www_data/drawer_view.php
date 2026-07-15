@@ -12,7 +12,7 @@ $drawerId = $_GET['id'];
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo" id="drawer_title">Drawers</h3>
+              <h3 class="" id="drawer_title">Drawers</h3>
             </section>
             <section class="col-md-6 text-end"><a href="index.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
           </article>
@@ -42,7 +42,7 @@ $drawerId = $_GET['id'];
                 <input id="drawer_owner" name="drawer_owner" type="hidden" value="<?= $usuarioId ?>">
                   <div class="form-floating">
                     <input type='text' class='form-control' id='drawer_name' name='drawer_name' value='drawer_name' placeholder='drawer_name' title='drawer_name'>
-                    <label class="text-indigo " for="drawer_name">Drawer Name</label>
+                    <label class="" for="drawer_name">Drawer Name</label>
                   </div>
                 </section>
               </article>
@@ -50,7 +50,7 @@ $drawerId = $_GET['id'];
                 <section class="col">
                   <div class="form-floating">
                     <input type='text' class='form-control' id='drawer_location' name='drawer_location' value='drawer_location' placeholder='drawer_location' title='drawer_location'>
-                    <label class="text-indigo " for="drawer_location">Location</label>
+                    <label class="" for="drawer_location">Location</label>
                   </div>
                 </section>
               </article>
@@ -58,7 +58,7 @@ $drawerId = $_GET['id'];
                 <section class="col">
                 <div class="form-floating">
                     <textarea id='drawer_description' class='form-control' name='drawer_description' rows='5' cols='10' placeholder='drawer_description' title='drawer_description'>drawer_description</textarea>
-                    <label class="text-indigo " for="drawer_description">Description</label>
+                    <label class="" for="drawer_description">Description</label>
                   </div>
                 </section>
               </article>
@@ -67,7 +67,7 @@ $drawerId = $_GET['id'];
                 <div class="form-floating">
                   <select name='drawer_category' id='drawer_category' class='form-control'>
                   </select>
-                  <label class="text-indigo " for="drawer_category">Category</label>
+                  <label class="" for="drawer_category">Category</label>
                 </div>
                 </section>
               </article>
@@ -94,7 +94,7 @@ $drawerId = $_GET['id'];
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo">Items in the Drawer</h3>
+              <h3 class="">Items in the Drawer</h3>
             </section>
             <section class="col-md-6 text-end"><a href="item_new.php?did=<?=$drawerId?>" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Add Item</a></section>
           </article>
@@ -127,7 +127,7 @@ $drawerId = $_GET['id'];
   <div class="modal-dialog  modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5 text-indigo" id="drawer_image_full_Label"></h1>
+        <h1 class="modal-title fs-5" id="drawer_image_full_Label"></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">

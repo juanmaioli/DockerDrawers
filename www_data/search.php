@@ -11,7 +11,7 @@ $query = $_GET['q'] ?? '';
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo">Search Results for: "<span id="searchQueryText"><?= htmlspecialchars($query) ?></span>"</h3>
+              <h3 class="">Search Results for: "<span id="searchQueryText"><?= htmlspecialchars($query) ?></span>"</h3>
             </section>
             <section class="col-md-6 text-end">
                 <a href="index.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a>
@@ -22,7 +22,7 @@ $query = $_GET['q'] ?? '';
           <div id="searchResults" class="row">
               <!-- Results will be loaded here via AJAX -->
               <div class="text-center p-5">
-                  <div class="spinner-border text-indigo" role="status">
+                  <div class="spinner-border" role="status">
                       <span class="visually-hidden">Loading...</span>
                   </div>
               </div>

@@ -111,7 +111,7 @@ $conn->close();
             <!-- Panel de Administración del Dólar Blue -->
             <article class="card mt-4 shadow-indigo-sm">
                 <section class="card-header">
-                    <h4 class="mb-0 text-indigo"><i class="fa-solid fa-dollar-sign me-2"></i>Cotización del Dólar Blue</h4>
+                    <h4 class="mb-0"><i class="fa-solid fa-dollar-sign me-2"></i>Cotización del Dólar Blue</h4>
                 </section>
                 <section class="card-body">
                     <?php if (!empty($success_msg)): ?>
@@ -137,7 +137,7 @@ $conn->close();
                         <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                         <input type="hidden" name="action" value="save_dolar">
                         <div class="col-auto">
-                            <label for="dolar_venta" class="col-form-label fw-bold text-indigo">Actualizar valor venta manualmente:</label>
+                            <label for="dolar_venta" class="col-form-label fw-bold">Actualizar valor venta manualmente:</label>
                         </div>
                         <div class="col-auto">
                             <div class="input-group">

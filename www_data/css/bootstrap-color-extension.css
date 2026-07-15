@@ -155,7 +155,7 @@ Copyright (c) 2023 Juan Gabriel Maioli
 .text-darkblue {color: var(--bs-darkblue) !important;}
 .text-darkgray {color: var(--bs-darkgray) !important;}
 .text-green {color: var(--bs-green) !important;}
-.text-indigo {color: var(--bs-indigo) !important;}
+.{color: var(--bs-indigo) !important;}
 .text-lemon {color: var(--bs-lemon) !important;}
 .text-lightgray {color: var(--bs-lightgray) !important;}
 .text-magenta {color: var(--bs-magenta) !important;}

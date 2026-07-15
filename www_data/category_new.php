@@ -11,7 +11,7 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo" id="item_title">Category</h3>
+              <h3 class="" id="item_title">Category</h3>
             </section>
             <section class="col-md-6 text-end"><a href="categories.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
           </article>
@@ -24,7 +24,7 @@ include("head.php");
             <input id="category_id_status" name="category_id_status" type="hidden" value="0">
               <div class="form-floating">
                 <input type='text' class='form-control' id='category_name' name='category_name' value='' placeholder='category_name' title='category_name'>
-                <label class="text-indigo " for="category_name">Category Name</label>
+                <label class="" for="category_name">Category Name</label>
               </div>
             </section>
             <section class="col-md-6">
@@ -35,7 +35,7 @@ include("head.php");
                 <option value="darkblue" class="text-darkblue">darkblue</option>
                 <option value="darkmagenta" class="text-darkmagenta">darkmagenta</option>
                 <option value="green" class="text-green">green</option>
-                <option value="indigo" class="text-indigo">indigo</option>
+                <option value="indigo" class="">indigo</option>
                 <option value="info" class="text-info">info</option>
                 <option value="lemon" class="text-lemon">lemon</option>
                 <option value="lightpink" class="text-lightpink">lightpink</option>
@@ -50,7 +50,7 @@ include("head.php");
                 <option value="warning" class="text-warning">warning</option>
                 <option value="yellow" class="text-yellow">yellow</option>
               </select>
-              <label class="text-indigo " for="category_color">Categoy Color</label>
+              <label class="" for="category_color">Categoy Color</label>
             </div>
             </section>
           </article>

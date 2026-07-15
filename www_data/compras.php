@@ -200,7 +200,7 @@ function ml_curl_get($url, $access_token) {
         <section class="card-header">
           <article class="row align-items-center">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo mb-0">  <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="40px"> Shopping Mercado Libre</h3>
+              <h3 class="mb-0">  <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="40px"> Shopping Mercado Libre</h3>
             </section>
             <section class="col-md-6 text-end">
               <?php if ($connected): ?>
@@ -267,7 +267,7 @@ function ml_curl_get($url, $access_token) {
                           </a>
                         </td>
                         <td>
-                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" class="text-indigo fw-bold text-decoration-none">
+                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" class="fw-bold text-decoration-none">
                             <?= h($item_title) ?>
                           </a>
                           <br>

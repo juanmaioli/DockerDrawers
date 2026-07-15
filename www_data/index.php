@@ -48,7 +48,7 @@ if(empty($_GET['id']))
         <section class="card-header">
           <article class="row">
             <section class="col-md-3 text-start">
-              <h3 class="text-indigo">Drawers</h3>
+              <h3 class="">Drawers</h3>
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="switchTableCard" onchange="changeView()">
                 <label class="form-check-label" id="switchTableCardLabel" for="switchTableCard" onclick="document.getElementById('switchTableCard').toogle">Change view to cards</label>

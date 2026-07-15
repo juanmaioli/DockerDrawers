@@ -10,7 +10,7 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-3 text-start">
-              <h3 class="text-indigo">Categories</h3>
+              <h3 class="">Categories</h3>
             </section>
             <section class="col-md-6 text-end"></section>
             <section class="col-md-3 text-end"><a href="category_new.php" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Add Category</a></section>

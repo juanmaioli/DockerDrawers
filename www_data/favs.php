@@ -10,7 +10,7 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-5 text-start">
-              <h3 class="text-indigo" id="totalPriceBookmark">Mercado Libre Bookmarks</h3>
+              <h3 class="" id="totalPriceBookmark">Mercado Libre Bookmarks</h3>
             </section>
             <section class="col-md-4 text-end">
               <input class="form-check-input text-purple" type="checkbox" value="" id="checkDeleted" onchange="bookmarksTable()" checked>
@@ -44,7 +44,7 @@ include("head.php");
   <div class="modal-dialog  modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5 text-indigo" id="item_image_full_Label"></h1>
+        <h1 class="modal-title fs-5" id="item_image_full_Label"></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">
@@ -59,7 +59,7 @@ include("head.php");
   <div class="modal-dialog  modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5 text-indigo" id="bookmark_modal_full_Label"></h1>
+        <h1 class="modal-title fs-5" id="bookmark_modal_full_Label"></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">
@@ -70,7 +70,7 @@ include("head.php");
             <section class="col-md-8">
             <div class="form-floating">
               <input type='text' class='form-control' id='bookmarkTitle' name='bookmarkTitle' value='bookmarkTitle' placeholder='bookmarkTitle' title='bookmarkTitle'>
-              <label class="text-indigo " for="bookmarkTitle">Bookmark</label>
+              <label class="" for="bookmarkTitle">Bookmark</label>
             </div>
             </section>
             <section class="col-md-4"><button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i></button></section>

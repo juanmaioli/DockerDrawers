@@ -18,7 +18,7 @@ if(empty($_GET['id']))
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo" id="item_title">Items</h3>
+              <h3 class="" id="item_title">Items</h3>
             </section>
             <section class="col-md-6 text-end"><a href="item_new.php?did=0" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Add Item</a></section>
           </article>
@@ -51,7 +51,7 @@ if(empty($_GET['id']))
   <div class="modal-dialog  modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5 text-indigo" id="item_image_full_Label"></h1>
+        <h1 class="modal-title fs-5" id="item_image_full_Label"></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">

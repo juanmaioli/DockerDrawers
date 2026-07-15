@@ -14,7 +14,7 @@ async function drawersListCards(usuarioId,categoryId) {
       drawersListText += `<section class="col card-300">
       <article class="card text-center shadow-${drawer.category_color}-md">
         <section class="card-body text-center">
-        <article class="row"><section class="col"><h4><a href="drawer_view.php?id=${drawer.drawer_id}" class="text-decoration-none text-indigo">${drawer.drawer_name}</h4></a></section></article>
+        <article class="row"><section class="col"><h4><a href="drawer_view.php?id=${drawer.drawer_id}" class="text-decoration-none">${drawer.drawer_name}</h4></a></section></article>
         <article class="row"><section class="col"><span class="badge rounded-pill bg-${drawer.category_color} ">${drawer.category_name}</span></section></article>
         <article class="row mt-3"><section class="col"><img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-4 border border-2 border-${drawer.category_color} " width="120px" alt="${drawer.drawer_name}"></section></article>
         <article class="row mt-3">
@@ -753,6 +753,6 @@ function mmToFractionInches(mm) {
   const thousandthsOut = document.querySelector('#thousandthsOut')
   const fractionOut = document.querySelector('#fractionOut')
   const inches = mm / 25.4
-  thousandthsOut.innerHTML = `Thousandths of an Inch: <span class="text-indigo">${inches.toFixed(3) } "<span class="text-indigo">`
-  fractionOut.innerHTML = `Inches Fraction: <span class="text-indigo">${mminch(mm).toInch()} "<span class="text-indigo">`
+  thousandthsOut.innerHTML = `Thousandths of an Inch: <span class="">${inches.toFixed(3) } "<span class="">`
+  fractionOut.innerHTML = `Inches Fraction: <span class="">${mminch(mm).toInch()} "<span class="">`
 }

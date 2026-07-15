@@ -40,7 +40,7 @@ $conn->close();
       <section class="card-header">
         <article class="row">
           <section class="col-md-3 text-start">
-            <h3 class="text-indigo">Convert MM to Inches</h3>
+            <h3 class="">Convert MM to Inches</h3>
           </section>
           <section class="col-md-9 text-end"></section>
         </article>
@@ -71,7 +71,7 @@ $conn->close();
       <section class="card-header">
         <article class="row">
           <section class="col-md-3 text-start">
-            <h3 class="text-indigo">Table Inches to MM</h3>
+            <h3 class="">Table Inches to MM</h3>
           </section>
           <section class="col-md-9 text-end"></section>
         </article>

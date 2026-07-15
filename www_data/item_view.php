@@ -13,7 +13,7 @@ $drawerId = $_GET['did'];
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo" id="item_title">Drawers</h3>
+              <h3 class="" id="item_title">Drawers</h3>
             </section>
             <section class="col-md-6 text-end"><a href="drawer_view.php?id=<?=$drawerId?>" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
           </article>
@@ -56,21 +56,21 @@ $drawerId = $_GET['did'];
                 <section class="col">
                   <input id="item_id_status" name="item_id_status" type="hidden" value="<?= $itemId?>">
                   <input id="item_owner" name="item_owner" type="hidden" value="<?= $usuarioId ?>">
-                  <label class="text-indigo mb-2" for="item_name">Item Name</label>
+                  <label class="mb-2" for="item_name">Item Name</label>
                   <input type='text' class='form-control' id='item_name' name='item_name' value='' placeholder='item_name' title='Name'>
                 </section>
                 <section class="col-2">
-                  <label class="text-indigo mb-2" for="item_amount">Amount</label>
+                  <label class="mb-2" for="item_amount">Amount</label>
                   <input type='number' class='form-control text-end' id='item_amount' name='item_amount' value='0' placeholder='item_amount' title='Amount'>
                 </section>
                 <section class="col-2">
-                  <label class="text-indigo mb-2" for="item_price">Price U$S</label>
+                  <label class="mb-2" for="item_price">Price U$S</label>
                   <input type='number' class='form-control text-end' id='item_price' name='item_price' value='' placeholder='0.00' title='Price' min="0" step="0.01">
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
-                  <label class="text-indigo mb-2" for="item_brand">Brand</label>
+                  <label class="mb-2" for="item_brand">Brand</label>
                   <section class="input-group">
                     <select name='item_brand' id='item_brand' class='form-control' title='Brand'>
                     </select>
@@ -80,25 +80,25 @@ $drawerId = $_GET['did'];
                   </section>
                 </section>
                 <section class="col">
-                  <label class="text-indigo mb-2" for="item_model">Model</label>
+                  <label class="mb-2" for="item_model">Model</label>
                   <input type='text' class='form-control' id='item_model' name='item_model' value='' placeholder='Model' title='Model'>
                 </section>
               </article>
 
               <article class="row mb-3">
                 <section class="col-12">
-                  <label class="text-indigo mb-2" for="item_description">Description</label>
+                  <label class="mb-2" for="item_description">Description</label>
                   <textarea id='item_description' class='form-control' name='item_description' rows='2' placeholder='Description' title='Description'>Description</textarea>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col-6">
-                  <label class="text-indigo mb-2" for="item_category">Category</label>
+                  <label class="mb-2" for="item_category">Category</label>
                   <select name='item_category' id='item_category' class='form-control' title='Category'>
                   </select>
                 </section>
                 <section class="col-6">
-                  <label class="text-indigo mb-2" for="item_drawer">Actual Drawer > Move to</label>
+                  <label class="mb-2" for="item_drawer">Actual Drawer > Move to</label>
                   <select name='item_drawer' id='item_drawer' class='form-control  mb-3' title='Actual Drawer'>
                   </select>
                 </section>
@@ -126,7 +126,7 @@ $drawerId = $_GET['did'];
   <div class="modal-dialog  modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5 text-indigo" id="item_image_full_Label"></h1>
+        <h1 class="modal-title fs-5" id="item_image_full_Label"></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">

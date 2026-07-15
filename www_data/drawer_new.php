@@ -11,7 +11,7 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="text-indigo" id="drawer_title">New Drawer</h3>
+              <h3 class="" id="drawer_title">New Drawer</h3>
             </section>
             <section class="col-md-6 text-end"><a href="index.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
           </article>
@@ -30,7 +30,7 @@ include("head.php");
                 <section class="col">
                   <div class="form-floating">
                     <input type='text' class='form-control' id='drawer_name' name='drawer_name' value='' placeholder='drawer_name' title='drawer_name'>
-                    <label class="text-indigo " for="drawer_name">Drawer Name</label>
+                    <label class="" for="drawer_name">Drawer Name</label>
                   </div>
                 </section>
               </article>
@@ -38,7 +38,7 @@ include("head.php");
                 <section class="col">
                   <div class="form-floating">
                     <input type='text' class='form-control' id='drawer_location' name='drawer_location' value='' placeholder='drawer_location' title='drawer_location'>
-                    <label class="text-indigo " for="drawer_location">Location</label>
+                    <label class="" for="drawer_location">Location</label>
                   </div>
                 </section>
               </article>
@@ -46,7 +46,7 @@ include("head.php");
                 <section class="col">
                 <div class="form-floating">
                     <textarea id='drawer_description' class='form-control' name='drawer_description' rows='5' cols='10' placeholder='drawer_description' title='drawer_description'></textarea>
-                    <label class="text-indigo " for="drawer_description">Description</label>
+                    <label class="" for="drawer_description">Description</label>
                   </div>
                 </section>
               </article>
@@ -55,7 +55,7 @@ include("head.php");
                 <div class="form-floating">
                   <select name='drawer_category' id='drawer_category' class='form-control'>
                   </select>
-                  <label class="text-indigo " for="drawer_category">Category</label>
+                  <label class="" for="drawer_category">Category</label>
                 </div>
                 </section>
               </article>
