@@ -376,6 +376,13 @@ async function itemView(itemId,usuarioId) {
     item_amount.value = item[0].item_amount
     item_model.value = item[0].item_model
     item_description.value = item[0].item_description
+    // Inicializar rating: setStars es global (definida en item_view.php)
+    const ratingValue = parseInt(item[0].item_rating) || 0;
+    const ratingInput = document.querySelector('#item_rating');
+    if (ratingInput) ratingInput.value = ratingValue;
+    if (typeof window.setStars === 'function') {
+      window.setStars(ratingValue);
+    }
     item_card.classList.add(`shadow-${item[0].category_color}-blur`)
     item_image.classList.add(`border-${item[0].category_color}`)
     const timestamp = new Date().getTime()
@@ -469,14 +476,12 @@ async function itemsAll(usuarioId,categoriaId) {
       { 'data': 'drawer_name' },//5
       // <th>Description</th> 6
       { 'data': 'item_description' },//6
-      // <th>Ranking</th> 7
-      { 'data': 'item_rating' , className: 'text-center'},//7
-      // <th>Amount</th> 8
-      { 'data': 'item_amount' , className: 'text-center'},//8
-      // <th>Price U$S</th> 9
-      { 'data': 'item_price' , className: 'text-center'},//9
-      // <th>Delete</th> 10
-      { 'data': 'item_id' , className: 'text-center'},//10
+      // <th>Amount</th> 7
+      { 'data': 'item_amount' , className: 'text-center'},//7
+      // <th>Price U$S</th> 8
+      { 'data': 'item_price' , className: 'text-center'},//8
+      // <th>Delete</th> 9
+      { 'data': 'item_id' , className: 'text-center'},//9
     ],
     columnDefs: [
       { 'width': '5%', 'targets': 0 },
@@ -486,17 +491,16 @@ async function itemsAll(usuarioId,categoriaId) {
       { 'width': '7%', 'targets': 4 },
       { 'width': '5%', 'targets': 5 },
       // { 'width': '13%', 'targets': 6 },
-      { 'width': '8%', 'targets': 7 },
+      { 'width': '5%', 'targets': 7 },
       { 'width': '5%', 'targets': 8 },
-      { 'width': '5%', 'targets': 9 },
-      { 'width': '3%', 'targets': 10 },
+      { 'width': '3%', 'targets': 9 },
       {
         'targets': 0,
         'data': 'download_link',
         'render': function ( data, type, row) {
           let srcIMG = 'default.png'
           if (row['item_image'].length > 0){srcIMG = `${row['item_image']}`}
-          const respuesta =  `<img class="border border-${row['category_color']} mb-3 rounded-circle" src="images/item/${srcIMG}" alt="" width="90px">`
+          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}"><img class="border border-${row['category_color']} mb-3 rounded-circle" src="images/item/${srcIMG}" alt="" width="90px"></a>`
           return respuesta
         }
       },
@@ -504,7 +508,17 @@ async function itemsAll(usuarioId,categoriaId) {
         'targets': 1,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta =  `<div class="d-grid gap-2"><a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-${row['category_color']}">${row['item_name']}</a></div>`
+          const rating = parseInt(row['item_rating']) || 0;
+          let starsHtml = '<br><span style="white-space: nowrap;">';
+          for (let s = 1; s <= 5; s++) {
+            if (s <= rating) {
+              starsHtml += '<i class="fa-solid fa-star" style="color: #f5a623; font-size: 0.85rem;"></i>';
+            } else {
+              starsHtml += '<i class="fa-regular fa-star" style="color: #ccc; font-size: 0.85rem;"></i>';
+            }
+          }
+          starsHtml += '</span>';
+          const respuesta =  `<div class="d-grid gap-2"><a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-${row['category_color']}">${row['item_name']}</a>${starsHtml}</div>`
           return respuesta
         }
       },
@@ -525,24 +539,7 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 7,
-        'data': 'download_link',
-        'render': function ( data, type, row ) {
-          const rating = parseInt(row['item_rating']) || 0;
-          let starsHtml = '<span style="white-space: nowrap;">';
-          for (let s = 1; s <= 5; s++) {
-            if (s <= rating) {
-              starsHtml += '<i class="fa-solid fa-star" style="color: #f5a623;"></i>';
-            } else {
-              starsHtml += '<i class="fa-regular fa-star" style="color: #ccc;"></i>';
-            }
-          }
-          starsHtml += '</span>';
-          return starsHtml;
-        }
-      },
-      {
-        'targets': 9,
+        'targets': 8,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const price = Number(row['item_price'] || 0)
@@ -550,7 +547,7 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 10,
+        'targets': 9,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const respuesta = `<div class="d-grid gap-2"><button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button></div>`

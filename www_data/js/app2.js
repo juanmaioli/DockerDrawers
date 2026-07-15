@@ -436,11 +436,10 @@ async function itemsAll(usuarioId,categoriaId) {
       { 'data': 'category_name' },//2
       { 'data': 'drawer_name' },//3
       { 'data': 'item_description' },//4
-      { 'data': 'item_rating' , className: 'text-center'},//5
-      { 'data': 'item_amount' , className: 'text-center'},//6
-      { 'data': 'item_price' , className: 'text-center'},//7
+      { 'data': 'item_amount' , className: 'text-center'},//5
+      { 'data': 'item_price' , className: 'text-center'},//6
+      { 'data': 'item_id' , className: 'text-center'},//7
       { 'data': 'item_id' , className: 'text-center'},//8
-      { 'data': 'item_id' , className: 'text-center'},//9
 
     ],
     columnDefs: [
@@ -451,7 +450,7 @@ async function itemsAll(usuarioId,categoriaId) {
         'render': function ( data, type, row) {
           let srcIMG = 'default.png'
           if (row['item_image'].length > 0){srcIMG = `${row['item_image']}`}
-          const respuesta =  `<img class="border border-${row['category_color']} mb-3 rounded-circle" src="images/item/${srcIMG}" alt="" width="90px">`
+          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}"><img class="border border-${row['category_color']} mb-3 rounded-circle" src="images/item/${srcIMG}" alt="" width="90px"></a>`
           return respuesta
         }
       },
@@ -459,7 +458,17 @@ async function itemsAll(usuarioId,categoriaId) {
         'targets': 1,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-${row['category_color']}">${row['item_name']}</a>`
+          const rating = parseInt(row['item_rating']) || 0;
+          let starsHtml = '<br><span style="white-space: nowrap;">';
+          for (let s = 1; s <= 5; s++) {
+            if (s <= rating) {
+              starsHtml += '<i class="fa-solid fa-star" style="color: #f5a623; font-size: 0.85rem;"></i>';
+            } else {
+              starsHtml += '<i class="fa-regular fa-star" style="color: #ccc; font-size: 0.85rem;"></i>';
+            }
+          }
+          starsHtml += '</span>';
+          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-${row['category_color']}">${row['item_name']}</a>${starsHtml}`
           return respuesta
         }
       },
@@ -480,24 +489,7 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 5,
-        'data': 'download_link',
-        'render': function ( data, type, row ) {
-          const rating = parseInt(row['item_rating']) || 0;
-          let starsHtml = '<span style="white-space: nowrap;">';
-          for (let s = 1; s <= 5; s++) {
-            if (s <= rating) {
-              starsHtml += '<i class="fa-solid fa-star" style="color: #f5a623;"></i>';
-            } else {
-              starsHtml += '<i class="fa-regular fa-star" style="color: #ccc;"></i>';
-            }
-          }
-          starsHtml += '</span>';
-          return starsHtml;
-        }
-      },
-      {
-        'targets': 7,
+        'targets': 6,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const price = Number(row['item_price'] || 0)
@@ -505,7 +497,7 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 8,
+        'targets': 7,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const respuesta = `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="btn btn-outline-success"><i class="fa-regular fa-eye"></i></a>`
@@ -513,7 +505,7 @@ async function itemsAll(usuarioId,categoriaId) {
         }
       },
       {
-        'targets': 9,
+        'targets': 8,
         'data': 'download_link',
         'render': function ( data, type, row) {
           const respuesta = `<button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button>`

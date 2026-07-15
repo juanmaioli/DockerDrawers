@@ -282,7 +282,7 @@ function ml_curl_get($url, $access_token) {
                       <tr>
                         <td class="text-center">
                           <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" title="View  Mercado Libre">
-                          <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="90px">
+                          <img class="border border-lemon rounded-circle" src="images/ml.svg" alt="" width="40px">
                           </a>
                         </td>
                         <?php
@@ -290,6 +290,7 @@ function ml_curl_get($url, $access_token) {
                           $is_checked = isset($checked_map[$map_key]);
                         ?>
                         <td class="text-center">
+                          <span class="d-none"><?= $is_checked ? '1' : '0' ?></span>
                           <div class="form-check d-flex justify-content-center">
                             <input class="form-check-input compra-check fs-5" type="checkbox"
                               data-order-id="<?= h((string)$order['id']) ?>"
@@ -376,12 +377,12 @@ function ml_curl_get($url, $access_token) {
         responsive: true,
         dom: 'Bfrtip',
         orderCellsTop: true,
-        columnDefs: [{ orderable: false, targets: [0, 1, 2] }],
+        columnDefs: [{ orderable: false, targets: [0, 2] }],
         buttons: [
           {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
           {extend: 'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
           {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
-          {extend:'print',className: 'btn btn-outline-secondary',text:'<i class="fa-regular fa-print"></i> Print'}
+          {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
         ]
       });
 
@@ -402,6 +403,15 @@ function ml_curl_get($url, $access_token) {
         const itemId  = $cb.data('item-id');
         const checked = $cb.is(':checked') ? 1 : 0;
 
+        // Actualizar el span oculto para el ordenamiento de DataTables
+        const $cell = $cb.closest('td');
+        $cell.find('span.d-none').text(checked);
+
+        // Notificar a DataTables que la celda cambió para que invalide la cache
+        if (typeof table !== 'undefined') {
+          table.cell($cell).invalidate();
+        }
+
         $.post('api/compras_check.php', {
           csrf_token:  window.csrfToken,
           ml_order_id: orderId,
@@ -410,10 +420,17 @@ function ml_curl_get($url, $access_token) {
         })
         .done(function() {
           // Si el switch está activo, redibujar para ocultar la fila recién marcada
-          if (switchEl.is(':checked')) table.draw();
+          if (switchEl.is(':checked')) {
+            table.draw();
+          } else {
+            // Si no se oculta, redibujar sin perder paginación para aplicar ordenamiento si corresponde
+            table.draw(false);
+          }
         })
         .fail(function() {
           $cb.prop('checked', !$cb.is(':checked'));
+          $cell.find('span.d-none').text(checked ? 0 : 1);
+          if (typeof table !== 'undefined') table.cell($cell).invalidate().draw(false);
           alert('Error al guardar el estado. Intentá nuevamente.');
         });
       });
