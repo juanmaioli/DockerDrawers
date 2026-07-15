@@ -18,24 +18,24 @@ if(empty($_GET['id']))
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="" id="item_title">Items</h3>
+              <h3 class="" id="item_title">Ítems</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="item_new.php?did=0" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Add Item</a></section>
+            <section class="col-md-6 text-end"><a href="item_new.php?did=0" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Agregar Ítem</a></section>
           </article>
         </section>
         <section class="card-body">
           <table id="item_all_table" class="table table-sm table-hover" style="width:100%">
             <thead class="small">
               <th></th>
-              <th>Name</th>
-              <th>Brand</th>
-              <th>Model</th>
-              <th>Category</th>
-              <th>Drawer</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Price U$S</th>
-              <th>Delete</th>
+              <th>Nombre</th>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>Categoría</th>
+              <th>Cajón</th>
+              <th>Descripción</th>
+              <th>Cantidad</th>
+              <th>Precio U$S</th>
+              <th>Eliminar</th>
             </thead>
             <tbody class="small">
             </tbody>

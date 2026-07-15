@@ -12,9 +12,9 @@ $drawerId = $_GET['id'];
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="" id="drawer_title">Drawers</h3>
+              <h3 class="" id="drawer_title">Detalle del Cajón</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="index.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
+            <section class="col-md-6 text-end"><a href="index.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Volver</a></section>
           </article>
         </section>
         <section class="card-body">
@@ -28,7 +28,7 @@ $drawerId = $_GET['id'];
                   <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                   <input id="drawer_id" name="drawer_id" type="hidden" value="<?= $drawerId ?>">
                   <label for="file-upload" class="custom-file-upload btn btn-indigo m-2">
-                  <i class="fa-regular fa-cloud-upload-alt"></i>&nbsp;Change Image</label>
+                  <i class="fa-regular fa-cloud-upload-alt"></i>&nbsp;Cambiar Imagen</label>
                   <input id="file-upload" name="file-upload" type="file" accept=".jpeg, .jpg" onChange="this.form.submit()">
                 </form>
               </div>
@@ -41,24 +41,24 @@ $drawerId = $_GET['id'];
                 <input id="drawer_id_status" name="drawer_id_status" type="hidden" value="<?= $drawerId ?>">
                 <input id="drawer_owner" name="drawer_owner" type="hidden" value="<?= $usuarioId ?>">
                   <div class="form-floating">
-                    <input type='text' class='form-control' id='drawer_name' name='drawer_name' value='drawer_name' placeholder='drawer_name' title='drawer_name'>
-                    <label class="" for="drawer_name">Drawer Name</label>
+                    <input type='text' class='form-control' id='drawer_name' name='drawer_name' value='drawer_name' placeholder='Nombre del Cajón' title='Nombre del Cajón'>
+                    <label class="" for="drawer_name">Nombre del Cajón</label>
                   </div>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
                   <div class="form-floating">
-                    <input type='text' class='form-control' id='drawer_location' name='drawer_location' value='drawer_location' placeholder='drawer_location' title='drawer_location'>
-                    <label class="" for="drawer_location">Location</label>
+                    <input type='text' class='form-control' id='drawer_location' name='drawer_location' value='drawer_location' placeholder='Ubicación' title='Ubicación'>
+                    <label class="" for="drawer_location">Ubicación</label>
                   </div>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
                 <div class="form-floating">
-                    <textarea id='drawer_description' class='form-control' name='drawer_description' rows='5' cols='10' placeholder='drawer_description' title='drawer_description'>drawer_description</textarea>
-                    <label class="" for="drawer_description">Description</label>
+                    <textarea id='drawer_description' class='form-control' name='drawer_description' rows='5' cols='10' placeholder='Descripción' title='Descripción'>drawer_description</textarea>
+                    <label class="" for="drawer_description">Descripción</label>
                   </div>
                 </section>
               </article>
@@ -67,16 +67,16 @@ $drawerId = $_GET['id'];
                 <div class="form-floating">
                   <select name='drawer_category' id='drawer_category' class='form-control'>
                   </select>
-                  <label class="" for="drawer_category">Category</label>
+                  <label class="" for="drawer_category">Categoría</label>
                 </div>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col-md-6 text-start p-3">
-                  <a href="drawer_del.php?id=<?= $drawerId ?>" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i>&nbsp;Delete Drawer</a>
+                  <a href="drawer_del.php?id=<?= $drawerId ?>" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i>&nbsp;Eliminar Cajón</a>
                 </section>
                 <section class="col-md-6 text-end p-3">
-                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Save</button>
+                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Guardar</button>
                 </section>
               </article>
             </form>
@@ -94,23 +94,23 @@ $drawerId = $_GET['id'];
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="">Items in the Drawer</h3>
+              <h3 class="">Ítems en el Cajón</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="item_new.php?did=<?=$drawerId?>" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Add Item</a></section>
+            <section class="col-md-6 text-end"><a href="item_new.php?did=<?=$drawerId?>" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Agregar Ítem</a></section>
           </article>
         </section>
         <section class="card-body">
         <table id="drawer_item_table" class="table table-sm table-hover" style="width:100%">
           <thead class="small">
             <th></th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Price U$S</th>
-            <th>Total Items Price U$S</th>
-            <th>View</th>
-            <th>Delete</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Precio U$S</th>
+            <th>Precio Total U$S</th>
+            <th>Ver</th>
+            <th>Eliminar</th>
           </thead>
           <tbody class="small">
           </tbody>

@@ -11,9 +11,9 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="" id="drawer_title">New Drawer</h3>
+              <h3 class="" id="drawer_title">Nuevo Cajón</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="index.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
+            <section class="col-md-6 text-end"><a href="index.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Volver</a></section>
           </article>
         </section>
         <section class="card-body">
@@ -29,24 +29,24 @@ include("head.php");
               <article class="row mb-3">
                 <section class="col">
                   <div class="form-floating">
-                    <input type='text' class='form-control' id='drawer_name' name='drawer_name' value='' placeholder='drawer_name' title='drawer_name'>
-                    <label class="" for="drawer_name">Drawer Name</label>
+                    <input type='text' class='form-control' id='drawer_name' name='drawer_name' value='' placeholder='Nombre del Cajón' title='Nombre del Cajón'>
+                    <label class="" for="drawer_name">Nombre del Cajón</label>
                   </div>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
                   <div class="form-floating">
-                    <input type='text' class='form-control' id='drawer_location' name='drawer_location' value='' placeholder='drawer_location' title='drawer_location'>
-                    <label class="" for="drawer_location">Location</label>
+                    <input type='text' class='form-control' id='drawer_location' name='drawer_location' value='' placeholder='Ubicación' title='Ubicación'>
+                    <label class="" for="drawer_location">Ubicación</label>
                   </div>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
                 <div class="form-floating">
-                    <textarea id='drawer_description' class='form-control' name='drawer_description' rows='5' cols='10' placeholder='drawer_description' title='drawer_description'></textarea>
-                    <label class="" for="drawer_description">Description</label>
+                    <textarea id='drawer_description' class='form-control' name='drawer_description' rows='5' cols='10' placeholder='Descripción' title='Descripción'></textarea>
+                    <label class="" for="drawer_description">Descripción</label>
                   </div>
                 </section>
               </article>
@@ -55,7 +55,7 @@ include("head.php");
                 <div class="form-floating">
                   <select name='drawer_category' id='drawer_category' class='form-control'>
                   </select>
-                  <label class="" for="drawer_category">Category</label>
+                  <label class="" for="drawer_category">Categoría</label>
                 </div>
                 </section>
               </article>
@@ -63,7 +63,7 @@ include("head.php");
                 <section class="col-md-6 text-start p-3">
                 </section>
                 <section class="col-md-6 text-end p-3">
-                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Save</button>
+                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Guardar</button>
                 </section>
               </article>
             </section>

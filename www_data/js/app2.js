@@ -45,14 +45,14 @@ async function drawersListTable(usuarioId,categoryId) {
 
   drawersList.innerHTML = `<table id="drawersListTable" class="table table-sm table-hover" style="width:100%">
   <thead class="small">
-    <th></th>
-    <th>Name</th>
-    <th>Category</th>
-    <th>Description</th>
-    <th>Content</th>
-    <th>Total Items</th>
-    <th>Drawer Price U$S</th>
-    <th>Actions</th>
+     <th></th>
+     <th>Nombre</th>
+     <th>Categoría</th>
+     <th>Descripción</th>
+     <th>Contenido</th>
+     <th>Total de Ítems</th>
+     <th>Precio del Cajón U$S</th>
+     <th>Acciones</th>
   </thead>
   <tbody class="small"></tbody>
 </table>`
@@ -627,14 +627,14 @@ async function getStatistics(usuarioId,totalRecords) {
   const urlPrice = `./api/totalprice-${totalRecords}`
   const responsePrice = await fetch(urlPrice)
   const priceToJson = await responsePrice.json()
-  statisticsPrice.innerHTML = `<h1 class="text-white display-3"><i class="fa-regular fa-sack-dollar"></i>&nbsp;Full Value: <br>$${priceToJson[0].total}</h1>`
+  statisticsPrice.innerHTML = `<h1 class="text-white display-3"><i class="fa-regular fa-sack-dollar"></i>&nbsp;Valor Total: <br>$${priceToJson[0].total}</h1>`
 
   const urlCategoryPrice  = `./api/categoryprice-${totalRecords}`
   const responseCategoryPrice = await fetch(urlCategoryPrice)
   const categoryPriceToJson = await responseCategoryPrice.json()
   let bodyTable = ''
-  bodyTable = `<h5 class="text-white mb-3">Value By Category</h5><table class="bg-indigo text-white text-center" style="width:100%">
-  <thead class="small"><th class="text-center" style="width:80%">Category</th><th class="text-center" colspan="2">Price U$S</th></thead><tbody class="small">`
+  bodyTable = `<h5 class="text-white mb-3">Valor por Categoría</h5><table class="bg-indigo text-white text-center" style="width:100%">
+  <thead class="small"><th class="text-center" style="width:80%">Categoría</th><th class="text-center" colspan="2">Precio U$S</th></thead><tbody class="small">`
   for(const fila of categoryPriceToJson){
     bodyTable  +=`<tr class="border-bottom"><td class="text-start">
     <a href='items.php?id=${fila.ID}' class="text-white text-decoration-none">${fila.Categoria}</a>
@@ -648,8 +648,8 @@ async function getStatistics(usuarioId,totalRecords) {
   const responseCategoryTotal = await fetch(urlCategoryTotal)
   const categoryTotalToJson = await responseCategoryTotal.json()
 
-  bodyTable = `<h5 class="text-white mb-3">Items By Category</h5><table class="bg-indigo text-white text-center" style="width:100%">
-  <thead class="small"><th class="text-center">Category</th><th class="text-center">Total Items</th></thead><tbody class="small">`
+  bodyTable = `<h5 class="text-white mb-3">Ítems por Categoría</h5><table class="bg-indigo text-white text-center" style="width:100%">
+  <thead class="small"><th class="text-center">Categoría</th><th class="text-center">Total de Ítems</th></thead><tbody class="small">`
   for(const fila of categoryTotalToJson){
     bodyTable  +=`<tr class="border-bottom">
     <td class="text-start">
@@ -770,6 +770,6 @@ function mmToFractionInches(mm) {
   const thousandthsOut = document.querySelector('#thousandthsOut')
   const fractionOut = document.querySelector('#fractionOut')
   const inches = mm / 25.4
-  thousandthsOut.innerHTML = `Thousandths of an Inch: <span class="">${inches.toFixed(3) } "<span class="">`
-  fractionOut.innerHTML = `Inches Fraction: <span class="">${mminch(mm).toInch()} "<span class="">`
+  thousandthsOut.innerHTML = `Milésimas de Pulgada: <span class="">${inches.toFixed(3) } "<span class="">`
+  fractionOut.innerHTML = `Fracción de Pulgada: <span class="">${mminch(mm).toInch()} "<span class="">`
 }

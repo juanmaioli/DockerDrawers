@@ -15,7 +15,7 @@ if ($result->num_rows > 0) {
     $inches_mm_ml_inches = $row["inches_mm_ml_inches"];
     $inches_mm_tool = $row["inches_mm_tool"];
     if ($inches_mm_tool == 1) {
-      $inches_mm_tool = '<i class="fa-regular fa-wrench text-success"></i>&nbsp;Yes';
+      $inches_mm_tool = '<i class="fa-regular fa-wrench text-success"></i>&nbsp;Sí';
     }
     else {
       $inches_mm_tool = '<i class="fa-regular fa-circle-xmark text-danger"></i>&nbsp;No';
@@ -40,7 +40,7 @@ $conn->close();
       <section class="card-header">
         <article class="row">
           <section class="col-md-3 text-start">
-            <h3 class="">Convert MM to Inches</h3>
+            <h3 class="">Convertir MM a Pulgadas</h3>
           </section>
           <section class="col-md-9 text-end"></section>
         </article>
@@ -50,14 +50,14 @@ $conn->close();
           <section class="col-md-1"></section>
           <section class="col-md-2">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Millimeters" aria-label="Millimeters" id="millimetersIn" name="millimetersIn" onkeyup="mmToFractionInches(this.value)" value="0">
+            <input type="text" class="form-control" placeholder="Milímetros" aria-label="Milímetros" id="millimetersIn" name="millimetersIn" onkeyup="mmToFractionInches(this.value)" value="0">
             <span class="input-group-text bg-indigo text-white">mm</span>
           </div>
           </section>
           <section class="col-md-1"></section>
-          <section class="col-md-3"><h4 id="thousandthsOut">Thousandths of an Inch: 0"</h4></section>
+          <section class="col-md-3"><h4 id="thousandthsOut">Milésimas de Pulgada: 0"</h4></section>
           <section class="col-md-1"></section>
-          <section class="col-md-3"><h4 id="fractionOut">Inches Fraction: 0</h4></section>
+          <section class="col-md-3"><h4 id="fractionOut">Fracción de Pulgada: 0</h4></section>
           <section class="col-md-1"></section>
         </article>
       </section>
@@ -71,7 +71,7 @@ $conn->close();
       <section class="card-header">
         <article class="row">
           <section class="col-md-3 text-start">
-            <h3 class="">Table Inches to MM</h3>
+            <h3 class="">Tabla de Pulgadas a MM</h3>
           </section>
           <section class="col-md-9 text-end"></section>
         </article>
@@ -79,10 +79,10 @@ $conn->close();
       <section class="card-body">
         <table id="inchesListTable" class="table table-sm table-hover">
           <thead class="small">
-            <th>Inches</th>
-            <th>Mm</th>
-            <th>Thousandths Of An Inch</th>
-            <th>Tools</th>
+            <th>Pulgadas</th>
+            <th>MM</th>
+            <th>Milésimas de Pulgada</th>
+            <th>Herramientas</th>
           </thead>
           <tbody class="small"><?= $table_inches ?></tbody>
         </table>

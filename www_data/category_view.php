@@ -12,9 +12,9 @@ $categoryId = $_GET['id'];
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="" id="item_title">Category</h3>
+              <h3 class="" id="item_title">Detalle de la Categoría</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="categories.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
+            <section class="col-md-6 text-end"><a href="categories.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Volver</a></section>
           </article>
         </section>
         <section class="card-body">
@@ -24,8 +24,8 @@ $categoryId = $_GET['id'];
             <section class="col-md-6">
             <input id="category_id_status" name="category_id_status" type="hidden" value="<?= $categoryId ?>">
               <div class="form-floating">
-                <input type='text' class='form-control' id='category_name' name='category_name' value='' placeholder='category_name' title='category_name'>
-                <label class="" for="category_name">Category Name</label>
+                <input type='text' class='form-control' id='category_name' name='category_name' value='' placeholder='Nombre de la Categoría' title='Nombre de la Categoría'>
+                <label class="" for="category_name">Nombre de la Categoría</label>
               </div>
             </section>
             <section class="col-md-6">
@@ -51,7 +51,7 @@ $categoryId = $_GET['id'];
                 <option value="warning" class="text-warning">warning</option>
                 <option value="yellow" class="text-yellow">yellow</option>
               </select>
-              <label class="" for="category_color">Categoy Color</label>
+              <label class="" for="category_color">Color de la Categoría</label>
             </div>
             </section>
           </article>
@@ -59,7 +59,7 @@ $categoryId = $_GET['id'];
             <section class="col-md-6 text-start p-3">
           </section>
           <section class="col-md-6 text-end p-3">
-            <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Save</button>
+            <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Guardar</button>
           </section>
         </article>
         </form>

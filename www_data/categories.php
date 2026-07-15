@@ -10,21 +10,21 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-3 text-start">
-              <h3 class="">Categories</h3>
+              <h3 class="">Categorías</h3>
             </section>
             <section class="col-md-6 text-end"></section>
-            <section class="col-md-3 text-end"><a href="category_new.php" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Add Category</a></section>
+            <section class="col-md-3 text-end"><a href="category_new.php" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Agregar Categoría</a></section>
           </article>
         </section>
         <section class="card-body" id="categoriesList">
           <table id="categoriesListTable" class="table table-sm table-hover" style="width:100%">
           <thead class="small">
-            <th>Name</th>
+            <th>Nombre</th>
             <th>Color</th>
-            <th>Drawers per Category</th>
-            <th>Items per Category</th>
-            <th>Drawer Price</th>
-            <th>Actions</th>
+            <th>Cajones por Categoría</th>
+            <th>Ítems por Categoría</th>
+            <th>Precio Total</th>
+            <th>Acciones</th>
           </thead>
           <tbody class="small">
           </tbody>

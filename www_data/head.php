@@ -191,10 +191,10 @@ if ($usr_right == 1) {
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class='fas fa-ellipsis-v text-secondary fa-lg'></i>&nbsp;Menú</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item text-white" href="index.php">Drawers</a></li>
-            <li><a class="dropdown-item text-white" href="items.php">Items</a></li>
-            <li><a class="dropdown-item text-white" href="categories.php">Categories</a></li>
-            <li><a class="dropdown-item text-white" href="inches_mm.php">Inches to MM</a></li>
-            <li><a class="dropdown-item text-white" href="favs.php">Bookmarks</a></li>
+            <li><a class="dropdown-item text-white" href="items.php">Ítems</a></li>
+            <li><a class="dropdown-item text-white" href="categories.php">Categorías</a></li>
+            <li><a class="dropdown-item text-white" href="inches_mm.php">Inches a MM</a></li>
+            <li><a class="dropdown-item text-white" href="favs.php">Marcadores</a></li>
             <li><a class="dropdown-item text-white" href="compras.php">Compras</a></li>
             <li>
               <hr class="dropdown-divider">
@@ -208,7 +208,7 @@ if ($usr_right == 1) {
         <li class="nav-item position-relative">
           <div class="input-group">
             <span class="input-group-text bg-transparent border-0 text-white"><i class="fas fa-search"></i></span>
-            <input type="text" class="form-control bg-dark text-white border-secondary rounded-pill" id="globalSearchInput" placeholder="Search items or drawers..." onkeyup="handleSearchKeyUp(event)" autocomplete="off">
+            <input type="text" class="form-control bg-dark text-white border-secondary rounded-pill" id="globalSearchInput" placeholder="Buscar ítems o cajones..." onkeyup="handleSearchKeyUp(event)" autocomplete="off">
           </div>
           <div id="autocomplete-results" class="list-group position-absolute w-100 shadow-lg d-none" style="z-index: 2000; top: 100%;"></div>
         </li>

@@ -10,13 +10,13 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-5 text-start">
-              <h3 class="" id="totalPriceBookmark">Mercado Libre Bookmarks</h3>
+              <h3 class="" id="totalPriceBookmark">Marcadores de Mercado Libre</h3>
             </section>
             <section class="col-md-4 text-end">
               <input class="form-check-input text-purple" type="checkbox" value="" id="checkDeleted" onchange="bookmarksTable()" checked>
-              <label class="form-check-label text-purple" for="checkDeleted">Hide Deleted Items</label>
+              <label class="form-check-label text-purple" for="checkDeleted">Ocultar Ítems Eliminados</label>
             </section>
-            <section class="col-md-3 text-end"><a href="favs_new.php" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;New List of Bookmarks</a></section>
+            <section class="col-md-3 text-end"><a href="favs_new.php" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Nueva Lista de Marcadores</a></section>
             <!-- <section class="col-md-3 text-end"><a href="favs_new.php" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;New List of Bookmarks</a> <a href="javascript:void(0)" class="btn btn-danger ms-1" onclick="clearBookmark()"><i class="fa-regular fa-broom-wide"></i> Clear</a></section> -->
           </article>
         </section>
@@ -24,12 +24,12 @@ include("head.php");
           <table id="bookmarksListTable" class="table table-sm table-hover" style="width:100%">
           <thead class="small">
             <th></th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Ml Id</th>
-            <th>Update</th>
-            <th>Action</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>ML ID</th>
+            <th>Actualizar</th>
+            <th>Acción</th>
           </thead>
           <tbody class="small">
           </tbody>
@@ -69,8 +69,8 @@ include("head.php");
           <article class="row">
             <section class="col-md-8">
             <div class="form-floating">
-              <input type='text' class='form-control' id='bookmarkTitle' name='bookmarkTitle' value='bookmarkTitle' placeholder='bookmarkTitle' title='bookmarkTitle'>
-              <label class="" for="bookmarkTitle">Bookmark</label>
+              <input type='text' class='form-control' id='bookmarkTitle' name='bookmarkTitle' value='bookmarkTitle' placeholder='Título del Marcador' title='Marcador'>
+              <label class="" for="bookmarkTitle">Marcador</label>
             </div>
             </section>
             <section class="col-md-4"><button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i></button></section>

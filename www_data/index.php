@@ -48,15 +48,15 @@ if(empty($_GET['id']))
         <section class="card-header">
           <article class="row">
             <section class="col-md-3 text-start">
-              <h3 class="">Drawers</h3>
+              <h3 class="">Cajones</h3>
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="switchTableCard" onchange="changeView()">
-                <label class="form-check-label" id="switchTableCardLabel" for="switchTableCard" onclick="document.getElementById('switchTableCard').toogle">Change view to cards</label>
+                <label class="form-check-label" id="switchTableCardLabel" for="switchTableCard" onclick="document.getElementById('switchTableCard').toggle">Cambiar vista a tarjetas</label>
               </div>
             </section>
             <section class="col-md-5 text-end"></section>
-            <section class="col-md-2 text-end"><a href="item_new.php?did=0" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Add Item</a></section>
-            <section class="col-md-2 text-end"><a href="drawer_new.php" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Add Drawer</a></section>
+            <section class="col-md-2 text-end"><a href="item_new.php?did=0" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Agregar Ítem</a></section>
+            <section class="col-md-2 text-end"><a href="drawer_new.php" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Agregar Cajón</a></section>
           </article>
         </section>
         <section class="card-body" id="drawersList">
@@ -76,11 +76,11 @@ if(empty($_GET['id']))
   
   if (currentView === 'cards') {
     switchTableCard.checked = true
-    switchTableCardLabel.innerHTML = 'Change view to table'
+    switchTableCardLabel.innerHTML = 'Cambiar vista a tabla'
     drawersListCards(<?= $usuarioId ?>,<?=$categoryId?>)
   } else {
     switchTableCard.checked = false
-    switchTableCardLabel.innerHTML = 'Change view to cards'
+    switchTableCardLabel.innerHTML = 'Cambiar vista a tarjetas'
     drawersListTable(<?= $usuarioId ?>,<?=$categoryId?>)
   }
 
@@ -88,11 +88,11 @@ if(empty($_GET['id']))
 
   async function changeView() {
     if (switchTableCard.checked) {
-      switchTableCardLabel.innerHTML = 'Change view to table'
+      switchTableCardLabel.innerHTML = 'Cambiar vista a tabla'
       localStorage.setItem('drawers_view', 'cards')
       drawersListCards(<?= $usuarioId ?>,<?=$categoryId?>)
     } else {
-      switchTableCardLabel.innerHTML = 'Change view to cards'
+      switchTableCardLabel.innerHTML = 'Cambiar vista a tarjetas'
       localStorage.setItem('drawers_view', 'table')
       drawersListTable(<?= $usuarioId ?>,<?=$categoryId?>)
     }

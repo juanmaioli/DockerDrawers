@@ -214,7 +214,7 @@ function ml_curl_get($url, $access_token) {
         <section class="card-header">
           <article class="row align-items-center">
             <section class="col-md-6 text-start">
-              <h3 class="mb-0">  <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="40px"> Shopping Mercado Libre</h3>
+              <h3 class="mb-0">  <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="40px"> Compras de Mercado Libre</h3>
             </section>
             <section class="col-md-6 text-end d-flex align-items-center justify-content-end gap-3">
               <?php if ($connected): ?>
@@ -252,15 +252,15 @@ function ml_curl_get($url, $access_token) {
               <table id="comprasTable" class="table table-sm table-hover" style="width:100%">
                 <thead class="small">
                   <tr>
-                    <th style="width: 60px;">Photo</th>
+                    <th style="width: 60px;">Foto</th>
                     <th class="text-center" style="width: 70px;">Cargado</th>
-                    <th class="text-center" style="width: 50px;">Action</th>
-                    <th>Product</th>
-                    <th>Date</th>
-                    <th class="text-center">Qty.</th>
-                    <th class="text-end">Unit Price</th>
+                    <th class="text-center" style="width: 50px;">Acción</th>
+                    <th>Producto</th>
+                    <th>Fecha</th>
+                    <th class="text-center">Cant.</th>
+                    <th class="text-end">Precio Unitario</th>
                     <th class="text-end">Total</th>
-                    <th class="text-center">Status</th>
+                    <th class="text-center">Estado</th>
                   </tr>
                 </thead>
                 <tbody class="small">

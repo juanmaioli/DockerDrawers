@@ -84,13 +84,13 @@ async function drawersListTable(usuarioId,categoryId) {
   drawersList.innerHTML = `<table id="drawersListTable" class="table table-sm table-hover" style="width:100%">
   <thead class="small">
     <th></th>
-    <th>Name</th>
-    <th>Category</th>
-    <th>Description</th>
-    <th>Content</th>
-    <th>Total Items</th>
-    <th>Drawer Price U$S</th>
-    <th>Actions</th>
+    <th>Nombre</th>
+    <th>Categoría</th>
+    <th>Descripción</th>
+    <th>Contenido</th>
+    <th>Total de Ítems</th>
+    <th>Precio del Cajón U$S</th>
+    <th>Acciones</th>
   </thead>
   <tbody class="small"></tbody>
 </table>`
@@ -108,10 +108,10 @@ async function drawersListTable(usuarioId,categoryId) {
     dom: 'Bfrtip',
     orderCellsTop: true,
     buttons: [
-      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
+      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copiar' },
       {extend: 'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
-      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
-      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
+      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> PDF',orientation: 'landscape',pageSize: 'A4'},
+      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Imprimir'}
     ],
     columns: [
       { 'data': 'drawer_image' , 'width': '10%' , className: 'text-center'},//0
@@ -272,10 +272,10 @@ async function drawerItems($drawerId, usuarioId) {
     dom: 'Bfrtip',
     orderCellsTop: true,
     buttons: [
-      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
+      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copiar' },
       {extend: 'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
-      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
-      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
+      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> PDF',orientation: 'landscape',pageSize: 'A4'},
+      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Imprimir'}
     ],
     columns: [
       { 'data': 'item_image' , className: 'text-center'},//0
@@ -456,10 +456,10 @@ async function itemsAll(usuarioId,categoriaId) {
     dom: 'Bfrtip',
     orderCellsTop: true,
     buttons: [
-      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
+      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copiar' },
       {extend: 'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
-      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
-      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
+      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> PDF',orientation: 'landscape',pageSize: 'A4'},
+      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Imprimir'}
     ],
     columns: [
       // <th></th> 0
@@ -572,10 +572,10 @@ async function categoriesTable() {
     dom: 'Bfrtip',
     orderCellsTop: true,
     buttons: [
-      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
+      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copiar' },
       {extend: 'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
-      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
-      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
+      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> PDF',orientation: 'landscape',pageSize: 'A4'},
+      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Imprimir'}
     ],
     columns: [
       { 'data': 'category_name' },//0
@@ -656,10 +656,10 @@ async function bookmarksTable(){
     dom: 'Bfrtip',
     orderCellsTop: true,
     buttons: [
-      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
+      {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copiar' },
       {extend:'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
-      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
-      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
+      {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> PDF',orientation: 'landscape',pageSize: 'A4'},
+      {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Imprimir'}
     ],
     columns: [
       // <th></th>
@@ -788,17 +788,17 @@ async function getStatistics(usuarioId,totalRecords) {
   const fullValuePesos = fullValue * (window.valorDolar || 1000.00)
   
   statisticsPrice.innerHTML = `
-    <h5 class="text-white mb-1">Total Inventory Value</h5>
+    <h5 class="text-white mb-1">Valor Total del Inventario</h5>
     <h1 class="text-white display-4 fw-bold mb-1"><i class="fa-regular fa-sack-dollar"></i>&nbsp;${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'USD'})}</h1>
     <h5 class="text-white-75 mb-2">AR${fullValuePesos.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'})}</h5>
-    <h5 class="text-white mb-1">Total Inventory</h5>
-    <h2 class="text-white display-5 fw-bold"><i class="fa-regular fa-boxes-stacked"></i>&nbsp;${totalItems.toLocaleString('es-AR')} Items</h2>`
+    <h5 class="text-white mb-1">Inventario Total</h5>
+    <h2 class="text-white display-5 fw-bold"><i class="fa-regular fa-boxes-stacked"></i>&nbsp;${totalItems.toLocaleString('es-AR')} Ítems</h2>`
 
   // Value by Category
   const urlCategoryPrice  = `./api/api_drawers.php?id=categoryprice-${totalRecords}`
   const responseCategoryPrice = await fetch(urlCategoryPrice)
   const categoryPriceToJson = await responseCategoryPrice.json()
-  let bodyCategoryPrice = `<h6 class="text-white mb-2 fw-bold">Value By Category</h6>`
+  let bodyCategoryPrice = `<h6 class="text-white mb-2 fw-bold">Valor por Categoría</h6>`
   
   const maxPrice = categoryPriceToJson.length > 0 ? Math.max(...categoryPriceToJson.map(f => Number(f.category_price))) : 1;
 
@@ -822,7 +822,7 @@ async function getStatistics(usuarioId,totalRecords) {
   const urlCategoryTotal  = `./api/api_drawers.php?id=categorytotal-${totalRecords}`
   const responseCategoryTotal = await fetch(urlCategoryTotal)
   const categoryTotalToJson = await responseCategoryTotal.json()
-  let bodyCategoryTotal = `<h6 class="text-white mb-2 fw-bold">Items By Category</h6>`
+  let bodyCategoryTotal = `<h6 class="text-white mb-2 fw-bold">Ítems por Categoría</h6>`
   
   const maxItems = categoryTotalToJson.length > 0 ? Math.max(...categoryTotalToJson.map(f => Number(f.Total))) : 1;
 
@@ -846,7 +846,7 @@ async function getStatistics(usuarioId,totalRecords) {
   const urlLatest = `./api/api_drawers.php?id=lastitems-6-${usuarioId}`
   const responseLatest = await fetch(urlLatest)
   const latestItems = await responseLatest.json()
-  let bodyLatest = `<h6 class="text-white mb-2 fw-bold">Latest Items Added</h6><div class="row row-cols-6">`
+  let bodyLatest = `<h6 class="text-white mb-2 fw-bold">Últimos Ítems Agregados</h6><div class="row row-cols-6">`
   
   latestItems.forEach(item => {
     bodyLatest += `
@@ -863,15 +863,15 @@ async function getStatistics(usuarioId,totalRecords) {
   const urlFullest = `./api/api_drawers.php?id=fullestdrawers-6-${usuarioId}`
   const responseFullest = await fetch(urlFullest)
   const fullestDrawers = await responseFullest.json()
-  let bodyFullest = `<h6 class="text-white mb-2 fw-bold">Fullest Drawers</h6><div class="row row-cols-6">`
+  let bodyFullest = `<h6 class="text-white mb-2 fw-bold">Cajones Más Llenos</h6><div class="row row-cols-6">`
   
   fullestDrawers.forEach(drawer => {
     bodyFullest += `
       <div class="col text-center">
-        <a href="drawer_view.php?id=${drawer.drawer_id}" title="${drawer.drawer_name} (${drawer.total_items} items)">
+        <a href="drawer_view.php?id=${drawer.drawer_id}" title="${drawer.drawer_name} (${drawer.total_items} ítems)">
           <img src="images/drawers/${drawer.drawer_image}" class="img-fluid rounded-3 border border-2 border-${drawer.category_color}" style="width: 75px; height: 75px; object-fit: cover;">
         </a>
-        <div class="small text-white text-truncate mt-1" style="font-size: 0.7rem;">${drawer.total_items} items</div>
+        <div class="small text-white text-truncate mt-1" style="font-size: 0.7rem;">${drawer.total_items} ítems</div>
       </div>`
   })
   statisticsFullestDrawers.innerHTML = bodyFullest + `</div>`
@@ -970,8 +970,8 @@ function mmToFractionInches(mm) {
   const thousandthsOut = document.querySelector('#thousandthsOut')
   const fractionOut = document.querySelector('#fractionOut')
   const inches = mm / 25.4
-  thousandthsOut.innerHTML = `Thousandths of an Inch: <span class="">${inches.toFixed(3) } "<span class="">`
-  fractionOut.innerHTML = `Inches Fraction: <span class="">${mminch(mm).toInch()} "<span class="">`
+  thousandthsOut.innerHTML = `Milésimas de Pulgada: <span class="">${inches.toFixed(3) } "<span class="">`
+  fractionOut.innerHTML = `Fracción de Pulgada: <span class="">${mminch(mm).toInch()} "<span class="">`
 }
 async function deleteBookmark(article) {
   const url = `./api/api_drawers.php?id=deleteBookmark-${article}`

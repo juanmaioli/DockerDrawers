@@ -32,9 +32,9 @@ if ($pre_price > 0) {
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="" id="item_title">New Item</h3>
+              <h3 class="" id="item_title">Nuevo Ítem</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="drawer_view.php?id=<?=$drawerId?>" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
+            <section class="col-md-6 text-end"><a href="drawer_view.php?id=<?=$drawerId?>" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Volver</a></section>
           </article>
         </section>
         <section class="card-body">
@@ -53,16 +53,16 @@ if ($pre_price > 0) {
 
                 <input id="item_owner" name="item_owner" type="hidden" value="<?= $usuarioId ?>">
                   <div class="form-floating">
-                    <input type='text' class='form-control' id='item_name' name='item_name' value='<?= h($pre_name) ?>' placeholder='item_name' title='item_name'>
-                    <label class="" for="item_name">Item Name</label>
+                    <input type='text' class='form-control' id='item_name' name='item_name' value='<?= h($pre_name) ?>' placeholder='Nombre del ítem' title='Nombre del ítem'>
+                    <label class="" for="item_name">Nombre del Ítem</label>
                   </div>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
                   <div class="form-floating">
-                    <input type='number' class='form-control' id='item_amount' name='item_amount' value='<?= h($pre_amount) ?>' placeholder='item_amount' title='item_amount'>
-                    <label class="" for="item_amount">Amount</label>
+                    <input type='number' class='form-control' id='item_amount' name='item_amount' value='<?= h($pre_amount) ?>' placeholder='Cantidad' title='Cantidad'>
+                    <label class="" for="item_amount">Cantidad</label>
                   </div>
                 </section>
               </article>
@@ -70,21 +70,21 @@ if ($pre_price > 0) {
                 <section class="col-md-6 mb-3 mb-md-0">
                   <div class="form-floating">
                     <input type='number' step='0.01' class='form-control' id='item_price_ars' value='<?= $pre_price_ars > 0 ? number_format($pre_price_ars, 2, '.', '') : "" ?>' placeholder='Precio en Pesos (ARS)' title='Precio en Pesos (ARS)'>
-                    <label class="" for="item_price_ars">Price (ARS)</label>
+                    <label class="" for="item_price_ars">Precio (ARS)</label>
                   </div>
                 </section>
                 <section class="col-md-6">
                   <div class="form-floating">
-                    <input type='number' step='0.01' class='form-control' id='item_price' name='item_price' value='<?= $pre_price_usd > 0 ? number_format($pre_price_usd, 2, '.', '') : "" ?>' placeholder='Price in Dollars (USD)' title='Price in Dollars (USD)'>
-                    <label class="" for="item_price">Price (USD) - Se guarda</label>
+                    <input type='number' step='0.01' class='form-control' id='item_price' name='item_price' value='<?= $pre_price_usd > 0 ? number_format($pre_price_usd, 2, '.', '') : "" ?>' placeholder='Precio en Dólares (USD)' title='Precio en Dólares (USD)'>
+                    <label class="" for="item_price">Precio (USD) - Se guarda</label>
                   </div>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
                 <div class="form-floating">
-                    <textarea id='item_description' class='form-control' name='item_description' rows='5' cols='10' placeholder='item_description' title='item_description'><?= h($pre_desc) ?></textarea>
-                    <label class="" for="item_description">Description</label>
+                    <textarea id='item_description' class='form-control' name='item_description' rows='5' cols='10' placeholder='Descripción' title='Descripción'><?= h($pre_desc) ?></textarea>
+                    <label class="" for="item_description">Descripción</label>
                   </div>
                 </section>
               </article>
@@ -93,7 +93,7 @@ if ($pre_price > 0) {
                 <div class="form-floating">
                   <select name='item_category' id='item_category' class='form-control'>
                   </select>
-                  <label class="" for="item_category">Category</label>
+                  <label class="" for="item_category">Categoría</label>
                 </div>
                 </section>
               </article>
@@ -102,7 +102,7 @@ if ($pre_price > 0) {
                 <div class="form-floating">
                   <select name='item_drawer' id='item_drawer' class='form-control'>
                   </select>
-                  <label class="" for="item_drawer">Actual Drawer</label>
+                  <label class="" for="item_drawer">Cajón Actual</label>
                 </div>
                 </section>
               </article>
@@ -110,7 +110,7 @@ if ($pre_price > 0) {
                 <section class="col-md-6 text-start p-3">
                 </section>
                 <section class="col-md-6 text-end p-3">
-                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Save</button>
+                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Guardar</button>
                 </section>
               </article>
             </form>

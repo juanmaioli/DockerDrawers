@@ -28,9 +28,9 @@ if (isset($_SESSION['item_view_back_url'])) {
         <section class="card-header">
           <article class="row">
             <section class="col-md-6 text-start">
-              <h3 class="" id="item_title">Drawers</h3>
+              <h3 class="" id="item_title">Detalle del Ítem</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="<?= h($back_url) ?>" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Back</a></section>
+            <section class="col-md-6 text-end"><a href="<?= h($back_url) ?>" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Volver</a></section>
           </article>
         </section>
         <section class="card-body">
@@ -46,17 +46,17 @@ if (isset($_SESSION['item_view_back_url'])) {
                   <input id="item_id" name="item_id" type="hidden" value="<?= $itemId?>">
                   <input id="item_drawer_img" name="item_drawer_img" type="hidden" value="<?= $drawerId?>">
                   <label for="file-upload" class="custom-file-upload btn btn-indigo">
-                  <i class="fa-regular fa-cloud-upload-alt"></i>&nbsp;Change Image</label>
+                  <i class="fa-regular fa-cloud-upload-alt"></i>&nbsp;Cambiar Imagen</label>
                   <input id="file-upload" name="file-upload" type="file" accept=".jpeg, .jpg" onChange="this.form.submit()">
                 </form>
                 </section>
                 <section class="col">
                   <a id="searchImage" href='https://www.google.com/search?q= &source=lnms&tbm=isch' class='btn btn-primary' target='_blank'>
-                  <i class="fa-regular fa-search"></i>&nbsp;Search Image</a>
+                  <i class="fa-regular fa-search"></i>&nbsp;Buscar Imagen</a>
                 </section>
                 <section class="col">
                   <a id="searchML" href='https://www.google.com/search?q= &source=lnms&tbm=isch' class='btn btn-yellow' target='_blank'>
-                  <i class="fa-brands fa-shopify"></i>&nbsp;MercadoLibre</a>
+                  <i class="fa-brands fa-shopify"></i>&nbsp;Mercado Libre</a>
                 </section>
                 <!-- <section class="col">
                   <a id="searchPdf" href='https://www.google.com/search?q= &source=lnms&tbm=isch' class='btn btn-primary m-2' target='_blank'>
@@ -71,56 +71,56 @@ if (isset($_SESSION['item_view_back_url'])) {
                 <section class="col">
                   <input id="item_id_status" name="item_id_status" type="hidden" value="<?= $itemId?>">
                   <input id="item_owner" name="item_owner" type="hidden" value="<?= $usuarioId ?>">
-                  <label class="mb-2" for="item_name">Item Name</label>
-                  <input type='text' class='form-control' id='item_name' name='item_name' value='' placeholder='item_name' title='Name'>
+                  <label class="mb-2" for="item_name">Nombre del Ítem</label>
+                  <input type='text' class='form-control' id='item_name' name='item_name' value='' placeholder='Nombre del ítem' title='Nombre'>
                 </section>
                 <section class="col-2">
-                  <label class="mb-2" for="item_amount">Amount</label>
-                  <input type='number' class='form-control text-end' id='item_amount' name='item_amount' value='0' placeholder='item_amount' title='Amount'>
+                  <label class="mb-2" for="item_amount">Cantidad</label>
+                  <input type='number' class='form-control text-end' id='item_amount' name='item_amount' value='0' placeholder='Cantidad' title='Cantidad'>
                 </section>
                 <section class="col-2">
-                  <label class="mb-2" for="item_price">Price U$S</label>
-                  <input type='number' class='form-control text-end' id='item_price' name='item_price' value='' placeholder='0.00' title='Price' min="0" step="0.01">
+                  <label class="mb-2" for="item_price">Precio U$S</label>
+                  <input type='number' class='form-control text-end' id='item_price' name='item_price' value='' placeholder='0.00' title='Precio' min="0" step="0.01">
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col">
-                  <label class="mb-2" for="item_brand">Brand</label>
+                  <label class="mb-2" for="item_brand">Marca</label>
                   <section class="input-group">
-                    <select name='item_brand' id='item_brand' class='form-control' title='Brand'>
+                    <select name='item_brand' id='item_brand' class='form-control' title='Marca'>
                     </select>
-                    <span class="input-group-text bg-night rounded-end-2" title="Add Brand">
+                    <span class="input-group-text bg-night rounded-end-2" title="Agregar Marca">
                       <a href="#" class="btn btn-night btn-sm" data-bs-toggle="modal" data-bs-target="#addItemToList"><i class="fa-regular fa-plus-circle"></i></a>
                     </span>
                   </section>
                 </section>
                 <section class="col">
-                  <label class="mb-2" for="item_model">Model</label>
-                  <input type='text' class='form-control' id='item_model' name='item_model' value='' placeholder='Model' title='Model'>
+                  <label class="mb-2" for="item_model">Modelo</label>
+                  <input type='text' class='form-control' id='item_model' name='item_model' value='' placeholder='Modelo' title='Modelo'>
                 </section>
               </article>
 
               <article class="row mb-3">
                 <section class="col-12">
-                  <label class="mb-2" for="item_description">Description</label>
-                  <textarea id='item_description' class='form-control' name='item_description' rows='2' placeholder='Description' title='Description'>Description</textarea>
+                  <label class="mb-2" for="item_description">Descripción</label>
+                  <textarea id='item_description' class='form-control' name='item_description' rows='2' placeholder='Descripción' title='Descripción'>Descripción</textarea>
                 </section>
               </article>
               <article class="row mb-3">
                 <section class="col-6">
-                  <label class="mb-2" for="item_category">Category</label>
-                  <select name='item_category' id='item_category' class='form-control' title='Category'>
+                  <label class="mb-2" for="item_category">Categoría</label>
+                  <select name='item_category' id='item_category' class='form-control' title='Categoría'>
                   </select>
                 </section>
                 <section class="col-6">
-                  <label class="mb-2" for="item_drawer">Actual Drawer > Move to</label>
-                  <select name='item_drawer' id='item_drawer' class='form-control  mb-3' title='Actual Drawer'>
+                  <label class="mb-2" for="item_drawer">Cajón Actual > Mover a</label>
+                  <select name='item_drawer' id='item_drawer' class='form-control  mb-3' title='Cajón Actual'>
                   </select>
                 </section>
               </article>
               <article class="row mb-3 align-items-center">
                 <section class="col">
-                  <label class="mb-2">Rating</label>
+                  <label class="mb-2">Calificación</label>
                   <div class="d-flex align-items-center gap-1" id="star-rating-container">
                     <input type="hidden" id="item_rating" name="item_rating" value="0">
                     <?php for ($s = 1; $s <= 5; $s++): ?>
@@ -133,10 +133,10 @@ if (isset($_SESSION['item_view_back_url'])) {
               </article>
               <article class="row mb-3">
                 <section class="col-md-6 text-start p-3">
-                  <button type="button" onclick="safeDelete('item_del.php', <?= $itemId ?>)" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i>&nbsp;Delete Item</button>
+                  <button type="button" onclick="safeDelete('item_del.php', <?= $itemId ?>)" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i>&nbsp;Eliminar Ítem</button>
                 </section>
                 <section class="col-md-6 text-end p-3">
-                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Save</button>
+                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Guardar</button>
                 </section>
               </article>
             </form>
@@ -169,24 +169,24 @@ if (isset($_SESSION['item_view_back_url'])) {
     <div class="modal-dialog ">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addItemToListTitle">Add New Brand to List</h5>
+          <h5 class="modal-title" id="addItemToListTitle">Agregar Nueva Marca a la Lista</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <article class="row">
             <section class="col">
               <div class="form-group">
-                <label for="newItemName" id="labelNewItem">New Brand</label>
+                <label for="newItemName" id="labelNewItem">Nueva Marca</label>
                 <input type="text" class="form-control" id="newItemName" name="newItemName" value="" required >
               </div>
             </section>
           </article>
         </div>
         <div class="modal-footer">
-          <button id="addItemToListModalCerrar" class="btn btn-outline-secondary" data-bs-dismiss="modal" title="Close Window">
+          <button id="addItemToListModalCerrar" class="btn btn-outline-secondary" data-bs-dismiss="modal" title="Cerrar Ventana">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
-          <button  id="addItemToListModalGuardar" class="btn btn-outline-success" title="Save" onclick="addItemAList()" data-bs-dismiss="modal">
+          <button  id="addItemToListModalGuardar" class="btn btn-outline-success" title="Guardar" onclick="addItemAList()" data-bs-dismiss="modal">
             <i class="fa-regular fa-floppy-disk"></i>
           </button>
         </div>

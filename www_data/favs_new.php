@@ -10,13 +10,13 @@ include("head.php");
         <section class="card-header">
           <article class="row">
             <section class="col-md-3 text-start">
-              <h3 class="">Paste HTML Code</h3>
+              <h3 class="">Pegar Código HTML</h3>
             </section>
           </article>
         </section>
         <section class="card-body" id="newCode">
         <textarea class="form-control mb-3" id="code" rows="22"></textarea>
-        <button class="btn btn-indigo" onclick="process()">Process</button>
+        <button class="btn btn-indigo" onclick="process()">Procesar</button>
         </section>
       </article>
     </section>
@@ -32,7 +32,7 @@ async function process(){
   const code = document.querySelector('#code').value
   const newUl = document.createElement("div")
 
-  newCode.innerHTML = '<a href="javascript:(void)" onclick="procesaFavs()" class="btn btn-indigo"> Save</a>'
+  newCode.innerHTML = '<a href="javascript:(void)" onclick="procesaFavs()" class="btn btn-indigo"> Guardar</a>'
   newUl.innerHTML = code
   newCode.appendChild(newUl)
   procesaFavs()
