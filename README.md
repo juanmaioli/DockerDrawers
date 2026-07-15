@@ -89,6 +89,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.9.1` | 🚀 Guardado automático de calificación al hacer clic y unificación de tamaño de estrellas |
 | `v0.9.0` | 🚀 Implementación de seguimiento de carga en compras, ranking de estrellas y navegación Back dinámica |
 | `v0.8.6` | 🧹 Remoción de la clase `text-indigo` de todo el proyecto para consistencia visual |
 | `v0.8.5` | 🎨 Select2 adaptado al tema claro/oscuro con variables CSS de Bootstrap |

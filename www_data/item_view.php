@@ -124,7 +124,7 @@ if (isset($_SESSION['item_view_back_url'])) {
                   <div class="d-flex align-items-center gap-1" id="star-rating-container">
                     <input type="hidden" id="item_rating" name="item_rating" value="0">
                     <?php for ($s = 1; $s <= 5; $s++): ?>
-                    <i class="fa-star fa-xl star-btn" data-value="<?= $s ?>" id="star-<?= $s ?>"
+                    <i class="fa-regular fa-star fa-lg fa-fw star-btn" data-value="<?= $s ?>" id="star-<?= $s ?>"
                        style="cursor:pointer; color: #ccc;" title="<?= $s ?> estrella<?= $s > 1 ? 's' : '' ?>"></i>
                     <?php endfor; ?>
                     <span class="ms-2 small text-muted" id="star-label">Sin calificar</span>
@@ -231,7 +231,10 @@ if (isset($_SESSION['item_view_back_url'])) {
       const v = parseInt($(this).data('value'));
       $('.star-btn').each(function() {
         const sv = parseInt($(this).data('value'));
-        $(this).css('color', sv <= v ? '#f5a623' : '#ccc');
+        $(this)
+          .removeClass('fa-regular fa-solid')
+          .addClass(sv <= v ? 'fa-solid' : 'fa-regular')
+          .css('color', sv <= v ? '#f5a623' : '#ccc');
       });
     });
 
@@ -240,12 +243,26 @@ if (isset($_SESSION['item_view_back_url'])) {
       window.setStars($('#item_rating').val());
     });
 
-    // Click: fijar valor
+    // Click: fijar valor y guardar
     $(document).on('click', '.star-btn', function() {
       const v = parseInt($(this).data('value'));
       const current = parseInt($('#item_rating').val()) || 0;
-      // Click en la misma estrella seleccionada = reset a 0
-      window.setStars(v === current ? 0 : v);
+      const newValue = (v === current ? 0 : v);
+      
+      // Actualizar vista localmente
+      window.setStars(newValue);
+
+      // Guardar vía AJAX
+      $.post('api/item_rating_save.php', {
+        csrf_token: window.csrfToken,
+        item_id: <?= (int)$itemId ?>,
+        item_rating: newValue
+      })
+      .fail(function() {
+        // Revertir en caso de fallo de red/servidor
+        window.setStars(current);
+        alert('Error al guardar la calificación. Intentá nuevamente.');
+      });
     });
   })
 </script>
