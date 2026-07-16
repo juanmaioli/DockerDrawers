@@ -89,6 +89,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.10.3` | 🐛 Traducción de botón "Print" a "Imprimir" en compras y tabla de pulgadas; estilo de botones DataTable unificado en inches_mm |
 | `v0.10.2` | 🌐 Traducción de toda la interfaz (UI), cabeceras de tablas dinámicas y paneles de estadísticas al español (es_AR) |
 | `v0.10.1` | 🐛 Corrección de inicialización de estrellas, integración de rating bajo nombre, logo ML más chico y ordenamiento de columna Cargado |
 | `v0.10.0` | 🚀 Rediseño de switch de tema en navbar, integración de fondo homogéneo en cards y tablas, y insignias full-width |

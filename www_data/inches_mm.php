@@ -107,13 +107,11 @@ $conn->close();
       responsive: true,
       dom: 'Bfrtip',
       orderCellsTop: true,
-      buttons: ['copy', 'excel',
-        {
-          extend: 'pdf',
-          orientation: 'portrait',
-          pageSize: 'A4'
-        },
-        'print'
+      buttons: [
+        {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copiar' },
+        {extend:'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
+        {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> PDF',orientation: 'portrait',pageSize: 'A4'},
+        {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Imprimir'}
       ]
     })
   })

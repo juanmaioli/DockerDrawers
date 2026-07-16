@@ -382,7 +382,7 @@ function ml_curl_get($url, $access_token) {
           {extend:'copy',className: 'btn btn-darkblue',text:'<i class="fa-regular fa-copy"></i> Copy' },
           {extend: 'excel',className: 'btn btn-green',text:'<i class="fa-regular fa-file-excel"></i> Excel'},
           {extend:'pdf',className: 'btn btn-danger',text:'<i class="fa-regular fa-file-pdf"></i> Pdf',orientation: 'landscape',pageSize: 'A4'},
-          {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Print'}
+          {extend:'print',className: 'btn btn-indigo',text:'<i class="fa-regular fa-print"></i> Imprimir'}
         ]
       });
 
