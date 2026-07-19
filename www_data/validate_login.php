@@ -9,7 +9,7 @@ if(empty($_POST['usr_remember']))
 {
   $usr_remember = 1;
 }else{
-  $usr_remember = 1000;
+  $usr_remember = 30;
 }
 
 $ip = $_SERVER['REMOTE_ADDR'];

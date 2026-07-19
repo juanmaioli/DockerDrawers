@@ -378,8 +378,9 @@ async function itemView(itemId,usuarioId) {
     const item_brand = $('#item_brand')
     if (item_brand) {
       item_brand.innerHTML = ''
+      const activeBrand = (item[0].item_brand && item[0].item_brand != 0) ? item[0].item_brand : 1
       for (const brand of listBrands) {
-        const selectedTag = brand.brand_id == item[0].item_brand ? ' selected' : ''
+        const selectedTag = brand.brand_id == activeBrand ? ' selected' : ''
         item_brand.innerHTML += `<option value="${brand.brand_id}" ${selectedTag}>${brand.brand_name}</option>`
       }
       if (typeof jQuery !== 'undefined' && jQuery().select2) {

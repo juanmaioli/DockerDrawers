@@ -409,8 +409,9 @@ async function itemView(itemId,usuarioId) {
     const urlBrands = `./api/api_drawers.php?id=brandlist-0`
     const rtaBrands = await fetch(urlBrands)
     const listBrands = await rtaBrands.json()
+    const activeBrand = (item[0].item_brand && item[0].item_brand != 0) ? item[0].item_brand : 1
     for(const brand of listBrands ){
-      const selectedTag = brand.brand_id== item[0].item_brand ? ' selected':''
+      const selectedTag = brand.brand_id == activeBrand ? ' selected':''
       item_brand.innerHTML += `<option class='text-muted' value="${brand.brand_id}" ${selectedTag}>${brand.brand_name}</option>`
     }
     // $('#item_brand').select2({theme: 'bootstrap-5'})

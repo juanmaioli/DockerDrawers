@@ -300,7 +300,7 @@ function ml_curl_get($url, $access_token) {
                           </div>
                         </td>
                         <td>
-                          <a href="item_new.php?did=0&name=<?= urlencode($item_title) ?>&amount=<?= urlencode($quantity) ?>&price=<?= urlencode($price) ?>&desc=<?= urlencode($item_title . ' - Compra de Mercado Libre (' . $item_id . ')') ?>" class="btn btn-outline-success w-100" title="Agregar al Inventario">
+                          <a href="item_new.php?did=0&name=<?= urlencode($item_title) ?>&amount=<?= urlencode($quantity) ?>&price=<?= urlencode($price) ?>&desc=<?= urlencode($item_title . ' - Compra de Mercado Libre (' . $item_id . ')') ?>" target="_blank" class="btn btn-outline-success w-100" title="Agregar al Inventario">
                             <i class="fa-solid fa-plus"></i>
                           </a>
                         </td>

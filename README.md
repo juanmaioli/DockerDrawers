@@ -13,6 +13,7 @@
     -   Paginación ilimitada en el backend procesada en el navegador por **DataTables**, compartiendo el mismo diseño visual de botones y exportación que la lista de ítems.
     -   Botón de **creación rápida de ítems** en el inventario prellenado con los datos del producto comprado (Nombre, cantidad, descripción y precio).
     -   **Control de Carga:** Columna con selector de marcado manual (checkbox) y persistencia local en DB para llevar seguimiento de las compras ya registradas en el inventario, con switch para filtrar/ocultar los ya cargados.
+    -   **Favoritos de Mercado Libre:** Página nueva (`favoritos_ml.php`) para visualizar tus artículos favoritos/bookmarks en una tabla DataTable utilizando un proxy local seguro (`api/ml_item_proxy.php`) para enriquecer los detalles sin bloqueos de la API.
 -   **💵 Gestión de Divisas y Dólar Blue:**
     -   Panel en `admin.php` para el control de la cotización del dólar blue venta, con sincronización automática desde **DolarAPI** y actualización manual.
     -   Calculadora interactiva en pesos/dólares en `item_new.php` con conversión reactiva en tiempo real y persistencia del precio final en dólares.
@@ -89,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.11.0` | 🚀 Nueva página de Favoritos de Mercado Libre con proxy seguro; "Recordarme" establecido en 30 días; "Agregar al Inventario" abre en nueva pestaña; y marca "Generic" por defecto en vistas de ítem |
 | `v0.10.3` | 🐛 Traducción de botón "Print" a "Imprimir" en compras y tabla de pulgadas; estilo de botones DataTable unificado en inches_mm |
 | `v0.10.2` | 🌐 Traducción de toda la interfaz (UI), cabeceras de tablas dinámicas y paneles de estadísticas al español (es_AR) |
 | `v0.10.1` | 🐛 Corrección de inicialización de estrellas, integración de rating bajo nombre, logo ML más chico y ordenamiento de columna Cargado |

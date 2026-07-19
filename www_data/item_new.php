@@ -48,7 +48,7 @@ if ($pre_price > 0) {
               <article class="row mb-3">
                 <section class="col">
                 <input id="item_id_status" name="item_id_status" type="hidden" value="0">
-                <input id="item_brand" name="item_brand" type="hidden" value="0">
+                <input id="item_brand" name="item_brand" type="hidden" value="1">
                 <input id="item_model" name="item_model" type="hidden" value="No Model">
 
                 <input id="item_owner" name="item_owner" type="hidden" value="<?= $usuarioId ?>">
