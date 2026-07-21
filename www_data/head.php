@@ -106,9 +106,9 @@ $conn->close();
 
 if ($usr_right == 1) {
     //Admin Menu
-    $menu_admin = "<a href='admin.php' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;Admin</a>";
+    $menu_admin = "<a href='admin.php' class='dropdown-item d-flex align-items-center py-2 px-3 rounded-3'><i class='fa-solid fa-user-shield fa-fw text-white me-2 fs-5'></i><span>Admin</span></a>";
 } else {
-    $menu_admin = "<a href='#' class='dropdown-item text-white'><i class='fas fa-user-shield text-warning fa-lg'></i>&nbsp;No Admin</a>";
+    $menu_admin = "<a href='#' class='dropdown-item d-flex align-items-center py-2 px-3 rounded-3 opacity-50'><i class='fa-solid fa-user-shield fa-fw text-white-50 me-2 fs-5'></i><span>No Admin</span></a>";
 }
 ?>
 <html lang="es">
@@ -188,19 +188,35 @@ if ($usr_right == 1) {
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class='fas fa-ellipsis-v text-secondary fa-lg'></i>&nbsp;Menú</a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item text-white" href="index.php">Drawers</a></li>
-            <li><a class="dropdown-item text-white" href="items.php">Ítems</a></li>
-            <li><a class="dropdown-item text-white" href="categories.php">Categorías</a></li>
-            <li><a class="dropdown-item text-white" href="inches_mm.php">Inches a MM</a></li>
-            <li><a class="dropdown-item text-white" href="favs.php">Marcadores</a></li>
-            <li><a class="dropdown-item text-white" href="compras.php">Compras</a></li>
-            <li><a class="dropdown-item text-white" href="favoritos_ml.php"><i class="fa-solid fa-star text-warning me-1"></i>Favoritos ML</a></li>
+          <a class="nav-link dropdown-toggle btn-menu-custom d-flex align-items-center gap-2 px-3 py-2 rounded-pill" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-bars-staggered text-white"></i>
+            <span class="fw-semibold text-white">Menú</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-custom shadow-lg border-0 rounded-4 p-2 mt-2" aria-labelledby="navbarDropdown">
+            <li class="px-2 py-2 border-bottom border-white border-opacity-10 mb-2">
+              <form action='usr_edit.php' method='post' id='userProfileForm' class='m-0'>
+                <input type='hidden' name='id' value="<?= $usr_id ?>">
+                <a class="d-flex align-items-center text-white text-decoration-none p-2 rounded-3 btn-user-profile" href='#' onclick='document.getElementById("userProfileForm").submit();' title="Editar Perfil">
+                  <img class="profile-img1 border border-2 border-primary me-2" src="<?= $usr_image ?>" style="width: 38px; height: 38px; object-fit: cover;">
+                  <div class="d-flex flex-column text-truncate ms-1">
+                    <span class="fw-bold lh-1 text-white"><?= h($usr_name . " " . $usr_lastname) ?></span>
+                    <small class="text-white-50 fs-7 mt-1"><?= h($usr_email) ?></small>
+                  </div>
+                </a>
+              </form>
+            </li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="index.php"><i class="fa-solid fa-boxes-stacked fa-fw text-white me-2 fs-5"></i><span>Drawers</span></a></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="items.php"><i class="fa-solid fa-box-archive fa-fw text-white me-2 fs-5"></i><span>Ítems</span></a></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="categories.php"><i class="fa-solid fa-tags fa-fw text-white me-2 fs-5"></i><span>Categorías</span></a></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="inches_mm.php"><i class="fa-solid fa-ruler-combined fa-fw text-white me-2 fs-5"></i><span>Inches a MM</span></a></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="favs.php"><i class="fa-solid fa-bookmark fa-fw text-white me-2 fs-5"></i><span>Marcadores</span></a></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="compras.php"><i class="fa-solid fa-cart-shopping fa-fw text-white me-2 fs-5"></i><span>Compras</span></a></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="favoritos_ml.php"><i class="fa-solid fa-star fa-fw text-white me-2 fs-5"></i><span>Favoritos ML</span></a></li>
             <li>
-              <hr class="dropdown-divider">
+              <hr class="dropdown-divider my-2">
             </li>
             <li><?= $menu_admin ?></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="logout.php"><i class="fa-solid fa-right-from-bracket fa-fw text-white me-2 fs-5"></i><span>Salir</span></a></li>
           </ul>
         </li>
       </ul>
@@ -215,26 +231,40 @@ if ($usr_right == 1) {
         </li>
       </ul>
       <ul class="navbar-nav ml-auto align-items-center">
-        <li class="nav-item me-3" title="Cambiar tema claro/oscuro">
+        <li class="nav-item me-2" title="Cambiar tema claro/oscuro">
           <button type="button" class="btn btn-link nav-link text-white border-0 p-0" id="btn-theme" onclick="toggleTheme()">
             <i class="fa-regular fa-sun fa-fw fs-5"></i>
           </button>
-        </li>
-        <li class="nav-item d-none d-lg-block">
-          <a class="nav-link" href='#'><img class="profile-img1 border border-primary" src="<?= $usr_image ?>"></a>
-        </li>
-        <li class="nav-item">
-          <form action='usr_edit.php' method='post'>
-            <input type='hidden' name='id' id='id' value="<?= $usr_id ?>">
-            <a class="nav-link text-white" href='#' onclick='this.parentNode.submit();'><?= $usr_name . " " . $usr_lastname ?></a>
-          </form>
-        </li>
-        <li class="nav-item" title="Cerrar Sesion">
-          <a class="nav-link text-white" href="logout.php"><i class="fas fa-sign-out-alt text-danger fa-lg"></i>Salir</a>
         </li>
       </ul>
     </div>
     </div>
   </nav>
   <!-- /Navigation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdowns = document.querySelectorAll('.nav-item.dropdown');
+      dropdowns.forEach(dropdown => {
+        let timeoutId;
+        const menu = dropdown.querySelector('.dropdown-menu-custom');
+        const btn = dropdown.querySelector('.dropdown-toggle');
+        if (!menu || !btn) return;
+
+        dropdown.addEventListener('mouseenter', () => {
+          clearTimeout(timeoutId);
+          menu.classList.add('show');
+          btn.classList.add('show');
+          btn.setAttribute('aria-expanded', 'true');
+        });
+
+        dropdown.addEventListener('mouseleave', () => {
+          timeoutId = setTimeout(() => {
+            menu.classList.remove('show');
+            btn.classList.remove('show');
+            btn.setAttribute('aria-expanded', 'false');
+          }, 350); // Tolerancia de 350ms para mantenerlo abierto cómodamente
+        });
+      });
+    });
+  </script>
   <div class="separador"></div>
