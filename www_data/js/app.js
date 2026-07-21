@@ -304,7 +304,15 @@ async function drawerItems($drawerId, usuarioId) {
         'render': function ( data, type, row) {
           let srcIMG = 'default.png'
           if (row['item_image'].length > 0){srcIMG = `${row['item_image']}`}
-          const respuesta =  `<img class="border border-teal mb-3 rounded-circle" src="images/item/${srcIMG}" alt="" width="60px">`
+          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}"><img class="border border-${row['category_color']} mb-3 rounded-circle" src="images/item/${srcIMG}" alt="" width="90px"></a>`
+          return respuesta
+        }
+      },
+      {
+        'targets': 1,
+        'data': 'item_name',
+        'render': function ( data, type, row) {
+          const respuesta = `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-decoration-none text-reset fw-bold">${row['item_name']}</a>`
           return respuesta
         }
       },

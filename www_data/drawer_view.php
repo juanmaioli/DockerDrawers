@@ -6,8 +6,8 @@ $drawerId = $_GET['id'];
 <!-- Container -->
 <main class="container-fluid">
   <article class="row">
-    <section class="col-md-1"></section>
-    <section class="col-md-10">
+    <!-- <section class="col-md-1"></section> -->
+    <section class="col-md-12">
       <article class="card" id="drawer_card">
         <section class="card-header">
           <article class="row">
@@ -85,11 +85,11 @@ $drawerId = $_GET['id'];
         </section>
       </article>
     </section>
-    <section class="col-md-1"></section>
+    <!-- <section class="col-md-1"></section> -->
   </article>
   <article class="row mt-4">
-    <section class="col-md-1"></section>
-    <section class="col-md-10">
+    <!-- <section class="col-md-1"></section> -->
+    <section class="col-md-12">
       <article class="card" id="drawer_card_items">
         <section class="card-header">
           <article class="row">
@@ -118,7 +118,7 @@ $drawerId = $_GET['id'];
         </section>
       </article>
     </section>
-    <section class="col-md-1"></section>
+    <!-- <section class="col-md-1"></section> -->
   </article>
 </main>
 <!-- /Container -->
