@@ -76,8 +76,8 @@ if (time() >= strtotime($auth['expires_at'])) {
 }
 $conn->close();
 
-// Intentar obtener detalles — primero con token, luego sin él
-$attrs = "id,title,thumbnail,price,currency_id,permalink";
+// Attempt to fetch details - status, title, etc.
+$attrs = "id,title,thumbnail,price,currency_id,permalink,status";
 $url   = "https://api.mercadolibre.com/items?ids={$ids}&attributes={$attrs}";
 
 function proxy_curl(string $url, ?string $token = null): array {
@@ -121,23 +121,33 @@ if (!is_array($data) || isset($data['error']) || isset($data['blocked_by'])) {
     exit();
 }
 
-// Normalizar: puede venir como [{code,body},...] o directamente [{id,...},...]
+// Normalizar e identificar favoritos eliminados o no encontrados
 $result = [];
-foreach ($data as $entry) {
-    $item = (isset($entry['body']) && is_array($entry['body'])) ? $entry['body'] : $entry;
-    if (isset($item['id']) && isset($item['title'])) {
-        $result[] = [
-            'id'          => $item['id'],
-            'title'       => $item['title'],
-            'thumbnail'   => str_replace('http://', 'https://', $item['thumbnail'] ?? ''),
-            'price'       => $item['price'] ?? null,
-            'currency_id' => $item['currency_id'] ?? 'ARS',
-            'permalink'   => $item['permalink'] ?? '',
-        ];
+if (is_array($data)) {
+    foreach ($data as $entry) {
+        if (!is_array($entry)) continue;
+
+        $code = $entry['code'] ?? 200;
+        $item = (isset($entry['body']) && is_array($entry['body'])) ? $entry['body'] : $entry;
+        $itemId = $item['id'] ?? ($entry['body']['id'] ?? null);
+
+        if (($code == 200 || $code == 206) && !empty($item['id'])) {
+            $result[] = [
+                'id'          => $item['id'],
+                'title'       => !empty($item['title']) ? $item['title'] : $item['id'],
+                'thumbnail'   => str_replace('http://', 'https://', $item['thumbnail'] ?? ''),
+                'price'       => $item['price'] ?? null,
+                'currency_id' => $item['currency_id'] ?? 'ARS',
+                'permalink'   => $item['permalink'] ?? '',
+                'deleted'     => false,
+            ];
+        } else if ($itemId) {
+            $result[] = [
+                'id'      => $itemId,
+                'deleted' => true,
+            ];
+        }
     }
 }
 
-echo json_encode(empty($result)
-    ? ['_debug' => ['r1_code' => $r1['code'], 'sample' => array_slice($data, 0, 2)]]
-    : $result
-);
+echo json_encode($result);

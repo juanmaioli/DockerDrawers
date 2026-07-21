@@ -71,6 +71,8 @@ CREATE TABLE `drawers_fav`  (
   `fav_img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NULL DEFAULT NULL,
   `fav_price` float(10, 2) NULL DEFAULT NULL,
   `fav_mla` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NULL DEFAULT NULL,
+  `fav_full` varchar(2) NOT NULL DEFAULT 'no',
+  `fav_internacional` varchar(2) NOT NULL DEFAULT 'no',
   `fav_delete` int(11) NULL DEFAULT 0,
   PRIMARY KEY (`fav_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;

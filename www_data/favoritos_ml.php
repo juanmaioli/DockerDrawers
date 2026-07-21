@@ -74,43 +74,73 @@ if ($auth && $config_ready) {
         $connected = true;
     }
 
-    // 4. Obtener TODOS los bookmarks paginando (solo ID + fecha, sin detalles)
+    // 4. Obtener los bookmarks del usuario desduplicados
     if ($connected) {
-        set_time_limit(120);
-        $offset = 0;
-        $limit  = 50;
+        $ch = curl_init("https://api.mercadolibre.com/users/me/bookmarks");
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => ["Authorization: Bearer {$access_token}", "Accept: application/json"],
+            CURLOPT_TIMEOUT        => 15,
+        ]);
+        $response_body = curl_exec($ch);
+        curl_close($ch);
 
-        do {
-            $ch = curl_init("https://api.mercadolibre.com/users/me/bookmarks?limit={$limit}&offset={$offset}");
-            curl_setopt_array($ch, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HTTPHEADER     => ["Authorization: Bearer {$access_token}", "Accept: application/json"],
-            ]);
-            $page = json_decode(curl_exec($ch), true);
-            curl_close($ch);
+        $page = json_decode($response_body, true);
 
-            if (!is_array($page) || isset($page['error'])) {
-                if ($offset === 0 && isset($page['message'])) {
-                    $error_msg = "Error API: " . $page['message'];
+        if (is_array($page)) {
+            $items = isset($page['results']) && is_array($page['results']) ? $page['results'] : $page;
+            if (is_array($items)) {
+                $seen = [];
+                foreach ($items as $bk) {
+                    if (is_array($bk) && !empty($bk['item_id'])) {
+                        $id = $bk['item_id'];
+                        if (!isset($seen[$id])) {
+                            $seen[$id] = true;
+                            $bookmarks[] = $bk;
+                        }
+                    }
                 }
-                break;
+            }
+        }
+        
+        // 5. Comparar con la tabla drawers_fav e insertar los que NO estén cargados en la base de datos
+        if (!empty($bookmarks)) {
+            // Asegurar que las columnas existan en la tabla MariaDB
+            $conn->query("ALTER TABLE drawers_fav ADD COLUMN IF NOT EXISTS fav_full VARCHAR(2) NOT NULL DEFAULT 'no'");
+            $conn->query("ALTER TABLE drawers_fav ADD COLUMN IF NOT EXISTS fav_internacional VARCHAR(2) NOT NULL DEFAULT 'no'");
+
+            $res_existing = $conn->query("SELECT fav_mla FROM drawers_fav WHERE fav_mla IS NOT NULL AND fav_mla != ''");
+            $existing_mlas = [];
+            if ($res_existing) {
+                while ($row_ex = $res_existing->fetch_assoc()) {
+                    $existing_mlas[$row_ex['fav_mla']] = true;
+                }
             }
 
-            $items = isset($page['results']) ? $page['results'] : $page;
-            if (!is_array($items) || count($items) === 0) break;
+            $stmt_ins = $conn->prepare("INSERT INTO drawers_fav (fav_mla, fav_link, fav_date, fav_title, fav_img, fav_price, fav_desc, fav_full, fav_internacional, fav_delete) VALUES (?, ?, ?, '', '', NULL, '', 'no', 'no', 0)");
 
-            $bookmarks = array_merge($bookmarks, $items);
-            $offset   += count($items);
-
-            if (count($items) < $limit) break;
-
-        } while (count($bookmarks) < 5000);
+            foreach ($bookmarks as $bk) {
+                $mla_id = $bk['item_id'];
+                if (!isset($existing_mlas[$mla_id])) {
+                    $link = "https://articulo.mercadolibre.com.ar/" . str_replace('MLA', 'MLA-', $mla_id);
+                    $date = '';
+                    if (!empty($bk['bookmarked_date'])) {
+                        $dt = new DateTime($bk['bookmarked_date']);
+                        $date = $dt->format('Y-m-d H:i:s');
+                    }
+                    $stmt_ins->bind_param("sss", $mla_id, $link, $date);
+                    $stmt_ins->execute();
+                    $existing_mlas[$mla_id] = true;
+                }
+            }
+            $stmt_ins->close();
+        }
     }
 }
 
 $conn->close();
 
-// Pasar bookmarks a JS como JSON
+// Pasar marcadores a JS como JSON (ID, Fecha, Enlace directo, Full e Internacional)
 $bookmarks_json = json_encode(array_map(function($bk) {
     $iid  = $bk['item_id'];
     $link = "https://articulo.mercadolibre.com.ar/" . str_replace('MLA', 'MLA-', $iid);
@@ -119,7 +149,13 @@ $bookmarks_json = json_encode(array_map(function($bk) {
         $dt   = new DateTime($bk['bookmarked_date']);
         $date = $dt->format('Y/m/d');
     }
-    return ['id' => $iid, 'link' => $link, 'date' => $date];
+    return [
+        'id'            => $iid,
+        'link'          => $link,
+        'date'          => $date,
+        'full'          => 'no',
+        'internacional' => 'no'
+    ];
 }, $bookmarks), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
 ?>
 
@@ -173,23 +209,17 @@ $bookmarks_json = json_encode(array_map(function($bk) {
             <div class="alert alert-info"><i class="fa-solid fa-star me-2"></i>No tenés artículos marcados como favoritos todavía.</div>
 
           <?php else: ?>
-            <!-- Spinner mientras JS carga los detalles -->
-            <div id="fav-loading" class="text-center py-4 text-muted">
-              <div class="spinner-border spinner-border-sm me-2" role="status"></div>
-              Cargando detalles de <?= count($bookmarks) ?> favoritos...
-              <div class="progress mt-3" style="height:6px;max-width:400px;margin:auto;">
-                <div id="fav-progress" class="progress-bar bg-indigo progress-bar-striped progress-bar-animated" style="width:0%"></div>
-              </div>
-            </div>
 
-            <table id="favoritosTable" class="table table-sm table-hover d-none" style="width:100%">
+            <table id="favoritosTable" class="table table-sm table-hover" style="width:100%">
               <thead class="small">
                 <tr>
                   <th style="width:60px;">Foto</th>
-                  <th>Producto</th>
+                  <th>ID del Artículo</th>
+                  <th class="text-center" style="width:70px;">Full</th>
+                  <th class="text-center" style="width:100px;">Internacional</th>
                   <th class="text-end">Precio</th>
-                  <th class="text-center">Fecha</th>
-                  <th class="text-center" style="width:55px;">Ver</th>
+                  <th class="text-center">Fecha de Marcado</th>
+                  <th class="text-center" style="width:110px;">Enlace directo</th>
                 </tr>
               </thead>
               <tbody class="small" id="favoritosBody"></tbody>
@@ -201,76 +231,36 @@ $bookmarks_json = json_encode(array_map(function($bk) {
 <?php include("footer.php"); ?>
 
 <script>
-(async function () {
+(function () {
   const bookmarks = <?= $bookmarks_json ?>;
   if (!bookmarks || !bookmarks.length) return;
 
-  const tbody    = document.getElementById('favoritosBody');
-  const loading  = document.getElementById('fav-loading');
-  const progress = document.getElementById('fav-progress');
-  const table    = document.getElementById('favoritosTable');
-  const total    = bookmarks.length;
-  const chunk    = 20;
+  const tbody = document.getElementById('favoritosBody');
 
-  // Pre-renderizar filas con placeholders
+  // Renderizar las filas con las columnas 'Full' e 'Internacional' por defecto en 'no'
   bookmarks.forEach(bk => {
     const tr = document.createElement('tr');
     tr.dataset.itemId = bk.id;
     tr.innerHTML = `
       <td class="text-center td-foto">
         <a href="${bk.link}" target="_blank">
-          <img src="images/ml.svg" class="rounded border border-lemon" width="50" height="50" style="object-fit:contain" alt="">
+          <img src="images/ml.svg" class="rounded border border-lemon" width="40" height="40" style="object-fit:contain" alt="ML">
         </a>
       </td>
-      <td class="td-titulo">
+      <td class="td-titulo fw-bold">
         <a href="${bk.link}" target="_blank" class="fw-bold text-decoration-none">${bk.id}</a>
-        <br><small class="text-muted">${bk.id}</small>
       </td>
-      <td class="text-end fw-bold td-precio">-</td>
+      <td class="text-center"><span class="badge bg-secondary">no</span></td>
+      <td class="text-center"><span class="badge bg-secondary">no</span></td>
+      <td class="text-end fw-bold td-precio"></td>
       <td class="text-center">${bk.date}</td>
       <td class="text-center">
-        <a href="${bk.link}" target="_blank" class="btn btn-outline-warning btn-sm td-link" title="Ver en ML">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <a href="${bk.link}" target="_blank" class="btn btn-outline-warning btn-sm" title="Ver en Mercado Libre">
+          <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Ver en ML
         </a>
       </td>`;
     tbody.appendChild(tr);
   });
-
-  const rowMap = {};
-  tbody.querySelectorAll('tr[data-item-id]').forEach(tr => {
-    rowMap[tr.dataset.itemId] = tr;
-  });
-
-  function enrichRow(item) {
-    const tr = rowMap[item.id];
-    if (!tr || !item.title) return;
-    const price = item.price != null
-      ? `${item.currency_id}&nbsp;$${parseFloat(item.price).toLocaleString('es-AR',{minimumFractionDigits:2})}`
-      : '-';
-    const link = item.permalink || tr.querySelector('.td-link').href;
-    if (item.thumbnail) tr.querySelector('.td-foto img').src = item.thumbnail;
-    tr.querySelector('.td-titulo a').href        = link;
-    tr.querySelector('.td-titulo a').textContent = item.title;
-    tr.querySelector('.td-titulo small').textContent = item.id;
-    tr.querySelector('.td-precio').innerHTML     = price;
-    tr.querySelector('.td-link').href            = link;
-  }
-
-
-  // Fetch en lotes via proxy PHP (requiere permiso read_items habilitado en portal ML)
-  for (let i = 0; i < total; i += chunk) {
-    const ids = bookmarks.slice(i, i + chunk).map(b => b.id).join(',');
-    const pct = Math.round(((i + chunk) / total) * 100);
-    try {
-      const res  = await fetch(`api/ml_item_proxy.php?ids=${ids}`);
-      const data = await res.json();
-      if (Array.isArray(data)) data.forEach(enrichRow);
-    } catch(e) { console.warn('Error lote proxy:', e); }
-    if (progress) progress.style.width = Math.min(pct, 100) + '%';
-  }
-
-  if (loading) loading.classList.add('d-none');
-  if (table)   table.classList.remove('d-none');
 
   $('#favoritosTable').DataTable({
     destroy: true,
@@ -278,12 +268,12 @@ $bookmarks_json = json_encode(array_map(function($bk) {
     stateSave: true,
     stateDuration: 120,
     pageLength: 25,
-    order: [[3, 'desc']],
+    order: [[5, 'desc']],
     paging: true,
     responsive: true,
     dom: 'Bfrtip',
     orderCellsTop: true,
-    columnDefs: [{ orderable: false, targets: [0, 4] }],
+    columnDefs: [{ orderable: false, targets: [0, 6] }],
     buttons: [
       {extend:'copy',  className:'btn btn-darkblue', text:'<i class="fa-regular fa-copy"></i> Copiar'},
       {extend:'excel', className:'btn btn-green',    text:'<i class="fa-regular fa-file-excel"></i> Excel'},
