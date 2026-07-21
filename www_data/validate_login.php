@@ -48,11 +48,8 @@ if($result->num_rows > 0 )
         $_SESSION["right"] = $usr_right;
         $_SESSION["loggedin"] = true;
 
-        if ($www_https == "on") {
-            setcookie($site_cookie, hash('sha256', $usr_email )  . ":".$usr_id, time()+60*60*24*$usr_remember, '/',  $www_host   , true, true);
-        } else {
-            setcookie($site_cookie, hash('sha256', $usr_email )  . ":".$usr_id, time()+60*60*24*$usr_remember, '/',  $www_host  , false, true);
-        }
+        $secure_cookie = ($www_https === "on");
+        setcookie($site_cookie, hash('sha256', $usr_email) . ":" . $usr_id, time() + (60 * 60 * 24 * $usr_remember), '/', $www_host, $secure_cookie, true);
 
         $sql_sess = "INSERT INTO " . $table_pre . "session(sess_usr, sess_ip, sess_date, sess_action) VALUES(?, ?, ?, 1)";
         $stmt_sess = $conn->prepare($sql_sess);

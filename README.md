@@ -90,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.12.1` | 🐛 Corrección de persistencia de sesión en cookies de "Recordarme en este equipo" habilitando coincidencia dinámica de host y protocolo HTTPS |
 | `v0.12.0` | 🚀 Enlaces en nombre y foto de ítems en cajones para ir al detalle, ampliación de imágenes a 90px con bordes dinámicos de categoría, y optimización de diseño a pantalla completa (col-md-12) en la vista de cajón |
 | `v0.11.0` | 🚀 Nueva página de Favoritos de Mercado Libre con proxy seguro; "Recordarme" establecido en 30 días; "Agregar al Inventario" abre en nueva pestaña; y marca "Generic" por defecto en vistas de ítem |
 | `v0.10.3` | 🐛 Traducción de botón "Print" a "Imprimir" en compras y tabla de pulgadas; estilo de botones DataTable unificado en inches_mm |
