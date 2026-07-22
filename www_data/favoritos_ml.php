@@ -163,6 +163,20 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
             <section class="col-md-6 text-end">
               <?php if ($connected): ?>
                 <?php if (!empty($bookmarks)): ?>
+                  <div class="d-inline-flex align-items-center me-2 border border-secondary border-opacity-25 rounded-3 px-2 py-1 bg-body-tertiary">
+                    <div class="form-check form-switch mb-0 me-3" title="Filtrar por envíos FULL">
+                      <input class="form-check-input" type="checkbox" id="switchFiltrarFull" role="switch">
+                      <label class="form-check-label small fw-bold text-success" for="switchFiltrarFull">
+                        <i class="fa-solid fa-bolt me-1"></i>Solo FULL
+                      </label>
+                    </div>
+                    <div class="form-check form-switch mb-0" title="Filtrar por compras INTERNACIONALES">
+                      <input class="form-check-input" type="checkbox" id="switchFiltrarInter" role="switch">
+                      <label class="form-check-label small fw-bold text-danger fst-italic" for="switchFiltrarInter">
+                        <i class="fa-solid fa-plane" style="transform: rotate(-45deg); display: inline-block;"></i>Solo INTER.
+                      </label>
+                    </div>
+                  </div>
                   <button class="btn btn-indigo btn-sm me-2 shadow-indigo-sm" id="btnScrapearTodos" onclick="scrapeAllFavs()">
                     <i class="fa-solid fa-cloud-arrow-down me-1"></i>Scrapear Todos
                   </button>
@@ -380,7 +394,23 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     processNext();
   };
 
-  $('#favoritosTable').DataTable({
+  $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    if (settings.nTable.id !== 'favoritosTable') return true;
+    const soloFull = $('#switchFiltrarFull').is(':checked');
+    const soloInter = $('#switchFiltrarInter').is(':checked');
+
+    if (soloFull) {
+      const fullCell = data[2] || '';
+      if (fullCell.indexOf('FULL') === -1) return false;
+    }
+    if (soloInter) {
+      const interCell = data[3] || '';
+      if (interCell.indexOf('INTER.') === -1) return false;
+    }
+    return true;
+  });
+
+  const table = $('#favoritosTable').DataTable({
     destroy: true,
     deferRender: true,
     stateSave: true,
@@ -399,6 +429,22 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
       {extend:'print', className:'btn btn-indigo',   text:'<i class="fa-regular fa-print"></i> Imprimir'}
     ]
   });
+
+  $('#switchFiltrarFull, #switchFiltrarInter').on('change', function () {
+    localStorage.setItem('drawers_fav_switch_full', $('#switchFiltrarFull').is(':checked') ? '1' : '0');
+    localStorage.setItem('drawers_fav_switch_inter', $('#switchFiltrarInter').is(':checked') ? '1' : '0');
+    table.draw();
+  });
+
+  if (localStorage.getItem('drawers_fav_switch_full') === '1') {
+    $('#switchFiltrarFull').prop('checked', true);
+  }
+  if (localStorage.getItem('drawers_fav_switch_inter') === '1') {
+    $('#switchFiltrarInter').prop('checked', true);
+  }
+  if (localStorage.getItem('drawers_fav_switch_full') === '1' || localStorage.getItem('drawers_fav_switch_inter') === '1') {
+    table.draw();
+  }
 })();
 </script>
 
