@@ -218,9 +218,9 @@ function ml_curl_get($url, $access_token) {
             </section>
             <section class="col-md-6 text-end d-flex align-items-center justify-content-end gap-3">
               <?php if ($connected): ?>
-                <div class="form-check form-switch mb-0" title="Mostrar/ocultar compras ya cargadas en inventario">
+                <div class="form-check form-switch mb-0" title="Mostrar todos / solo compras sin cargar en inventario">
                   <input class="form-check-input" type="checkbox" id="switchOcultarCargados" role="switch">
-                  <label class="form-check-label small" for="switchOcultarCargados">Ocultar cargados</label>
+                  <label class="form-check-label small fw-bold text-warning" for="switchOcultarCargados">Sin cargar</label>
                 </div>
                 <a href="compras.php?action=disconnect" class="btn btn-danger btn-sm"><i class="fa-solid fa-link-slash me-1"></i>Desconectar Cuenta</a>
               <?php endif; ?>

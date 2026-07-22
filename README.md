@@ -90,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.16.1` | 🐛 Actualización de etiqueta del switch en `compras.php` a "Sin cargar" (`TODOS / SIN CARGAR`) y perfeccionamiento visual de indicadores `FULL` e `INTER.` |
 | `v0.16.0` | 🚀 Switches interactivos `Solo FULL` y `Solo INTER.` en la tabla de Favoritos de Mercado Libre (`favoritos_ml.php`) con filtrado dinámico en DataTables y persistencia en `localStorage` |
 | `v0.15.1` | 🐛 Ajustes de diseño y correcciones en Favoritos: imágenes a 90px de alto/ancho circulares, indicadores de `FULL` (verde e itálica sin espacios) e `INTER.` (rojo, itálica, sin espacios y avión rotado -45°) |
 | `v0.15.0` | 🚀 Sistema de scraping individual y masivo en Favoritos de Mercado Libre (`favoritos_ml.php` / `api/scrape_fav_item.php`), extracción de precio, título, foto, descripción y detección precisa de Envío FULL y Compra Internacional con sincronización en MariaDB (`drawers_fav`) |
