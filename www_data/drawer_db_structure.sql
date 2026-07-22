@@ -204,4 +204,29 @@ CREATE TABLE `drawers_compras_check` (
   KEY `idx_cc_usr` (`usr_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
 
+-- ----------------------------
+-- Table structure for drawers_compras
+-- ----------------------------
+DROP TABLE IF EXISTS `drawers_compras`;
+CREATE TABLE `drawers_compras` (
+  `cmp_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `usr_id` INT(11) NOT NULL,
+  `ml_order_id` VARCHAR(64) NOT NULL,
+  `ml_item_id` VARCHAR(64) NOT NULL,
+  `cmp_title` VARCHAR(255) NOT NULL DEFAULT '',
+  `cmp_img` VARCHAR(255) NOT NULL DEFAULT 'images/ml.svg',
+  `cmp_quantity` INT(11) NOT NULL DEFAULT 1,
+  `cmp_unit_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `cmp_total_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `cmp_date` DATETIME NULL,
+  `cmp_status` VARCHAR(32) NOT NULL DEFAULT 'paid',
+  `cmp_checked` TINYINT(1) NOT NULL DEFAULT 0,
+  `cmp_created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `cmp_updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`cmp_id`),
+  UNIQUE KEY `usr_order_item` (`usr_id`, `ml_order_id`, `ml_item_id`),
+  KEY `idx_usr_id` (`usr_id`),
+  KEY `idx_cmp_checked` (`cmp_checked`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;

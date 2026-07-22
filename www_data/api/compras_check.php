@@ -27,7 +27,14 @@ if (empty($ml_order_id) || empty($ml_item_id)) {
     exit();
 }
 
-// INSERT ... ON DUPLICATE KEY UPDATE para hacer toggle
+// 1. Actualizar en drawers_compras
+$sql_cmp = "UPDATE drawers_compras SET cmp_checked = ? WHERE usr_id = ? AND ml_order_id = ? AND ml_item_id = ?";
+$stmt_cmp = $conn->prepare($sql_cmp);
+$stmt_cmp->bind_param("iiss", $checked, $usuarioId, $ml_order_id, $ml_item_id);
+$stmt_cmp->execute();
+$stmt_cmp->close();
+
+// 2. Mantener actualización en drawers_compras_check por compatibilidad
 $sql = "INSERT INTO drawers_compras_check (usr_id, ml_order_id, ml_item_id, checked)
         VALUES (?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE checked = VALUES(checked)";

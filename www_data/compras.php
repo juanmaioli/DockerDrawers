@@ -133,62 +133,113 @@ if ($auth && $config_ready) {
         $connected = true;
     }
     
-    // 5. Obtener compras
+    // 5. Sincronizar y consultar compras locales
     if ($connected) {
-        $offset = 0;
-        $limit = 50;
-        $has_more = true;
-        
-        while ($has_more) {
-            $orders_res = ml_curl_get("https://api.mercadolibre.com/orders/search?buyer=$ml_user_id&limit=$limit&offset=$offset", $access_token);
-            
-            if (isset($orders_res['results']) && !empty($orders_res['results'])) {
-                $orders = array_merge($orders, $orders_res['results']);
-                $offset += $limit;
-                
-                $total = $orders_res['paging']['total'] ?? 0;
-                if ($offset >= $total) {
+        // Verificar cuántos registros locales existen
+        $local_count = 0;
+        $stmt_cnt = $conn->prepare("SELECT COUNT(*) FROM drawers_compras WHERE usr_id = ?");
+        $stmt_cnt->bind_param("i", $usuarioId);
+        $stmt_cnt->execute();
+        $stmt_cnt->bind_result($local_count);
+        $stmt_cnt->fetch();
+        $stmt_cnt->close();
+
+        $force_sync = (isset($_GET['action']) && $_GET['action'] === 'sync');
+
+        // Si se pide sync manual o no hay registros locales, sincronizar desde la API
+        if ($force_sync || $local_count === 0) {
+            $offset = 0;
+            $limit = 50;
+            $has_more = true;
+            $api_orders = [];
+
+            while ($has_more) {
+                $orders_res = ml_curl_get("https://api.mercadolibre.com/orders/search?buyer=$ml_user_id&limit=$limit&offset=$offset", $access_token);
+
+                if (isset($orders_res['results']) && !empty($orders_res['results'])) {
+                    $api_orders = array_merge($api_orders, $orders_res['results']);
+                    $offset += $limit;
+                    $total = $orders_res['paging']['total'] ?? 0;
+                    if ($offset >= $total) $has_more = false;
+                } else {
+                    if ($offset === 0 && isset($orders_res['message'])) {
+                        $error_msg = "No se pudieron obtener las compras: " . $orders_res['message'];
+                    }
                     $has_more = false;
                 }
-            } else {
-                if ($offset === 0 && isset($orders_res['message'])) {
-                    $error_msg = "No se pudieron obtener las compras: " . $orders_res['message'];
+            }
+
+            if (!empty($api_orders)) {
+                $checked_map = [];
+                $res_chk = $conn->query("SELECT ml_order_id, ml_item_id, checked FROM drawers_compras_check WHERE usr_id = $usuarioId");
+                if ($res_chk) {
+                    while ($r = $res_chk->fetch_assoc()) {
+                        $checked_map[$r['ml_order_id'] . '_' . $r['ml_item_id']] = (int)$r['checked'];
+                    }
                 }
-                $has_more = false;
+
+                $stmt_upsert = $conn->prepare("INSERT INTO drawers_compras 
+                    (usr_id, ml_order_id, ml_item_id, cmp_title, cmp_img, cmp_quantity, cmp_unit_price, cmp_total_price, cmp_date, cmp_status, cmp_checked)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE 
+                    cmp_title = VALUES(cmp_title),
+                    cmp_img = VALUES(cmp_img),
+                    cmp_quantity = VALUES(cmp_quantity),
+                    cmp_unit_price = VALUES(cmp_unit_price),
+                    cmp_total_price = VALUES(cmp_total_price),
+                    cmp_date = VALUES(cmp_date),
+                    cmp_status = VALUES(cmp_status)");
+
+                foreach ($api_orders as $order) {
+                    $order_id = (string)$order['id'];
+                    $status   = $order['status'] ?? 'paid';
+                    $dt       = new DateTime($order['date_created']);
+                    $date_str = $dt->format('Y-m-d H:i:s');
+
+                    foreach ($order['order_items'] as $oi) {
+                        $item_id = $oi['item']['id'] ?? '';
+                        $title   = $oi['item']['title'] ?? 'Producto sin título';
+                        $img     = 'images/ml.svg';
+                        $qty     = (int)($oi['quantity'] ?? 1);
+                        $price   = (float)($oi['unit_price'] ?? 0);
+                        $tot     = $qty * $price;
+                        $chk_val = $checked_map[$order_id . '_' . $item_id] ?? 0;
+
+                        $stmt_upsert->bind_param("issssiddssi", 
+                            $usuarioId, $order_id, $item_id, $title, $img, $qty, $price, $tot, $date_str, $status, $chk_val
+                        );
+                        $stmt_upsert->execute();
+                    }
+                }
+                $stmt_upsert->close();
+            }
+
+            if ($force_sync) {
+                $conn->close();
+                header("Location: compras.php?synced=1");
+                exit();
             }
         }
     }
 }
 
-// Cargar estados de checkbox para el usuario actual
-$checked_map = [];
+// 6. Consultar listado local desde drawers_compras
+$db_compras = [];
+$compras_total_sum = 0;
 if ($connected) {
-    $stmt_chk = $conn->prepare("SELECT ml_order_id, ml_item_id FROM drawers_compras_check WHERE usr_id = ? AND checked = 1");
-    $stmt_chk->bind_param("i", $usuarioId);
-    $stmt_chk->execute();
-    $res_chk = $stmt_chk->get_result();
-    while ($row_chk = $res_chk->fetch_assoc()) {
-        $map_key = $row_chk['ml_order_id'] . '_' . $row_chk['ml_item_id'];
-        $checked_map[$map_key] = true;
+    $stmt_fetch = $conn->prepare("SELECT * FROM drawers_compras WHERE usr_id = ? ORDER BY cmp_date DESC");
+    $stmt_fetch->bind_param("i", $usuarioId);
+    $stmt_fetch->execute();
+    $res_fetch = $stmt_fetch->get_result();
+    while ($row = $res_fetch->fetch_assoc()) {
+        $db_compras[] = $row;
+        $compras_total_sum += floatval($row['cmp_total_price']);
     }
-    $stmt_chk->close();
+    $stmt_fetch->close();
 }
 
 $conn->close();
 
-// Calcular la suma total de todas las compras obtenidas
-$compras_total_sum = 0;
-if (!empty($orders)) {
-    foreach ($orders as $order) {
-        if (!empty($order['order_items'])) {
-            foreach ($order['order_items'] as $oi) {
-                $q = $oi['quantity'] ?? 1;
-                $p = $oi['unit_price'] ?? 0;
-                $compras_total_sum += ($q * $p);
-            }
-        }
-    }
-}
 $formatted_compras_total = '$ ' . number_format($compras_total_sum, 2, ',', '.');
 
 // Auxiliares Curl
@@ -233,22 +284,34 @@ function ml_curl_get($url, $access_token) {
                 <img class="border border-lemon mb-1 rounded-circle" src="images/ml.svg" alt="ML" width="40px">
                 Compras de Mercado Libre
               </h3>
-              <?php if ($connected && !empty($orders)): ?>
+              <?php if ($connected && !empty($db_compras)): ?>
                 <h3 class="fst-italic text-muted mt-1 mb-0 fs-5" id="compras-total-price">(<?= $formatted_compras_total ?>)</h3>
               <?php endif; ?>
             </section>
-            <section class="col-md-6 text-end d-flex align-items-center justify-content-end gap-3">
+            <section class="col-md-6 text-end d-flex align-items-center justify-content-end gap-2">
               <?php if ($connected): ?>
-                <div class="form-check form-switch mb-0" title="Mostrar todos / solo compras sin cargar en inventario">
+                <div class="form-check form-switch mb-0 me-2" title="Mostrar todos / solo compras sin cargar en inventario">
                   <input class="form-check-input" type="checkbox" id="switchOcultarCargados" role="switch">
                   <label class="form-check-label small fw-bold text-warning" for="switchOcultarCargados">Sin cargar</label>
                 </div>
-                <a href="compras.php?action=disconnect" class="btn btn-danger btn-sm"><i class="fa-solid fa-link-slash me-1"></i>Desconectar Cuenta</a>
+                <a href="compras.php?action=sync" class="btn btn-indigo btn-sm shadow-indigo-sm me-1" title="Sincronizar compras con Mercado Libre">
+                  <i class="fa-solid fa-arrows-rotate me-1"></i>Sincronizar Compras
+                </a>
+                <a href="compras.php?action=disconnect" class="btn btn-danger btn-sm">
+                  <i class="fa-solid fa-link-slash me-1"></i>Desconectar Cuenta
+                </a>
               <?php endif; ?>
             </section>
           </article>
         </section>
         <section class="card-body">
+          <?php if (isset($_GET['synced'])): ?>
+            <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+              <i class="fa-solid fa-circle-check me-2"></i>Compras sincronizadas exitosamente con Mercado Libre.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <?php endif; ?>
+
           <?php if (!empty($error_msg)): ?>
             <div class="alert alert-danger" role="alert">
               <i class="fa-solid fa-triangle-exclamation me-2"></i><?= h($error_msg) ?>
@@ -285,36 +348,31 @@ function ml_curl_get($url, $access_token) {
                   </tr>
                 </thead>
                 <tbody class="small">
-                  <?php foreach ($orders as $order): ?>
+                  <?php foreach ($db_compras as $cmp): ?>
                     <?php
-                      $date = new DateTime($order['date_created']);
-                      $date_formatted = $date->format('Y/m/d');
-                      foreach ($order['order_items'] as $oi):
-                        $item_id = $oi['item']['id'] ?? '';
-                        $item_link_id = $item_id;
-                        if (strlen($item_id) > 3) {
-                            $item_link_id = substr($item_id, 0, 3) . '-' . substr($item_id, 3);
-                        }
-                        $item_title = $oi['item']['title'] ?? 'Producto sin título';
-                        $quantity = $oi['quantity'] ?? 1;
-                        $price = $oi['unit_price'] ?? 0;
-                        $total = $quantity * $price;
+                      $item_id = $cmp['ml_item_id'];
+                      $item_link_id = $item_id;
+                      if (strlen($item_id) > 3) {
+                          $item_link_id = substr($item_id, 0, 3) . '-' . substr($item_id, 3);
+                      }
+                      $item_title = $cmp['cmp_title'];
+                      $quantity = (int)$cmp['cmp_quantity'];
+                      $price = (float)$cmp['cmp_unit_price'];
+                      $total = (float)$cmp['cmp_total_price'];
+                      $is_checked = ($cmp['cmp_checked'] == 1);
+                      $date_formatted = !empty($cmp['cmp_date']) ? (new DateTime($cmp['cmp_date']))->format('Y/m/d') : '-';
                     ?>
                       <tr>
                         <td class="text-center">
-                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" title="View  Mercado Libre">
-                          <img class="border border-lemon rounded-circle" src="images/ml.svg" alt="" width="40px">
+                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" title="Ver en Mercado Libre">
+                            <img class="border border-lemon rounded-circle" src="<?= h($cmp['cmp_img']) ?>" alt="" width="40px">
                           </a>
                         </td>
-                        <?php
-                          $map_key = $order['id'] . '_' . $item_id;
-                          $is_checked = isset($checked_map[$map_key]);
-                        ?>
                         <td class="text-center">
                           <span class="d-none"><?= $is_checked ? '1' : '0' ?></span>
                           <div class="form-check d-flex justify-content-center">
                             <input class="form-check-input compra-check fs-5" type="checkbox"
-                              data-order-id="<?= h((string)$order['id']) ?>"
+                              data-order-id="<?= h($cmp['ml_order_id']) ?>"
                               data-item-id="<?= h($item_id) ?>"
                               <?= $is_checked ? 'checked' : '' ?>
                               title="Marcar como cargado en inventario">
@@ -326,7 +384,7 @@ function ml_curl_get($url, $access_token) {
                           </a>
                         </td>
                         <td>
-                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" class="fw-bold text-decoration-none">
+                          <a href="https://articulo.mercadolibre.com.ar/<?= urlencode($item_link_id) ?>" target="_blank" class="fw-bold text-decoration-none text-body">
                             <?= h($item_title) ?>
                           </a>
                           <br>
@@ -338,7 +396,7 @@ function ml_curl_get($url, $access_token) {
                         <td class="text-end fw-bold">$<?= number_format($total, 2, ',', '.') ?></td>
                         <td class="text-center">
                           <?php 
-                            $status = $order['status'] ?? 'unknown';
+                            $status = $cmp['cmp_status'] ?? 'paid';
                             $badge_class = 'bg-secondary';
                             $status_text = $status;
                             switch ($status) {
@@ -359,7 +417,6 @@ function ml_curl_get($url, $access_token) {
                           <span class="badge <?= $badge_class ?>"><?= $status_text ?></span>
                         </td>
                       </tr>
-                    <?php endforeach; ?>
                   <?php endforeach; ?>
                 </tbody>
               </table>

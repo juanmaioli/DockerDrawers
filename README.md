@@ -90,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.18.0` | 🚀 Creación de la tabla `drawers_compras` en MariaDB para almacenamiento local y renderizado instantáneo de compras de Mercado Libre (`compras.php`), con botón de sincronización manual/automática y actualización de estados |
 | `v0.17.0` | 🚀 Cálculo y visualización en `<h3>` itálica del importe total acumulado en `favoritos_ml.php` y `compras.php` con actualización reactiva en tiempo real |
 | `v0.16.1` | 🐛 Actualización de etiqueta del switch en `compras.php` a "Sin cargar" (`TODOS / SIN CARGAR`) y perfeccionamiento visual de indicadores `FULL` e `INTER.` |
 | `v0.16.0` | 🚀 Switches interactivos `Solo FULL` y `Solo INTER.` en la tabla de Favoritos de Mercado Libre (`favoritos_ml.php`) con filtrado dinámico en DataTables y persistencia en `localStorage` |
