@@ -13,7 +13,7 @@
     -   Paginación ilimitada en el backend procesada en el navegador por **DataTables**, compartiendo el mismo diseño visual de botones y exportación que la lista de ítems.
     -   Botón de **creación rápida de ítems** en el inventario prellenado con los datos del producto comprado (Nombre, cantidad, descripción y precio).
     -   **Control de Carga:** Columna con selector de marcado manual (checkbox) y persistencia local en DB para llevar seguimiento de las compras ya registradas en el inventario, con switch para filtrar/ocultar los ya cargados.
-    -   **Favoritos de Mercado Libre:** Página nueva (`favoritos_ml.php`) para visualizar tus artículos favoritos/bookmarks en una tabla DataTable utilizando un proxy local seguro (`api/ml_item_proxy.php`) para enriquecer los detalles sin bloqueos de la API.
+    -   **Favoritos de Mercado Libre:** Página (`favoritos_ml.php`) con sistema de **scraping individual y masivo** mediante [api/scrape_fav_item.php](file:///home/juan/VirtualMachines/Docker/Drawers/www_data/api/scrape_fav_item.php). Extrae título, imagen, precio, descripción y detecta de forma automática los distintivos de **Envío FULL** y **Compra Internacional**, almacenando y sincronizando todo en MariaDB (`drawers_fav`).
 -   **💵 Gestión de Divisas y Dólar Blue:**
     -   Panel en `admin.php` para el control de la cotización del dólar blue venta, con sincronización automática desde **DolarAPI** y actualización manual.
     -   Calculadora interactiva en pesos/dólares en `item_new.php` con conversión reactiva en tiempo real y persistencia del precio final en dólares.
@@ -90,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.15.0` | 🚀 Sistema de scraping individual y masivo en Favoritos de Mercado Libre (`favoritos_ml.php` / `api/scrape_fav_item.php`), extracción de precio, título, foto, descripción y detección precisa de Envío FULL y Compra Internacional con sincronización en MariaDB (`drawers_fav`) |
 | `v0.14.0` | 🚀 Sincronización automática de favoritos de Mercado Libre a la base de datos `drawers_fav`, creación de columnas `fav_full` e `fav_internacional` (por defecto en `'no'`), renderizado instantáneo y dump completo DDL en `./.dev/admin_drawers.sql` |
 | `v0.13.0` | 🚀 Rediseño completo UI/UX del menú desplegable: apertura por hover con tolerancia de 350ms, letras con peso negrita, íconos monocromáticos e integración de perfil de usuario y salida |
 | `v0.12.1` | 🐛 Corrección de persistencia de sesión en cookies de "Recordarme en este equipo" habilitando coincidencia dinámica de host y protocolo HTTPS |

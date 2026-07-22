@@ -107,41 +107,22 @@ if ($auth && $config_ready) {
         if (!empty($bookmarks)) {
             // Asegurar que las columnas existan en la tabla MariaDB
             $conn->query("ALTER TABLE drawers_fav ADD COLUMN IF NOT EXISTS fav_full VARCHAR(2) NOT NULL DEFAULT 'no'");
-            $conn->query("ALTER TABLE drawers_fav ADD COLUMN IF NOT EXISTS fav_internacional VARCHAR(2) NOT NULL DEFAULT 'no'");
-
-            $res_existing = $conn->query("SELECT fav_mla FROM drawers_fav WHERE fav_mla IS NOT NULL AND fav_mla != ''");
-            $existing_mlas = [];
-            if ($res_existing) {
-                while ($row_ex = $res_existing->fetch_assoc()) {
-                    $existing_mlas[$row_ex['fav_mla']] = true;
+            // 6. Consultar los datos procesados en MariaDB drawers_fav para fusionar con la vista
+            $db_favs = [];
+            $res_db = $conn->query("SELECT fav_mla, fav_title, fav_img, fav_price, fav_full, fav_internacional FROM drawers_fav");
+            if ($res_db) {
+                while ($row = $res_db->fetch_assoc()) {
+                    $db_favs[$row['fav_mla']] = $row;
                 }
             }
-
-            $stmt_ins = $conn->prepare("INSERT INTO drawers_fav (fav_mla, fav_link, fav_date, fav_title, fav_img, fav_price, fav_desc, fav_full, fav_internacional, fav_delete) VALUES (?, ?, ?, '', '', NULL, '', 'no', 'no', 0)");
-
-            foreach ($bookmarks as $bk) {
-                $mla_id = $bk['item_id'];
-                if (!isset($existing_mlas[$mla_id])) {
-                    $link = "https://articulo.mercadolibre.com.ar/" . str_replace('MLA', 'MLA-', $mla_id);
-                    $date = '';
-                    if (!empty($bk['bookmarked_date'])) {
-                        $dt = new DateTime($bk['bookmarked_date']);
-                        $date = $dt->format('Y-m-d H:i:s');
-                    }
-                    $stmt_ins->bind_param("sss", $mla_id, $link, $date);
-                    $stmt_ins->execute();
-                    $existing_mlas[$mla_id] = true;
-                }
-            }
-            $stmt_ins->close();
         }
     }
 }
 
 $conn->close();
 
-// Pasar marcadores a JS como JSON (ID, Fecha, Enlace directo, Full e Internacional)
-$bookmarks_json = json_encode(array_map(function($bk) {
+// Pasar marcadores a JS como JSON (ID, Fecha, Título, Foto, Precio, Full e Internacional)
+$bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     $iid  = $bk['item_id'];
     $link = "https://articulo.mercadolibre.com.ar/" . str_replace('MLA', 'MLA-', $iid);
     $date = '';
@@ -149,12 +130,16 @@ $bookmarks_json = json_encode(array_map(function($bk) {
         $dt   = new DateTime($bk['bookmarked_date']);
         $date = $dt->format('Y/m/d');
     }
+    $saved = $db_favs[$iid] ?? [];
     return [
         'id'            => $iid,
         'link'          => $link,
         'date'          => $date,
-        'full'          => 'no',
-        'internacional' => 'no'
+        'title'         => !empty($saved['fav_title']) ? $saved['fav_title'] : $iid,
+        'img'           => !empty($saved['fav_img']) ? $saved['fav_img'] : 'images/ml.svg',
+        'price'         => (isset($saved['fav_price']) && $saved['fav_price'] !== null) ? floatval($saved['fav_price']) : null,
+        'full'          => $saved['fav_full'] ?? 'no',
+        'internacional' => $saved['fav_internacional'] ?? 'no'
     ];
 }, $bookmarks), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
 ?>
@@ -177,6 +162,11 @@ $bookmarks_json = json_encode(array_map(function($bk) {
             </section>
             <section class="col-md-6 text-end">
               <?php if ($connected): ?>
+                <?php if (!empty($bookmarks)): ?>
+                  <button class="btn btn-indigo btn-sm me-2 shadow-indigo-sm" id="btnScrapearTodos" onclick="scrapeAllFavs()">
+                    <i class="fa-solid fa-cloud-arrow-down me-1"></i>Scrapear Todos
+                  </button>
+                <?php endif; ?>
                 <a href="favoritos_ml.php?action=disconnect" class="btn btn-danger btn-sm">
                   <i class="fa-solid fa-link-slash me-1"></i>Desconectar Cuenta
                 </a>
@@ -210,16 +200,16 @@ $bookmarks_json = json_encode(array_map(function($bk) {
 
           <?php else: ?>
 
-            <table id="favoritosTable" class="table table-sm table-hover" style="width:100%">
+            <table id="favoritosTable" class="table table-sm table-hover align-middle" style="width:100%">
               <thead class="small">
                 <tr>
                   <th style="width:60px;">Foto</th>
-                  <th>ID del Artículo</th>
+                  <th>Artículo</th>
                   <th class="text-center" style="width:70px;">Full</th>
-                  <th class="text-center" style="width:100px;">Internacional</th>
+                  <th class="text-center" style="width:110px;">Internacional</th>
                   <th class="text-end">Precio</th>
-                  <th class="text-center">Fecha de Marcado</th>
-                  <th class="text-center" style="width:110px;">Enlace directo</th>
+                  <th class="text-center">Fecha</th>
+                  <th class="text-center" style="width:180px;">Acciones</th>
                 </tr>
               </thead>
               <tbody class="small" id="favoritosBody"></tbody>
@@ -237,30 +227,158 @@ $bookmarks_json = json_encode(array_map(function($bk) {
 
   const tbody = document.getElementById('favoritosBody');
 
-  // Renderizar las filas con las columnas 'Full' e 'Internacional' por defecto en 'no'
+  // Renderizar las filas con datos previos o valores por defecto
   bookmarks.forEach(bk => {
     const tr = document.createElement('tr');
     tr.dataset.itemId = bk.id;
+
+    const fullHtml = bk.full === 'si' 
+      ? '<span class="badge bg-success"><i class="fa-solid fa-bolt me-1"></i>Sí</span>' 
+      : '<span class="badge bg-secondary">no</span>';
+
+    const intHtml = bk.internacional === 'si' 
+      ? '<span class="badge bg-info text-dark"><i class="fa-solid fa-globe me-1"></i>Sí</span>' 
+      : '<span class="badge bg-secondary">no</span>';
+
+    const priceText = (bk.price !== null && bk.price !== undefined) 
+      ? '$ ' + Number(bk.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+      : '-';
+
     tr.innerHTML = `
       <td class="text-center td-foto">
         <a href="${bk.link}" target="_blank">
-          <img src="images/ml.svg" class="rounded border border-lemon" width="40" height="40" style="object-fit:contain" alt="ML">
+          <img src="${bk.img}" class="rounded border border-lemon" width="40" height="40" style="object-fit:contain" alt="Foto">
         </a>
       </td>
       <td class="td-titulo fw-bold">
-        <a href="${bk.link}" target="_blank" class="fw-bold text-decoration-none">${bk.id}</a>
+        <a href="${bk.link}" target="_blank" class="text-decoration-none text-body">${bk.title}</a>
+        <br><small class="text-muted fw-normal">${bk.id}</small>
       </td>
-      <td class="text-center"><span class="badge bg-secondary">no</span></td>
-      <td class="text-center"><span class="badge bg-secondary">no</span></td>
-      <td class="text-end fw-bold td-precio"></td>
+      <td class="text-center td-full">${fullHtml}</td>
+      <td class="text-center td-internacional">${intHtml}</td>
+      <td class="text-end fw-bold td-precio">${priceText}</td>
       <td class="text-center">${bk.date}</td>
       <td class="text-center">
+        <button class="btn btn-outline-indigo btn-sm btn-scrape me-1" onclick="scrapeItem('${bk.id}', this)" title="Scrapear y guardar en drawers_fav">
+          <i class="fa-solid fa-arrows-rotate me-1"></i>Scrapear
+        </button>
         <a href="${bk.link}" target="_blank" class="btn btn-outline-warning btn-sm" title="Ver en Mercado Libre">
-          <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Ver en ML
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </a>
       </td>`;
     tbody.appendChild(tr);
   });
+
+  window.scrapeItem = function (itemId, btn) {
+    const $btn = $(btn);
+    const originalHtml = $btn.html();
+    $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin"></i>');
+
+    $.getJSON('api/scrape_fav_item.php', { id: itemId })
+      .done(function (res) {
+        if (res.status === 'ok') {
+          const d = res.data;
+          const tr = document.querySelector(`tr[data-item-id="${itemId}"]`);
+          if (tr) {
+            if (d.img) {
+              tr.querySelector('.td-foto img').src = d.img;
+            }
+            if (d.title) {
+              const titleEl = tr.querySelector('.td-titulo a');
+              if (titleEl) titleEl.textContent = d.title;
+            }
+            const fullTd = tr.querySelector('.td-full');
+            if (fullTd) {
+              fullTd.innerHTML = d.full === 'si'
+                ? '<span class="badge bg-success"><i class="fa-solid fa-bolt me-1"></i>Sí</span>'
+                : '<span class="badge bg-secondary">no</span>';
+            }
+            const intTd = tr.querySelector('.td-internacional');
+            if (intTd) {
+              intTd.innerHTML = d.internacional === 'si'
+                ? '<span class="badge bg-info text-dark"><i class="fa-solid fa-globe me-1"></i>Sí</span>'
+                : '<span class="badge bg-secondary">no</span>';
+            }
+            const priceTd = tr.querySelector('.td-precio');
+            if (priceTd && d.price !== null) {
+              priceTd.textContent = '$ ' + Number(d.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+          }
+          $btn.removeClass('btn-outline-indigo').addClass('btn-success').html('<i class="fa-solid fa-check me-1"></i>Guardado');
+          setTimeout(() => {
+            $btn.removeClass('btn-success').addClass('btn-outline-indigo').html(originalHtml).prop('disabled', false);
+          }, 2000);
+        } else {
+          alert('Error al scrapear: ' + (res.message || 'Ocurrió un problema'));
+          $btn.html(originalHtml).prop('disabled', false);
+        }
+      })
+      .fail(function () {
+        alert('Error de red al consultar el servidor.');
+        $btn.html(originalHtml).prop('disabled', false);
+      });
+  };
+
+  window.scrapeAllFavs = function () {
+    const buttons = document.querySelectorAll('.btn-scrape');
+    if (!buttons.length) return;
+    const $mainBtn = $('#btnScrapearTodos');
+    $mainBtn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin me-1"></i>Scrapeando...');
+
+    let index = 0;
+    function processNext() {
+      if (index >= bookmarks.length) {
+        $mainBtn.removeClass('btn-indigo').addClass('btn-success').html('<i class="fa-solid fa-check me-1"></i>Completado');
+        setTimeout(() => {
+          $mainBtn.removeClass('btn-success').addClass('btn-indigo').html('<i class="fa-solid fa-cloud-arrow-down me-1"></i>Scrapear Todos').prop('disabled', false);
+        }, 3000);
+        return;
+      }
+      const item = bookmarks[index];
+      const btn = document.querySelector(`tr[data-item-id="${item.id}"] .btn-scrape`);
+      index++;
+
+      if (btn) {
+        const $btn = $(btn);
+        $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin"></i>');
+        $.getJSON('api/scrape_fav_item.php', { id: item.id })
+          .done(function (res) {
+            if (res.status === 'ok') {
+              const d = res.data;
+              const tr = document.querySelector(`tr[data-item-id="${item.id}"]`);
+              if (tr) {
+                if (d.img) tr.querySelector('.td-foto img').src = d.img;
+                if (d.title) tr.querySelector('.td-titulo a').textContent = d.title;
+                const fullTd = tr.querySelector('.td-full');
+                if (fullTd) {
+                  fullTd.innerHTML = d.full === 'si'
+                    ? '<span class="badge bg-success"><i class="fa-solid fa-bolt me-1"></i>Sí</span>'
+                    : '<span class="badge bg-secondary">no</span>';
+                }
+                const intTd = tr.querySelector('.td-internacional');
+                if (intTd) {
+                  intTd.innerHTML = d.internacional === 'si'
+                    ? '<span class="badge bg-info text-dark"><i class="fa-solid fa-globe me-1"></i>Sí</span>'
+                    : '<span class="badge bg-secondary">no</span>';
+                }
+                const priceTd = tr.querySelector('.td-precio');
+                if (priceTd && d.price !== null) {
+                  priceTd.textContent = '$ ' + Number(d.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+              }
+              $btn.removeClass('btn-outline-indigo').addClass('btn-success').html('<i class="fa-solid fa-check"></i>');
+            }
+            setTimeout(processNext, 600);
+          })
+          .fail(function () {
+            setTimeout(processNext, 600);
+          });
+      } else {
+        processNext();
+      }
+    }
+    processNext();
+  };
 
   $('#favoritosTable').DataTable({
     destroy: true,
@@ -283,3 +401,4 @@ $bookmarks_json = json_encode(array_map(function($bk) {
   });
 })();
 </script>
+
