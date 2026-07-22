@@ -203,7 +203,7 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
             <table id="favoritosTable" class="table table-sm table-hover align-middle" style="width:100%">
               <thead class="small">
                 <tr>
-                  <th style="width:60px;">Foto</th>
+                  <th style="width:100px;" class="text-center">Foto</th>
                   <th>Artículo</th>
                   <th class="text-center" style="width:70px;">Full</th>
                   <th class="text-center" style="width:110px;">Internacional</th>
@@ -233,12 +233,12 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     tr.dataset.itemId = bk.id;
 
     const fullHtml = bk.full === 'si' 
-      ? '<span class="badge bg-success"><i class="fa-solid fa-bolt me-1"></i>Sí</span>' 
-      : '<span class="badge bg-secondary">no</span>';
+      ? '<span class="text-success fst-italic fw-bold"><i class="fa-solid fa-bolt"></i>FULL</span>' 
+      : '';
 
     const intHtml = bk.internacional === 'si' 
-      ? '<span class="badge bg-info text-dark"><i class="fa-solid fa-globe me-1"></i>Sí</span>' 
-      : '<span class="badge bg-secondary">no</span>';
+      ? '<span class="text-danger fst-italic fw-bold"><i class="fa-solid fa-plane" style="transform: rotate(-45deg); display: inline-block;"></i>INTER.</span>' 
+      : '';
 
     const priceText = (bk.price !== null && bk.price !== undefined) 
       ? '$ ' + Number(bk.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
@@ -247,7 +247,7 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     tr.innerHTML = `
       <td class="text-center td-foto">
         <a href="${bk.link}" target="_blank">
-          <img src="${bk.img}" class="rounded border border-lemon" width="40" height="40" style="object-fit:contain" alt="Foto">
+          <img src="${bk.img}" class="border border-lemon rounded-circle" width="90" height="90" style="object-fit:cover;" alt="Foto">
         </a>
       </td>
       <td class="td-titulo fw-bold">
@@ -290,14 +290,14 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
             const fullTd = tr.querySelector('.td-full');
             if (fullTd) {
               fullTd.innerHTML = d.full === 'si'
-                ? '<span class="badge bg-success"><i class="fa-solid fa-bolt me-1"></i>Sí</span>'
-                : '<span class="badge bg-secondary">no</span>';
+                ? '<span class="text-success fst-italic fw-bold"><i class="fa-solid fa-bolt"></i>FULL</span>'
+                : '';
             }
             const intTd = tr.querySelector('.td-internacional');
             if (intTd) {
               intTd.innerHTML = d.internacional === 'si'
-                ? '<span class="badge bg-info text-dark"><i class="fa-solid fa-globe me-1"></i>Sí</span>'
-                : '<span class="badge bg-secondary">no</span>';
+                ? '<span class="text-danger fst-italic fw-bold"><i class="fa-solid fa-plane" style="transform: rotate(-45deg); display: inline-block;"></i>INTER.</span>'
+                : '';
             }
             const priceTd = tr.querySelector('.td-precio');
             if (priceTd && d.price !== null) {
@@ -352,14 +352,14 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
                 const fullTd = tr.querySelector('.td-full');
                 if (fullTd) {
                   fullTd.innerHTML = d.full === 'si'
-                    ? '<span class="badge bg-success"><i class="fa-solid fa-bolt me-1"></i>Sí</span>'
-                    : '<span class="badge bg-secondary">no</span>';
+                    ? '<span class="text-success fst-italic fw-bold"><i class="fa-solid fa-bolt"></i>FULL</span>'
+                    : '';
                 }
                 const intTd = tr.querySelector('.td-internacional');
                 if (intTd) {
                   intTd.innerHTML = d.internacional === 'si'
-                    ? '<span class="badge bg-info text-dark"><i class="fa-solid fa-globe me-1"></i>Sí</span>'
-                    : '<span class="badge bg-secondary">no</span>';
+                    ? '<span class="text-danger fst-italic fw-bold"><i class="fa-solid fa-plane" style="transform: rotate(-45deg); display: inline-block;"></i>INTER.</span>'
+                    : '';
                 }
                 const priceTd = tr.querySelector('.td-precio');
                 if (priceTd && d.price !== null) {
