@@ -121,6 +121,18 @@ if ($auth && $config_ready) {
 
 $conn->close();
 
+// Calcular la suma de precios de los artículos favoritos que tengan precio
+$total_price_sum = 0;
+if (!empty($bookmarks)) {
+    foreach ($bookmarks as $bk) {
+        $saved = $db_favs[$bk['item_id']] ?? [];
+        if (isset($saved['fav_price']) && $saved['fav_price'] !== null) {
+            $total_price_sum += floatval($saved['fav_price']);
+        }
+    }
+}
+$formatted_total_price = '$ ' . number_format($total_price_sum, 2, ',', '.');
+
 // Pasar marcadores a JS como JSON (ID, Fecha, Título, Foto, Precio, Full e Internacional)
 $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     $iid  = $bk['item_id'];
@@ -159,6 +171,9 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
                   <span class="badge bg-indigo ms-2 fs-6" id="fav-badge"><?= count($bookmarks) ?></span>
                 <?php endif; ?>
               </h3>
+              <?php if ($connected && !empty($bookmarks)): ?>
+                <h3 class="fst-italic text-muted mt-1 mb-0 fs-5" id="fav-total-price">(<?= $formatted_total_price ?>)</h3>
+              <?php endif; ?>
             </section>
             <section class="col-md-6 text-end">
               <?php if ($connected): ?>
@@ -283,6 +298,20 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     tbody.appendChild(tr);
   });
 
+  function updateFavTotalPrice() {
+    let sum = 0;
+    bookmarks.forEach(b => {
+      if (b.price !== null && b.price !== undefined && !isNaN(b.price)) {
+        sum += parseFloat(b.price);
+      }
+    });
+    const formatted = '$ ' + sum.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const totalEl = document.getElementById('fav-total-price');
+    if (totalEl) {
+      totalEl.textContent = `(${formatted})`;
+    }
+  }
+
   window.scrapeItem = function (itemId, btn) {
     const $btn = $(btn);
     const originalHtml = $btn.html();
@@ -316,6 +345,9 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
             const priceTd = tr.querySelector('.td-precio');
             if (priceTd && d.price !== null) {
               priceTd.textContent = '$ ' + Number(d.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+              const targetBk = bookmarks.find(b => b.id === itemId);
+              if (targetBk) targetBk.price = parseFloat(d.price);
+              updateFavTotalPrice();
             }
           }
           $btn.removeClass('btn-outline-indigo').addClass('btn-success').html('<i class="fa-solid fa-check me-1"></i>Guardado');
@@ -378,6 +410,9 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
                 const priceTd = tr.querySelector('.td-precio');
                 if (priceTd && d.price !== null) {
                   priceTd.textContent = '$ ' + Number(d.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                  const targetBk = bookmarks.find(b => b.id === item.id);
+                  if (targetBk) targetBk.price = parseFloat(d.price);
+                  updateFavTotalPrice();
                 }
               }
               $btn.removeClass('btn-outline-indigo').addClass('btn-success').html('<i class="fa-solid fa-check"></i>');

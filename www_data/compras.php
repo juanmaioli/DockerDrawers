@@ -176,6 +176,21 @@ if ($connected) {
 
 $conn->close();
 
+// Calcular la suma total de todas las compras obtenidas
+$compras_total_sum = 0;
+if (!empty($orders)) {
+    foreach ($orders as $order) {
+        if (!empty($order['order_items'])) {
+            foreach ($order['order_items'] as $oi) {
+                $q = $oi['quantity'] ?? 1;
+                $p = $oi['unit_price'] ?? 0;
+                $compras_total_sum += ($q * $p);
+            }
+        }
+    }
+}
+$formatted_compras_total = '$ ' . number_format($compras_total_sum, 2, ',', '.');
+
 // Auxiliares Curl
 function ml_curl_post($url, $params) {
     $ch = curl_init();
@@ -214,7 +229,13 @@ function ml_curl_get($url, $access_token) {
         <section class="card-header">
           <article class="row align-items-center">
             <section class="col-md-6 text-start">
-              <h3 class="mb-0">  <img class="border border-lemon mb-3 rounded-circle" src="images/ml.svg" alt="" width="40px"> Compras de Mercado Libre</h3>
+              <h3 class="mb-0">
+                <img class="border border-lemon mb-1 rounded-circle" src="images/ml.svg" alt="ML" width="40px">
+                Compras de Mercado Libre
+              </h3>
+              <?php if ($connected && !empty($orders)): ?>
+                <h3 class="fst-italic text-muted mt-1 mb-0 fs-5" id="compras-total-price">(<?= $formatted_compras_total ?>)</h3>
+              <?php endif; ?>
             </section>
             <section class="col-md-6 text-end d-flex align-items-center justify-content-end gap-3">
               <?php if ($connected): ?>
