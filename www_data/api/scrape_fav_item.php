@@ -42,9 +42,28 @@ curl_setopt_array($ch, [
 $html = curl_exec($ch);
 curl_close($ch);
 
+// Fallback: si MercadoLibre bloquea con la pantalla de tráfico sospechoso, usar proxy de Google Translate
+if (empty($html) || stripos($html, 'suspicious-traffic') !== false || stripos($html, 'account-verification') !== false || stripos($html, 'og:title') === false) {
+    $proxy_url = "https://translate.google.com/translate?sl=auto&tl=es&u=" . urlencode($permalink);
+    $ch_p = curl_init($proxy_url);
+    curl_setopt_array($ch_p, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT        => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    ]);
+    $html_proxy = curl_exec($ch_p);
+    curl_close($ch_p);
+    if (!empty($html_proxy) && stripos($html_proxy, 'suspicious-traffic') === false) {
+        $html = $html_proxy;
+    }
+}
+
 if (!empty($html)) {
     // A. Extracción de Título y Precio desde og:title (Ej: "Google TV Streamer... - $ 224.900")
-    if (preg_match('/<meta\s+property=["\']og:title["\']\s+content=["\'](.*?)["\']/i', $html, $m)) {
+    if (preg_match('/<meta\s+(?:property|name)=["\']og:title["\']\s+content=["\'](.*?)["\']/i', $html, $m)) {
         $raw_title = html_entity_decode($m[1], ENT_QUOTES, 'UTF-8');
         if (preg_match('/^(.*?)\s*-\s*\$\s*([\d\.\,]+)/u', $raw_title, $pm)) {
             $title = trim($pm[1]);
@@ -57,14 +76,29 @@ if (!empty($html)) {
         $title = html_entity_decode(explode('|', $m[1])[0], ENT_QUOTES, 'UTF-8');
     } else if (preg_match('/class=["\'][^"\']*ui-pdp-title[^"\']*["\'][^>]*>(.*?)<\/h1>/is', $html, $m)) {
         $title = trim(strip_tags($m[1]));
+    } else if (preg_match('/<base[^>]+href=["\'](https?:\/\/[^"\']+)["\']/i', $html, $m)) {
+        if (preg_match('/\/([a-z0-9\-]+)\/p\/MLA/i', $m[1], $sm)) {
+            $title = ucwords(str_replace('-', ' ', $sm[1]));
+        }
     }
     $title = trim(str_replace([' | MercadoLibre', ' | Mercado Libre'], '', $title));
 
+    // Si el título parece una URL o contiene translate.goog o sigue igual a la id, limpiar extraendo el slug legible
+    if (empty($title) || $title === $mla_id || preg_match('/https?:\/\/[^\s]+/i', $title) || stripos($title, 'translate.goog') !== false) {
+        if (preg_match('/\/([a-z0-9\-]+)\/p\/MLA/i', $html, $sm)) {
+            $title = ucwords(str_replace('-', ' ', $sm[1]));
+        } else if (preg_match('/MLA-\d+-([a-z0-9\-]+)/i', $html, $sm)) {
+            $title = ucwords(str_replace('-', ' ', $sm[1]));
+        }
+    }
+
     // B. Extracción de Imagen
-    if (preg_match('/<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']/i', $html, $m)) {
+    if (preg_match('/<meta\s+(?:property|name)=["\'](?:og:image|twitter:image)["\']\s+content=["\'](.*?)["\']/i', $html, $m)) {
         $img = str_replace('http://', 'https://', $m[1]);
     } else if (preg_match('/<img[^>]+class=["\'][^"\']*ui-pdp-image[^"\']*["\'][^>]+src=["\'](.*?)["\']/i', $html, $m)) {
         $img = str_replace('http://', 'https://', $m[1]);
+    } else if (preg_match('/https?:\/\/http2\.mlstatic\.com\/D_[A-Z0-9_\-]+/i', $html, $im)) {
+        $img = $im[0];
     }
 
     // C. Extracción de Precio Fallback (JSON offers, og:price:amount, andes-money-amount)
