@@ -90,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.19.0` | 🚀 Modal de edición para artículos en Favoritos de Mercado Libre (`favoritos_ml.php` / `api/fav_edit_item.php`) en layout de 2 columnas con imagen ampliada a la izquierda, enlace directo a ML y actualización AJAX en tiempo real |
 | `v0.18.1` | 🐛 Corrección en scraping de favoritos (`scrape_fav_item.php`): proxy de fallback (Google Translate) ante bloqueos de anti-bot y extracción robusta de títulos/imágenes |
 | `v0.18.0` | 🚀 Creación de la tabla `drawers_compras` en MariaDB para almacenamiento local y renderizado instantáneo de compras de Mercado Libre (`compras.php`), con botón de sincronización manual/automática y actualización de estados |
 | `v0.17.0` | 🚀 Cálculo y visualización en `<h3>` itálica del importe total acumulado en `favoritos_ml.php` y `compras.php` con actualización reactiva en tiempo real |

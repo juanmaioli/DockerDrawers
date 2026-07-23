@@ -107,6 +107,7 @@ if ($auth && $config_ready) {
         if (!empty($bookmarks)) {
             // Asegurar que las columnas existan en la tabla MariaDB
             $conn->query("ALTER TABLE drawers_fav ADD COLUMN IF NOT EXISTS fav_full VARCHAR(2) NOT NULL DEFAULT 'no'");
+            $conn->query("ALTER TABLE drawers_fav ADD COLUMN IF NOT EXISTS fav_internacional VARCHAR(2) NOT NULL DEFAULT 'no'");
             // 6. Consultar los datos procesados en MariaDB drawers_fav para fusionar con la vista
             $db_favs = [];
             $res_db = $conn->query("SELECT fav_mla, fav_title, fav_img, fav_price, fav_full, fav_internacional FROM drawers_fav");
@@ -247,6 +248,81 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
 
         </section>
       </article>
+    </section>
+  </article>
+</main>
+
+<!-- Modal Editar Favorito -->
+<div class="modal fade" id="editFavModal" tabindex="-1" aria-labelledby="editFavModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-indigo text-white">
+        <h5 class="modal-title fs-5" id="editFavModalLabel">
+          <i class="fa-solid fa-pen-to-square me-2"></i>Editar Artículo Favorito
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="formEditFav" onsubmit="saveFavItem(event)">
+        <div class="modal-body">
+          <input type="hidden" id="edit_fav_id" name="id">
+          
+          <div class="row g-3 align-items-stretch">
+            <div class="col-md-5 text-center d-flex align-items-center justify-content-center">
+              <a id="edit_fav_img_link" href="#" target="_blank" class="w-100 h-100" title="Ver en Mercado Libre">
+                <img id="edit_fav_img_preview" src="images/ml.svg" class="border border-lemon rounded-4 shadow-sm img-fluid w-100" style="object-fit: cover; width: 100%; height: 100%; min-height: 230px; max-height: 280px; aspect-ratio: 1/1;" alt="Vista previa">
+              </a>
+            </div>
+            <div class="col-md-7 d-flex flex-column justify-content-center">
+              <div class="mb-2">
+                <label for="edit_fav_title" class="form-label fw-bold small mb-1">Título del Artículo</label>
+                <input type="text" class="form-control form-control-sm" id="edit_fav_title" name="title" required placeholder="Nombre del artículo">
+              </div>
+
+              <div class="mb-2">
+                <label for="edit_fav_price" class="form-label fw-bold small mb-1">Precio ($)</label>
+                <input type="number" step="0.01" min="0" class="form-control form-control-sm" id="edit_fav_price" name="price" placeholder="0.00">
+              </div>
+
+              <div class="mb-3">
+                <label for="edit_fav_img" class="form-label fw-bold small mb-1">URL de Imagen</label>
+                <input type="url" class="form-control form-control-sm" id="edit_fav_img" name="img" placeholder="https://...">
+              </div>
+
+              <div class="row g-2 pt-2 border-top">
+                <div class="col-6">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="edit_fav_full" name="full" value="si" role="switch">
+                    <label class="form-check-label fw-bold text-success small" for="edit_fav_full">
+                      <i class="fa-solid fa-bolt me-1"></i>Envío FULL
+                    </label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="edit_fav_internacional" name="internacional" value="si" role="switch">
+                    <label class="form-check-label fw-bold text-danger fst-italic small" for="edit_fav_internacional">
+                      <i class="fa-solid fa-plane me-1" style="transform: rotate(-45deg); display: inline-block;"></i>Internacional
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a id="edit_fav_link" href="#" target="_blank" class="btn btn-outline-warning btn-sm me-auto" title="Ver en Mercado Libre">
+            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Ver en Mercado Libre
+          </a>
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-indigo btn-sm shadow-indigo-sm" id="btnSaveFav">
+            <i class="fa-solid fa-floppy-disk me-1"></i>Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <?php include("footer.php"); ?>
 
 <script>
@@ -290,6 +366,9 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
       <td class="text-center">
         <button class="btn btn-outline-indigo btn-sm btn-scrape me-1" onclick="scrapeItem('${bk.id}', this)" title="Scrapear y guardar en drawers_fav">
           <i class="fa-solid fa-arrows-rotate me-1"></i>Scrapear
+        </button>
+        <button class="btn btn-outline-primary btn-sm me-1" onclick="openEditFavModal('${bk.id}')" title="Editar artículo">
+          <i class="fa-solid fa-pen-to-square"></i>
         </button>
         <a href="${bk.link}" target="_blank" class="btn btn-outline-warning btn-sm" title="Ver en Mercado Libre">
           <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -427,6 +506,127 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
       }
     }
     processNext();
+  };
+
+  window.openEditFavModal = function (itemId) {
+    const item = bookmarks.find(b => b.id === itemId);
+    if (!item) return;
+
+    document.getElementById('edit_fav_id').value = item.id;
+    document.getElementById('edit_fav_title').value = item.title || '';
+    document.getElementById('edit_fav_price').value = (item.price !== null && item.price !== undefined) ? item.price : '';
+    document.getElementById('edit_fav_img').value = item.img || '';
+    document.getElementById('edit_fav_full').checked = (item.full === 'si');
+    document.getElementById('edit_fav_internacional').checked = (item.internacional === 'si');
+
+    const linkEl = document.getElementById('edit_fav_link');
+    if (linkEl) {
+      linkEl.href = item.link || '#';
+    }
+    const imgLinkEl = document.getElementById('edit_fav_img_link');
+    if (imgLinkEl) {
+      imgLinkEl.href = item.link || '#';
+    }
+
+    const previewImg = document.getElementById('edit_fav_img_preview');
+    if (previewImg) {
+      previewImg.src = item.img || 'images/ml.svg';
+    }
+
+    const editModal = new bootstrap.Modal(document.getElementById('editFavModal'));
+    editModal.show();
+  };
+
+  const imgInput = document.getElementById('edit_fav_img');
+  if (imgInput) {
+    imgInput.addEventListener('input', function () {
+      const previewImg = document.getElementById('edit_fav_img_preview');
+      if (previewImg) {
+        previewImg.src = this.value.trim() || 'images/ml.svg';
+      }
+    });
+  }
+
+  window.saveFavItem = function (e) {
+    e.preventDefault();
+    const $btn = $('#btnSaveFav');
+    const originalHtml = $btn.html();
+    $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin me-1"></i>Guardando...');
+
+    const itemId = document.getElementById('edit_fav_id').value;
+    const title = document.getElementById('edit_fav_title').value;
+    const priceVal = document.getElementById('edit_fav_price').value;
+    const price = priceVal !== '' ? parseFloat(priceVal) : null;
+    const img = document.getElementById('edit_fav_img').value;
+    const full = document.getElementById('edit_fav_full').checked ? 'si' : 'no';
+    const internacional = document.getElementById('edit_fav_internacional').checked ? 'si' : 'no';
+
+    $.post('api/fav_edit_item.php', {
+      id: itemId,
+      title: title,
+      price: priceVal,
+      img: img,
+      full: full,
+      internacional: internacional
+    })
+    .done(function (res) {
+      if (res.status === 'ok') {
+        const targetBk = bookmarks.find(b => b.id === itemId);
+        if (targetBk) {
+          targetBk.title = title;
+          targetBk.price = price;
+          targetBk.img = img || 'images/ml.svg';
+          targetBk.full = full;
+          targetBk.internacional = internacional;
+        }
+
+        const tr = document.querySelector(`tr[data-item-id="${itemId}"]`);
+        if (tr) {
+          if (img) tr.querySelector('.td-foto img').src = img;
+          const titleEl = tr.querySelector('.td-titulo a');
+          if (titleEl) titleEl.textContent = title;
+
+          const fullTd = tr.querySelector('.td-full');
+          if (fullTd) {
+            fullTd.innerHTML = full === 'si'
+              ? '<span class="text-success fst-italic fw-bold"><i class="fa-solid fa-bolt"></i>FULL</span>'
+              : '';
+          }
+          const intTd = tr.querySelector('.td-internacional');
+          if (intTd) {
+            intTd.innerHTML = internacional === 'si'
+              ? '<span class="text-danger fst-italic fw-bold"><i class="fa-solid fa-plane" style="transform: rotate(-45deg); display: inline-block;"></i>INTER.</span>'
+              : '';
+          }
+          const priceTd = tr.querySelector('.td-precio');
+          if (priceTd) {
+            priceTd.textContent = (price !== null && !isNaN(price))
+              ? '$ ' + Number(price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+              : '-';
+          }
+        }
+
+        updateFavTotalPrice();
+
+        if (typeof table !== 'undefined' && table) {
+          table.rows().invalidate();
+        }
+
+        const modalEl = document.getElementById('editFavModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
+      } else {
+        alert('Error al guardar: ' + (res.message || 'Ocurrió un problema'));
+      }
+    })
+    .fail(function () {
+      alert('Error de red al guardar los cambios.');
+    })
+    .always(function () {
+      $btn.html(originalHtml).prop('disabled', false);
+    });
   };
 
   $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
