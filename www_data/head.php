@@ -208,10 +208,8 @@ if ($usr_right == 1) {
             <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="index.php"><i class="fa-solid fa-boxes-stacked fa-fw text-white me-2 fs-5"></i><span>Drawers</span></a></li>
             <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="items.php"><i class="fa-solid fa-box-archive fa-fw text-white me-2 fs-5"></i><span>Ítems</span></a></li>
             <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="categories.php"><i class="fa-solid fa-tags fa-fw text-white me-2 fs-5"></i><span>Categorías</span></a></li>
-            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="inches_mm.php"><i class="fa-solid fa-ruler-combined fa-fw text-white me-2 fs-5"></i><span>Inches a MM</span></a></li>
-            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="favs.php"><i class="fa-solid fa-bookmark fa-fw text-white me-2 fs-5"></i><span>Marcadores</span></a></li>
-            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="compras.php"><i class="fa-solid fa-cart-shopping fa-fw text-white me-2 fs-5"></i><span>Compras</span></a></li>
-            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="favoritos_ml.php"><i class="fa-solid fa-star fa-fw text-white me-2 fs-5"></i><span>Favoritos ML</span></a></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="compras.php"><i class="fa-solid fa-cart-shopping fa-fw text-white me-2 fs-5"></i><span>Compras <img src="images/ml.svg" class="rounded-circle ms-1" width="20" height="20" alt="ML"></span></a></li>
+            <li><a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-3" href="favoritos_ml.php"><i class="fa-solid fa-star fa-fw text-white me-2 fs-5"></i><span>Favoritos <img src="images/ml.svg" class="rounded-circle ms-1" width="20" height="20" alt="ML"></span></a></li>
             <li>
               <hr class="dropdown-divider my-2">
             </li>

@@ -90,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.19.2` | 🎨 Simplificación del menú desplegable (`head.php`): remoción de "Marcadores" e "Inches a MM", e integración del isotipo de Mercado Libre sin borde en las opciones "Compras" y "Favoritos" |
 | `v0.19.1` | 🚀 Botón de búsqueda directa en Mercado Libre en tabla y modal de Favoritos (`favoritos_ml.php`), remoción del texto en el botón de scraping y actualización del color a `btn-lightpink` |
 | `v0.19.0` | 🚀 Modal de edición para artículos en Favoritos de Mercado Libre (`favoritos_ml.php` / `api/fav_edit_item.php`) en layout de 2 columnas con imagen ampliada a la izquierda, enlace directo a ML y actualización AJAX en tiempo real |
 | `v0.18.1` | 🐛 Corrección en scraping de favoritos (`scrape_fav_item.php`): proxy de fallback (Google Translate) ante bloqueos de anti-bot y extracción robusta de títulos/imágenes |
