@@ -193,7 +193,7 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
                       </label>
                     </div>
                   </div>
-                  <button class="btn btn-indigo btn-sm me-2 shadow-indigo-sm" id="btnScrapearTodos" onclick="scrapeAllFavs()">
+                  <button class="btn btn-lightpink btn-sm me-2 shadow-sm" id="btnScrapearTodos" onclick="scrapeAllFavs()">
                     <i class="fa-solid fa-cloud-arrow-down me-1"></i>Scrapear Todos
                   </button>
                 <?php endif; ?>
@@ -310,8 +310,11 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
           </div>
         </div>
         <div class="modal-footer">
+          <a id="edit_fav_search_link" href="#" target="_blank" class="btn btn-outline-info btn-sm me-1" title="Buscar en Mercado Libre">
+            <i class="fa-solid fa-magnifying-glass me-1"></i>Buscar en ML
+          </a>
           <a id="edit_fav_link" href="#" target="_blank" class="btn btn-outline-warning btn-sm me-auto" title="Ver en Mercado Libre">
-            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Ver en Mercado Libre
+            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Ver en ML
           </a>
           <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
           <button type="submit" class="btn btn-indigo btn-sm shadow-indigo-sm" id="btnSaveFav">
@@ -364,12 +367,15 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
       <td class="text-end fw-bold td-precio">${priceText}</td>
       <td class="text-center">${bk.date}</td>
       <td class="text-center">
-        <button class="btn btn-outline-indigo btn-sm btn-scrape me-1" onclick="scrapeItem('${bk.id}', this)" title="Scrapear y guardar en drawers_fav">
-          <i class="fa-solid fa-arrows-rotate me-1"></i>Scrapear
+        <button class="btn btn-outline-lightpink btn-sm btn-scrape me-1" onclick="scrapeItem('${bk.id}', this)" title="Scrapear y guardar en drawers_fav">
+          <i class="fa-solid fa-arrows-rotate"></i>
         </button>
         <button class="btn btn-outline-primary btn-sm me-1" onclick="openEditFavModal('${bk.id}')" title="Editar artículo">
           <i class="fa-solid fa-pen-to-square"></i>
         </button>
+        <a href="https://listado.mercadolibre.com.ar/${encodeURIComponent(bk.title)}" target="_blank" class="btn btn-outline-info btn-sm me-1" title="Buscar en Mercado Libre">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
         <a href="${bk.link}" target="_blank" class="btn btn-outline-warning btn-sm" title="Ver en Mercado Libre">
           <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </a>
@@ -429,9 +435,9 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
               updateFavTotalPrice();
             }
           }
-          $btn.removeClass('btn-outline-indigo').addClass('btn-success').html('<i class="fa-solid fa-check me-1"></i>Guardado');
+          $btn.removeClass('btn-outline-lightpink').addClass('btn-success').html('<i class="fa-solid fa-check"></i>');
           setTimeout(() => {
-            $btn.removeClass('btn-success').addClass('btn-outline-indigo').html(originalHtml).prop('disabled', false);
+            $btn.removeClass('btn-success').addClass('btn-outline-lightpink').html(originalHtml).prop('disabled', false);
           }, 2000);
         } else {
           alert('Error al scrapear: ' + (res.message || 'Ocurrió un problema'));
@@ -453,9 +459,9 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     let index = 0;
     function processNext() {
       if (index >= bookmarks.length) {
-        $mainBtn.removeClass('btn-indigo').addClass('btn-success').html('<i class="fa-solid fa-check me-1"></i>Completado');
+        $mainBtn.removeClass('btn-lightpink').addClass('btn-success').html('<i class="fa-solid fa-check me-1"></i>Completado');
         setTimeout(() => {
-          $mainBtn.removeClass('btn-success').addClass('btn-indigo').html('<i class="fa-solid fa-cloud-arrow-down me-1"></i>Scrapear Todos').prop('disabled', false);
+          $mainBtn.removeClass('btn-success').addClass('btn-lightpink').html('<i class="fa-solid fa-cloud-arrow-down me-1"></i>Scrapear Todos').prop('disabled', false);
         }, 3000);
         return;
       }
@@ -494,7 +500,7 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
                   updateFavTotalPrice();
                 }
               }
-              $btn.removeClass('btn-outline-indigo').addClass('btn-success').html('<i class="fa-solid fa-check"></i>');
+              $btn.removeClass('btn-outline-lightpink').addClass('btn-success').html('<i class="fa-solid fa-check"></i>');
             }
             setTimeout(processNext, 600);
           })
@@ -527,6 +533,10 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     if (imgLinkEl) {
       imgLinkEl.href = item.link || '#';
     }
+    const searchLinkEl = document.getElementById('edit_fav_search_link');
+    if (searchLinkEl) {
+      searchLinkEl.href = 'https://listado.mercadolibre.com.ar/' + encodeURIComponent(item.title || '');
+    }
 
     const previewImg = document.getElementById('edit_fav_img_preview');
     if (previewImg) {
@@ -536,6 +546,16 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     const editModal = new bootstrap.Modal(document.getElementById('editFavModal'));
     editModal.show();
   };
+
+  const titleInput = document.getElementById('edit_fav_title');
+  if (titleInput) {
+    titleInput.addEventListener('input', function () {
+      const searchLinkEl = document.getElementById('edit_fav_search_link');
+      if (searchLinkEl) {
+        searchLinkEl.href = 'https://listado.mercadolibre.com.ar/' + encodeURIComponent(this.value.trim());
+      }
+    });
+  }
 
   const imgInput = document.getElementById('edit_fav_img');
   if (imgInput) {
