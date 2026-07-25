@@ -17,8 +17,11 @@ if(empty($_GET['id']))
       <article class="card" id="item_card">
         <section class="card-header">
           <article class="row align-items-center">
-            <section class="col-md-6 text-start">
+            <section class="col-md-6 text-start d-flex align-items-center gap-2">
               <h3 class="mb-0" id="item_title">Ítems</h3>
+              <span id="totalRegaladoBadge" class="badge bg-danger d-none fs-6">
+                <i class="fa-solid fa-gift me-1"></i>Regalado: U$S <span id="totalRegaladoMonto">0.00</span>
+              </span>
             </section>
             <section class="col-md-6 text-end d-flex align-items-center justify-content-end gap-3">
               <div class="form-check form-switch mb-0" title="Mostrar ítems activos / borrados">

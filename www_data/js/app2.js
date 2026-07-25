@@ -447,8 +447,33 @@ async function itemsAll(usuarioId,categoriaId) {
   // eslint-disable-next-line no-unused-vars, no-undef
   const table = $('#item_all_table').DataTable( {
     destroy: true,
-    // language: {'url': '/dataTables/Spanish.json'},
-    ajax: {'url': url,'dataSrc': ''},
+    ajax: {
+      'url': url,
+      'dataSrc': function (json) {
+        const isBorrados = $('#switchBorrados').is(':checked');
+        const badgeEl = document.getElementById('totalRegaladoBadge');
+        const montoEl = document.getElementById('totalRegaladoMonto');
+
+        if (isBorrados && badgeEl && montoEl) {
+          let totalRegalado = 0;
+          json.forEach(row => {
+            const rName = (row.reason_name || '').toLowerCase();
+            const rId = parseInt(row.item_delete) || 0;
+            if (rName === 'regalado' || rId === 2) {
+              const price = parseFloat(row.item_price) || 0;
+              const amount = parseInt(row.item_amount) || 1;
+              totalRegalado += (price * amount);
+            }
+          });
+          montoEl.textContent = totalRegalado.toFixed(2);
+          badgeEl.classList.remove('d-none');
+        } else if (badgeEl) {
+          badgeEl.classList.add('d-none');
+        }
+
+        return json;
+      }
+    },
     deferRender: true,
     stateSave: true,
     stateDuration: 120,

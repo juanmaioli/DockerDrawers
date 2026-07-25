@@ -37,7 +37,7 @@ if (isset($_SESSION['item_view_back_url'])) {
 ?>
 
 <!-- Container -->
-<main class="container-fluid">
+<main class="container-fluid mb-5 pb-5">
   <article class="row">
     <section class="col-md-1"></section>
     <section class="col-md-10">
@@ -148,36 +148,42 @@ if (isset($_SESSION['item_view_back_url'])) {
                   </div>
                 </section>
               </article>
-              <article class="row mb-3 align-items-end">
-                <section class="col-md-8 text-start">
+              <article class="row mb-4 align-items-end g-3">
+                <section class="col-lg-8 col-12 text-start">
                   <label class="mb-2" for="item_delete_reason">
                     <?= $item_delete > 0 ? 'Motivo de eliminación (Estado: Borrado)' : 'Motivo de eliminación' ?>
                   </label>
-                  <section class="input-group">
-                    <select id="item_delete_reason" name="item_delete_reason" class="form-select" title="Motivo de eliminación" data-is-deleted="<?= $item_delete > 0 ? 'true' : 'false' ?>">
-                      <?php foreach ($reasons as $reason): ?>
-                        <option value="<?= (int)$reason['reason_id'] ?>" <?= (int)$reason['reason_id'] === $item_delete ? 'selected' : '' ?>>
-                          <?= h($reason['reason_name']) ?>
-                        </option>
-                      <?php endforeach; ?>
-                    </select>
-
-                    <?php if ($item_delete > 0): ?>
+                  <?php if ($item_delete > 0): ?>
+                    <div class="input-group mb-2">
+                      <select id="item_delete_reason" name="item_delete_reason" class="form-select" title="Motivo de eliminación" data-is-deleted="true">
+                        <?php foreach ($reasons as $reason): ?>
+                          <option value="<?= (int)$reason['reason_id'] ?>" <?= (int)$reason['reason_id'] === $item_delete ? 'selected' : '' ?>>
+                            <?= h($reason['reason_name']) ?>
+                          </option>
+                        <?php endforeach; ?>
+                      </select>
                       <button type="button" onclick="safeDelete('item_del.php', <?= (int)$itemId ?>, document.getElementById('item_delete_reason').value)" class="btn btn-outline-danger" title="Cambiar motivo de eliminación">
                         <i class="fa-solid fa-arrows-rotate me-1"></i>Cambiar Motivo
                       </button>
-                      <button type="button" onclick="safeDelete('item_del.php', <?= (int)$itemId ?>, 0)" class="btn btn-warning" title="Deshacer borrado y restaurar ítem">
-                        <i class="fa-solid fa-rotate-left me-1"></i>Deshacer Borrado
-                      </button>
-                    <?php else: ?>
+                    </div>
+                    <button type="button" onclick="safeDelete('item_del.php', <?= (int)$itemId ?>, 0)" class="btn btn-warning" title="Deshacer borrado y restaurar ítem">
+                      <i class="fa-solid fa-rotate-left me-1"></i>Deshacer Borrado
+                    </button>
+                  <?php else: ?>
+                    <div class="input-group">
+                      <select id="item_delete_reason" name="item_delete_reason" class="form-select" title="Motivo de eliminación" data-is-deleted="false">
+                        <?php foreach ($reasons as $reason): ?>
+                          <option value="<?= (int)$reason['reason_id'] ?>"><?= h($reason['reason_name']) ?></option>
+                        <?php endforeach; ?>
+                      </select>
                       <button type="button" onclick="safeDelete('item_del.php', <?= (int)$itemId ?>, document.getElementById('item_delete_reason').value)" class="btn btn-danger">
                         <i class="fa-regular fa-trash-can me-1"></i>Eliminar Ítem
                       </button>
-                    <?php endif; ?>
-                  </section>
+                    </div>
+                  <?php endif; ?>
                 </section>
-                <section class="col-md-4 text-end">
-                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Guardar</button>
+                <section class="col-lg-4 col-12 text-end">
+                  <button class="btn btn-success"><i class="fa-regular fa-floppy-disk me-1"></i>Guardar</button>
                 </section>
               </article>
             </form>
@@ -188,6 +194,7 @@ if (isset($_SESSION['item_view_back_url'])) {
     </section>
     <section class="col-md-1"></section>
   </article>
+  <div class="separador my-5"></div>
 </main>
 <!-- /Container -->
 <!-- Modal Full Image-->
