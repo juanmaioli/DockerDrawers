@@ -357,6 +357,9 @@ async function itemView(itemId,usuarioId) {
     if (typeof window.setStars === 'function') {
       window.setStars(ratingValue)
     }
+    if (parseInt(item[0].item_delete) > 0 && $('#item_delete_reason')) {
+      $('#item_delete_reason').val(item[0].item_delete)
+    }
     item_card.classList.add(`shadow-${item[0].category_color}-blur`)
     item_image.classList.add(`border-${item[0].category_color}`)
     item_image.src = `images/item/${item[0].item_image}`

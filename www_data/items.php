@@ -16,11 +16,17 @@ if(empty($_GET['id']))
     <section class="col">
       <article class="card" id="item_card">
         <section class="card-header">
-          <article class="row">
+          <article class="row align-items-center">
             <section class="col-md-6 text-start">
-              <h3 class="" id="item_title">Ítems</h3>
+              <h3 class="mb-0" id="item_title">Ítems</h3>
             </section>
-            <section class="col-md-6 text-end"><a href="item_new.php?did=0" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Agregar Ítem</a></section>
+            <section class="col-md-6 text-end d-flex align-items-center justify-content-end gap-3">
+              <div class="form-check form-switch mb-0" title="Mostrar ítems activos / borrados">
+                <input class="form-check-input" type="checkbox" id="switchBorrados" role="switch" onchange="reloadItemsTable()">
+                <label class="form-check-label small fw-bold text-danger" for="switchBorrados">Borrados</label>
+              </div>
+              <a href="item_new.php?did=0" class="btn btn-indigo"><i class="fa-regular fa-circle-plus"></i>&nbsp;Agregar Ítem</a>
+            </section>
           </article>
         </section>
         <section class="card-body">
@@ -35,7 +41,7 @@ if(empty($_GET['id']))
               <th>Descripción</th>
               <th>Cantidad</th>
               <th>Precio U$S</th>
-              <th>Eliminar</th>
+              <th>Estado / Acciones</th>
             </thead>
             <tbody class="small">
             </tbody>
@@ -63,5 +69,13 @@ if(empty($_GET['id']))
 
 <?php include("footer.php"); ?>
 <script>
-  itemsAll(<?= $usuarioId ?>,<?=$categoryId?>)
+  function reloadItemsTable() {
+    const isBorrados = $('#switchBorrados').is(':checked');
+    const filter = isBorrados ? '1' : '0';
+    itemsAll(<?= (int)$usuarioId ?>, <?= (int)$categoryId ?>, filter);
+  }
+
+  $(document).ready(function() {
+    reloadItemsTable();
+  });
 </script>

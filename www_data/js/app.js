@@ -15,8 +15,8 @@ function escapeHTML(str) {
 }
 
 //List Drawers
-function safeDelete(url, id) {
-    if (confirm('Are you sure you want to delete this item?')) {
+function safeDelete(url, id, reasonId = 1) {
+    if (confirm('¿Estás seguro de que querés eliminar este registro?')) {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = url;
@@ -26,6 +26,14 @@ function safeDelete(url, id) {
         idInput.name = 'id';
         idInput.value = id;
         form.appendChild(idInput);
+
+        if (reasonId) {
+            const reasonInput = document.createElement('input');
+            reasonInput.type = 'hidden';
+            reasonInput.name = 'reason_id';
+            reasonInput.value = reasonId;
+            form.appendChild(reasonInput);
+        }
 
         const csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
@@ -391,6 +399,9 @@ async function itemView(itemId,usuarioId) {
     if (typeof window.setStars === 'function') {
       window.setStars(ratingValue);
     }
+    if (parseInt(item[0].item_delete) > 0 && $('#item_delete_reason')) {
+      $('#item_delete_reason').val(item[0].item_delete);
+    }
     item_card.classList.add(`shadow-${item[0].category_color}-blur`)
     item_image.classList.add(`border-${item[0].category_color}`)
     const timestamp = new Date().getTime()
@@ -447,8 +458,8 @@ async function drawerListSelect(selecDest,usuarioId) {
   }
   selecDestOptions.innerHTML = options
 }
-async function itemsAll(usuarioId,categoriaId) {
-  const url = `./api/api_drawers.php?id=itemsall-${usuarioId}-${categoriaId}`
+async function itemsAll(usuarioId,categoriaId, filter = '0') {
+  const url = `./api/api_drawers.php?id=itemsall-${usuarioId}-${categoriaId}-${filter}`
   console.log('url: ', url)
 
   const table = $('#item_all_table').DataTable( {
@@ -559,7 +570,11 @@ async function itemsAll(usuarioId,categoriaId) {
         'targets': 9,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta = `<div class="d-grid gap-2"><button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button></div>`
+          if (parseInt(row['item_delete']) > 0) {
+            const reason = row['reason_name'] || 'Borrado';
+            return `<span class="badge bg-danger text-wrap p-2 d-block" title="Motivo: ${reason}"><i class="fa-solid fa-ban me-1"></i>${reason}</span>`;
+          }
+          const respuesta = `<div class="d-grid gap-2"><button onclick="safeDelete('item_del.php', ${row['item_id']})" class="btn btn-outline-danger" title="Eliminar"><i class="fa-solid fa-trash-can"></i></button></div>`
           return respuesta
         }
       }

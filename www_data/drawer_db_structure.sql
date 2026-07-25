@@ -28,6 +28,25 @@ CREATE TABLE `drawers_action`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for drawers_reason
+-- ----------------------------
+DROP TABLE IF EXISTS `drawers_reason`;
+CREATE TABLE `drawers_reason`  (
+  `reason_id` int(11) NOT NULL AUTO_INCREMENT,
+  `reason_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`reason_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_spanish2_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of drawers_reason
+-- ----------------------------
+INSERT INTO `drawers_reason` VALUES (1, 'Borrado');
+INSERT INTO `drawers_reason` VALUES (2, 'Regalado');
+INSERT INTO `drawers_reason` VALUES (3, 'Perdido');
+INSERT INTO `drawers_reason` VALUES (4, 'Obsoleto');
+INSERT INTO `drawers_reason` VALUES (5, 'Prestado');
+
+-- ----------------------------
 -- Table structure for drawers_category
 -- ----------------------------
 DROP TABLE IF EXISTS `drawers_category`;

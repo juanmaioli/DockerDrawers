@@ -96,7 +96,7 @@ try {
             $stmt->bind_param("i", $parametro[1]);
             break;
         case 'itemview':
-            $sql = "SELECT drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_image, drawers_items.item_owner, drawers_items.item_category, drawers_items.item_brand, drawers_items.item_model, drawers_items.item_rating, drawers_category.category_name, drawers_category.category_color, drawers_drawer.drawer_name FROM drawers_items LEFT JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id WHERE item_id = ?";
+            $sql = "SELECT drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_image, drawers_items.item_owner, drawers_items.item_category, drawers_items.item_brand, drawers_items.item_model, drawers_items.item_rating, drawers_items.item_delete, drawers_category.category_name, drawers_category.category_color, drawers_drawer.drawer_name FROM drawers_items LEFT JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id WHERE item_id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $parametro[1]);
             break;
@@ -106,15 +106,58 @@ try {
             $stmt->bind_param("ii", $parametro[1], $parametro[2]);
             break;
         case 'itemsall':
-            if(($parametro[2] ?? 0) == 0){
-                $sql = "SELECT drawers_category.category_name, drawers_category.category_color, drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_image, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_brand, drawers_items.item_model, drawers_items.item_category, drawers_items.item_owner, drawers_items.item_update, drawers_items.item_date, drawers_items.item_rating, drawers_drawer.drawer_name, drawers_brand.brand_name FROM drawers_items INNER JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id INNER JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id INNER JOIN drawers_brand ON drawers_items.item_brand = drawers_brand.brand_id WHERE item_owner = ? AND item_delete = 0 ORDER BY item_name ASC";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $parametro[1]);
-            }else{
-                $sql = "SELECT drawers_category.category_name, drawers_category.category_color, drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_image, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_brand, drawers_items.item_model, drawers_items.item_category, drawers_items.item_owner, drawers_items.item_update, drawers_items.item_date, drawers_items.item_rating, drawers_drawer.drawer_name, drawers_brand.brand_name FROM drawers_items INNER JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id INNER JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id INNER JOIN drawers_brand ON drawers_items.item_brand = drawers_brand.brand_id WHERE item_owner = ? AND item_delete = 0 AND item_category = ? ORDER BY item_name ASC";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ii", $parametro[1], $parametro[2]);
+            $owner = (int)($parametro[1] ?? 0);
+            $catId = (int)($parametro[2] ?? 0);
+            $filter = $parametro[3] ?? '0';
+
+            $sql = "SELECT 
+                        drawers_category.category_name, 
+                        drawers_category.category_color, 
+                        drawers_items.item_id, 
+                        drawers_items.item_drawer, 
+                        drawers_items.item_name, 
+                        drawers_items.item_image, 
+                        drawers_items.item_amount, 
+                        drawers_items.item_price, 
+                        drawers_items.item_description, 
+                        drawers_items.item_brand, 
+                        drawers_items.item_model, 
+                        drawers_items.item_category, 
+                        drawers_items.item_owner, 
+                        drawers_items.item_update, 
+                        drawers_items.item_date, 
+                        drawers_items.item_rating, 
+                        drawers_items.item_delete, 
+                        drawers_drawer.drawer_name, 
+                        drawers_brand.brand_name,
+                        drawers_reason.reason_name 
+                    FROM drawers_items 
+                    LEFT JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id 
+                    LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id 
+                    LEFT JOIN drawers_brand ON drawers_items.item_brand = drawers_brand.brand_id
+                    LEFT JOIN drawers_reason ON drawers_items.item_delete = drawers_reason.reason_id
+                    WHERE drawers_items.item_owner = ?";
+
+            $params = [$owner];
+            $types = "i";
+
+            if ($catId > 0) {
+                $sql .= " AND drawers_items.item_category = ?";
+                $params[] = $catId;
+                $types .= "i";
             }
+
+            if ($filter === '1' || $filter === 'borrados') {
+                $sql .= " AND drawers_items.item_delete > 0";
+            } elseif ($filter === 'all' || $filter === '2') {
+                // Mostrar todos (sin filtrar item_delete)
+            } else {
+                $sql .= " AND drawers_items.item_delete = 0";
+            }
+
+            $sql .= " ORDER BY drawers_items.item_name ASC";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param($types, ...$params);
             break;
         case 'totalprice':
             $owner = (int)($parametro[1] ?? 0);
