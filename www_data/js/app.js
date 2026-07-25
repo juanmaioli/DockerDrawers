@@ -16,7 +16,19 @@ function escapeHTML(str) {
 
 //List Drawers
 function safeDelete(url, id, reasonId = 1) {
-    if (confirm('¿Estás seguro de que querés eliminar este registro?')) {
+    const rId = parseInt(reasonId);
+    let confirmMsg = '¿Estás seguro de que querés eliminar este registro?';
+
+    if (rId === 0) {
+        confirmMsg = '¿Estás seguro de que querés deshacer el borrado de este registro?';
+    } else {
+        const itemDeleteReasonEl = document.querySelector('#item_delete_reason');
+        if (itemDeleteReasonEl && itemDeleteReasonEl.dataset.isDeleted === 'true') {
+            confirmMsg = '¿Estás seguro de que querés cambiar el motivo de eliminación?';
+        }
+    }
+
+    if (confirm(confirmMsg)) {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = url;
@@ -27,7 +39,7 @@ function safeDelete(url, id, reasonId = 1) {
         idInput.value = id;
         form.appendChild(idInput);
 
-        if (reasonId) {
+        if (reasonId !== null && reasonId !== undefined) {
             const reasonInput = document.createElement('input');
             reasonInput.type = 'hidden';
             reasonInput.name = 'reason_id';
@@ -384,9 +396,10 @@ async function itemView(itemId,usuarioId) {
   const response = await fetch(url)
   const item = await response.json()
   if(item.length != 0 ){
-    item_title.innerHTML = item[0].item_name
-    item_image_full_Label.innerHTML = item[0].item_name
-    item_name.value = item[0].item_name
+    const reasonTitle = (parseInt(item[0].item_delete) > 0 && item[0].reason_name) ? ` (${item[0].reason_name})` : ''
+    item_title.innerHTML = item[0].item_name + reasonTitle
+    item_image_full_Label.innerHTML = item[0].item_name + reasonTitle
+    item_name.value = item[0].item_name + reasonTitle
     item_price.value = item[0].item_price
     // console.log(item[0].item_price)
     item_amount.value = item[0].item_amount
@@ -399,14 +412,33 @@ async function itemView(itemId,usuarioId) {
     if (typeof window.setStars === 'function') {
       window.setStars(ratingValue);
     }
-    if (parseInt(item[0].item_delete) > 0 && $('#item_delete_reason')) {
-      $('#item_delete_reason').val(item[0].item_delete);
+    const itemDeleteReasonEl = document.querySelector('#item_delete_reason');
+    if (parseInt(item[0].item_delete) > 0 && itemDeleteReasonEl) {
+      itemDeleteReasonEl.value = item[0].item_delete;
     }
-    item_card.classList.add(`shadow-${item[0].category_color}-blur`)
-    item_image.classList.add(`border-${item[0].category_color}`)
+    const catColor = (item[0].category_color && item[0].category_color !== 'null') ? item[0].category_color : 'primary';
+    item_card.classList.add(`shadow-${catColor}-blur`)
+    item_image.classList.add(`border-${catColor}`)
     const timestamp = new Date().getTime()
-    item_image.src = `images/item/${item[0].item_image}?t=${timestamp}`
-    item_image_full_src.src = `images/item/${item[0].item_image}?t=${timestamp}`
+    const imgName = (item[0].item_image && item[0].item_image !== 'null' && item[0].item_image.trim() !== '') ? item[0].item_image : 'default.png';
+
+    const itemImgEl = document.getElementById('item_image');
+    if (itemImgEl) {
+      itemImgEl.onerror = function() {
+        this.onerror = null;
+        this.src = 'images/item/default.png';
+      };
+      itemImgEl.src = `images/item/${imgName}?t=${timestamp}`;
+    }
+
+    const itemFullImgEl = document.getElementById('item_image_full_src');
+    if (itemFullImgEl) {
+      itemFullImgEl.onerror = function() {
+        this.onerror = null;
+        this.src = 'images/item/default.png';
+      };
+      itemFullImgEl.src = `images/item/${imgName}?t=${timestamp}`;
+    }
     searchImage.href = `https://www.google.com/search?q=${item[0].item_description}&source=lnms&tbm=isch`
     searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_description}_OrderId_PRICE_NoIndex_True`
     // searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_description}#D[A:${item[0].item_description}]`
@@ -519,8 +551,9 @@ async function itemsAll(usuarioId,categoriaId, filter = '0') {
         'data': 'download_link',
         'render': function ( data, type, row) {
           let srcIMG = 'default.png'
-          if (row['item_image'].length > 0){srcIMG = `${row['item_image']}`}
-          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}"><img class="border border-${row['category_color']} mb-3 rounded-circle" src="images/item/${srcIMG}" alt="" width="90px"></a>`
+          if (row['item_image'] && row['item_image'] !== 'null' && row['item_image'].trim().length > 0){srcIMG = `${row['item_image']}`}
+          const catColor = (row['category_color'] && row['category_color'] !== 'null') ? row['category_color'] : 'primary';
+          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}"><img class="border border-${catColor} mb-3 rounded-circle" src="images/item/${srcIMG}" alt="" width="90px" onerror="this.onerror=null;this.src='images/item/default.png';"></a>`
           return respuesta
         }
       },
@@ -538,7 +571,15 @@ async function itemsAll(usuarioId,categoriaId, filter = '0') {
             }
           }
           starsHtml += '</span>';
-          const respuesta =  `<div class="d-grid gap-2"><a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-${row['category_color']}">${row['item_name']}</a>${starsHtml}</div>`
+          const catColor = (row['category_color'] && row['category_color'] !== 'null') ? row['category_color'] : 'primary';
+          
+          let reasonHtml = '';
+          if (parseInt(row['item_delete']) > 0) {
+            const reason = row['reason_name'] || 'Borrado';
+            reasonHtml = `<br><small class="text-danger fst-italic">(${reason})</small>`;
+          }
+
+          const respuesta = `<div class="d-grid gap-2"><a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-${catColor}">${row['item_name']}</a>${reasonHtml}${starsHtml}</div>`
           return respuesta
         }
       },
@@ -546,7 +587,9 @@ async function itemsAll(usuarioId,categoriaId, filter = '0') {
         'targets': 4,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta =  `<span class="badge rounded-pill bg-${row['category_color']} d-block w-100">${row['category_name']}</span>`
+          const catColor = (row['category_color'] && row['category_color'] !== 'null') ? row['category_color'] : 'primary';
+          const catName = row['category_name'] ? row['category_name'] : 'Sin Categoría';
+          const respuesta =  `<span class="badge rounded-pill bg-${catColor} d-block w-100">${catName}</span>`
           return respuesta
         }
       },
@@ -554,7 +597,9 @@ async function itemsAll(usuarioId,categoriaId, filter = '0') {
         'targets': 5,
         'data': 'download_link',
         'render': function ( data, type, row) {
-          const respuesta =  `<a href="drawer_view.php?id=${row['item_drawer']}" class="text-${row['category_color']}">${row['drawer_name']}</a>`
+          const catColor = (row['category_color'] && row['category_color'] !== 'null') ? row['category_color'] : 'primary';
+          const drawerName = row['drawer_name'] ? row['drawer_name'] : 'Sin Cajón';
+          const respuesta =  `<a href="drawer_view.php?id=${row['item_drawer']}" class="text-${catColor}">${drawerName}</a>`
           return respuesta
         }
       },

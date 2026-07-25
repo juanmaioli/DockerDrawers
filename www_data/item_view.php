@@ -4,12 +4,19 @@ $itemId= $_GET['id'];
 $drawerId = $_GET['did'];
 
 $reasons = [];
+$item_delete = 0;
 $conn_reasons = get_db_connection();
-$res_reasons = $conn_reasons->query("SELECT reason_id, reason_name FROM drawers_reason ORDER BY reason_id ASC");
+$res_reasons = $conn_reasons->query("SELECT reason_id, reason_name FROM drawers_reason ORDER BY reason_name ASC");
 if ($res_reasons) {
     while ($r = $res_reasons->fetch_assoc()) {
         $reasons[] = $r;
     }
+}
+$current_reason_name = '';
+$res_item = $conn_reasons->query("SELECT i.item_delete, r.reason_name FROM drawers_items i LEFT JOIN drawers_reason r ON i.item_delete = r.reason_id WHERE i.item_id = " . (int)$itemId);
+if ($res_item && $row_item = $res_item->fetch_assoc()) {
+    $item_delete = (int)$row_item['item_delete'];
+    $current_reason_name = $row_item['reason_name'] ?? 'Borrado';
 }
 $conn_reasons->close();
 
@@ -142,20 +149,34 @@ if (isset($_SESSION['item_view_back_url'])) {
                 </section>
               </article>
               <article class="row mb-3 align-items-end">
-                <section class="col-md-7 text-start">
-                  <label class="mb-2" for="item_delete_reason">Motivo de eliminación</label>
+                <section class="col-md-8 text-start">
+                  <label class="mb-2" for="item_delete_reason">
+                    <?= $item_delete > 0 ? 'Motivo de eliminación (Estado: Borrado)' : 'Motivo de eliminación' ?>
+                  </label>
                   <section class="input-group">
-                    <select id="item_delete_reason" name="item_delete_reason" class="form-select" title="Motivo de eliminación">
+                    <select id="item_delete_reason" name="item_delete_reason" class="form-select" title="Motivo de eliminación" data-is-deleted="<?= $item_delete > 0 ? 'true' : 'false' ?>">
                       <?php foreach ($reasons as $reason): ?>
-                        <option value="<?= (int)$reason['reason_id'] ?>"><?= h($reason['reason_name']) ?></option>
+                        <option value="<?= (int)$reason['reason_id'] ?>" <?= (int)$reason['reason_id'] === $item_delete ? 'selected' : '' ?>>
+                          <?= h($reason['reason_name']) ?>
+                        </option>
                       <?php endforeach; ?>
                     </select>
-                    <button type="button" onclick="safeDelete('item_del.php', <?= (int)$itemId ?>, $('#item_delete_reason').val())" class="btn btn-danger">
-                      <i class="fa-regular fa-trash-can"></i>&nbsp;Eliminar Ítem
-                    </button>
+
+                    <?php if ($item_delete > 0): ?>
+                      <button type="button" onclick="safeDelete('item_del.php', <?= (int)$itemId ?>, document.getElementById('item_delete_reason').value)" class="btn btn-outline-danger" title="Cambiar motivo de eliminación">
+                        <i class="fa-solid fa-arrows-rotate me-1"></i>Cambiar Motivo
+                      </button>
+                      <button type="button" onclick="safeDelete('item_del.php', <?= (int)$itemId ?>, 0)" class="btn btn-warning" title="Deshacer borrado y restaurar ítem">
+                        <i class="fa-solid fa-rotate-left me-1"></i>Deshacer Borrado
+                      </button>
+                    <?php else: ?>
+                      <button type="button" onclick="safeDelete('item_del.php', <?= (int)$itemId ?>, document.getElementById('item_delete_reason').value)" class="btn btn-danger">
+                        <i class="fa-regular fa-trash-can me-1"></i>Eliminar Ítem
+                      </button>
+                    <?php endif; ?>
                   </section>
                 </section>
-                <section class="col-md-5 text-end">
+                <section class="col-md-4 text-end">
                   <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i>&nbsp;Guardar</button>
                 </section>
               </article>

@@ -341,9 +341,10 @@ async function itemView(itemId,usuarioId) {
   const response = await fetch(url)
   const item = await response.json()
   if(item.length != 0 ){
-    item_title.innerHTML = item[0].item_name
-    item_image_full_Label.innerHTML = item[0].item_name
-    item_name.value = item[0].item_name
+    const reasonTitle = (parseInt(item[0].item_delete) > 0 && item[0].reason_name) ? ` (${item[0].reason_name})` : ''
+    item_title.innerHTML = item[0].item_name + reasonTitle
+    item_image_full_Label.innerHTML = item[0].item_name + reasonTitle
+    item_name.value = item[0].item_name + reasonTitle
     item_price.value = parseFloat(item[0].item_price || 0).toFixed(2)
     item_amount.value = item[0].item_amount
     item_description.value = item[0].item_description
@@ -357,13 +358,33 @@ async function itemView(itemId,usuarioId) {
     if (typeof window.setStars === 'function') {
       window.setStars(ratingValue)
     }
-    if (parseInt(item[0].item_delete) > 0 && $('#item_delete_reason')) {
-      $('#item_delete_reason').val(item[0].item_delete)
+    const itemDeleteReasonEl = document.querySelector('#item_delete_reason');
+    if (parseInt(item[0].item_delete) > 0 && itemDeleteReasonEl) {
+      itemDeleteReasonEl.value = item[0].item_delete;
     }
-    item_card.classList.add(`shadow-${item[0].category_color}-blur`)
-    item_image.classList.add(`border-${item[0].category_color}`)
-    item_image.src = `images/item/${item[0].item_image}`
-    item_image_full_src.src = `images/item/${item[0].item_image}`
+    const catColor = (item[0].category_color && item[0].category_color !== 'null') ? item[0].category_color : 'primary';
+    item_card.classList.add(`shadow-${catColor}-blur`)
+    item_image.classList.add(`border-${catColor}`)
+    const timestamp = new Date().getTime()
+    const imgName = (item[0].item_image && item[0].item_image !== 'null' && item[0].item_image.trim() !== '') ? item[0].item_image : 'default.png';
+
+    const itemImgEl = document.getElementById('item_image');
+    if (itemImgEl) {
+      itemImgEl.onerror = function() {
+        this.onerror = null;
+        this.src = 'images/item/default.png';
+      };
+      itemImgEl.src = `images/item/${imgName}?t=${timestamp}`;
+    }
+
+    const itemFullImgEl = document.getElementById('item_image_full_src');
+    if (itemFullImgEl) {
+      itemFullImgEl.onerror = function() {
+        this.onerror = null;
+        this.src = 'images/item/default.png';
+      };
+      itemFullImgEl.src = `images/item/${imgName}?t=${timestamp}`;
+    }
     searchImage.href = `https://www.google.com/search?q=${item[0].item_description}&source=lnms&tbm=isch`
     searchML.href = `https://listado.mercadolibre.com.ar/${item[0].item_description}#D[A:${item[0].item_description}]`
     item_category.innerHTML = ''
@@ -480,7 +501,15 @@ async function itemsAll(usuarioId,categoriaId) {
             }
           }
           starsHtml += '</span>';
-          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-${row['category_color']}">${row['item_name']}</a>${starsHtml}`
+          const catColor = (row['category_color'] && row['category_color'] !== 'null') ? row['category_color'] : 'primary';
+
+          let reasonHtml = '';
+          if (parseInt(row['item_delete']) > 0) {
+            const reason = row['reason_name'] || 'Borrado';
+            reasonHtml = `<br><small class="text-danger fst-italic">(${reason})</small>`;
+          }
+
+          const respuesta =  `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-${catColor}">${row['item_name']}</a>${reasonHtml}${starsHtml}`
           return respuesta
         }
       },

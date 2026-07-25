@@ -96,7 +96,7 @@ try {
             $stmt->bind_param("i", $parametro[1]);
             break;
         case 'itemview':
-            $sql = "SELECT drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_image, drawers_items.item_owner, drawers_items.item_category, drawers_items.item_brand, drawers_items.item_model, drawers_items.item_rating, drawers_items.item_delete, drawers_category.category_name, drawers_category.category_color, drawers_drawer.drawer_name FROM drawers_items LEFT JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id WHERE item_id = ?";
+            $sql = "SELECT drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_image, drawers_items.item_owner, drawers_items.item_category, drawers_items.item_brand, drawers_items.item_model, drawers_items.item_rating, drawers_items.item_delete, drawers_category.category_name, drawers_category.category_color, drawers_drawer.drawer_name, drawers_reason.reason_name FROM drawers_items LEFT JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id LEFT JOIN drawers_reason ON drawers_items.item_delete = drawers_reason.reason_id WHERE item_id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $parametro[1]);
             break;

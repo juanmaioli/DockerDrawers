@@ -90,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.21.0` | 🚀 Incorporación de nuevos motivos en `drawers_reason` ('Averiado', 'Recomprado', 'En Uso', 'Mal Cargado'), función para cambiar motivo de eliminación y deshacer borrado en `item_view.php`, y despliegue del motivo en itálica en `items.php` |
 | `v0.20.0` | 🚀 Creación de la tabla `drawers_reason`, selector con motivo de eliminación en `item_view.php` y switch de filtro `Borrados` (`form-switch`) en `items.php` |
 | `v0.19.2` | 🎨 Simplificación del menú desplegable (`head.php`): remoción de "Marcadores" e "Inches a MM", e integración del isotipo de Mercado Libre sin borde en las opciones "Compras" y "Favoritos" |
 | `v0.19.1` | 🚀 Botón de búsqueda directa en Mercado Libre en tabla y modal de Favoritos (`favoritos_ml.php`), remoción del texto en el botón de scraping y actualización del color a `btn-lightpink` |

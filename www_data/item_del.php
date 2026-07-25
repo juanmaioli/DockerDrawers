@@ -9,9 +9,9 @@ $conn = get_db_connection();
 $item_id = (int)$_POST['id'];
 
 $reason_id = 1;
-if (isset($_POST['reason_id']) && (int)$_POST['reason_id'] > 0) {
+if (isset($_POST['reason_id'])) {
     $reason_id = (int)$_POST['reason_id'];
-} elseif (isset($_POST['item_delete']) && (int)$_POST['item_delete'] > 0) {
+} elseif (isset($_POST['item_delete'])) {
     $reason_id = (int)$_POST['item_delete'];
 }
 
