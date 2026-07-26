@@ -348,8 +348,9 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
       ? '<span class="text-danger fst-italic fw-bold"><i class="fa-solid fa-plane" style="transform: rotate(-45deg); display: inline-block;"></i>INTER.</span>' 
       : '';
 
-    const priceText = (bk.price !== null && bk.price !== undefined) 
-      ? '$ ' + Number(bk.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+    const numPrice = (bk.price !== null && bk.price !== undefined && !isNaN(bk.price)) ? parseFloat(bk.price) : -1;
+    const priceText = (numPrice >= 0) 
+      ? '$ ' + Number(numPrice).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
       : '-';
 
     tr.innerHTML = `
@@ -364,7 +365,7 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
       </td>
       <td class="text-center td-full">${fullHtml}</td>
       <td class="text-center td-internacional">${intHtml}</td>
-      <td class="text-end fw-bold td-precio">${priceText}</td>
+      <td class="text-end fw-bold td-precio" data-order="${numPrice}">${priceText}</td>
       <td class="text-center">${bk.date}</td>
       <td class="text-center">
         <button class="btn btn-outline-lightpink btn-sm btn-scrape me-1" onclick="scrapeItem('${bk.id}', this)" title="Scrapear y guardar en drawers_fav">
@@ -429,10 +430,15 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
             }
             const priceTd = tr.querySelector('.td-precio');
             if (priceTd && d.price !== null) {
-              priceTd.textContent = '$ ' + Number(d.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+              const numPrice = parseFloat(d.price);
+              priceTd.setAttribute('data-order', numPrice);
+              priceTd.textContent = '$ ' + Number(numPrice).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
               const targetBk = bookmarks.find(b => b.id === itemId);
-              if (targetBk) targetBk.price = parseFloat(d.price);
+              if (targetBk) targetBk.price = numPrice;
               updateFavTotalPrice();
+              if (typeof table !== 'undefined' && table) {
+                table.cell(priceTd).invalidate();
+              }
             }
           }
           $btn.removeClass('btn-outline-lightpink').addClass('btn-success').html('<i class="fa-solid fa-check"></i>');
@@ -494,10 +500,15 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
                 }
                 const priceTd = tr.querySelector('.td-precio');
                 if (priceTd && d.price !== null) {
-                  priceTd.textContent = '$ ' + Number(d.price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                  const numPrice = parseFloat(d.price);
+                  priceTd.setAttribute('data-order', numPrice);
+                  priceTd.textContent = '$ ' + Number(numPrice).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                   const targetBk = bookmarks.find(b => b.id === item.id);
-                  if (targetBk) targetBk.price = parseFloat(d.price);
+                  if (targetBk) targetBk.price = numPrice;
                   updateFavTotalPrice();
+                  if (typeof table !== 'undefined' && table) {
+                    table.cell(priceTd).invalidate();
+                  }
                 }
               }
               $btn.removeClass('btn-outline-lightpink').addClass('btn-success').html('<i class="fa-solid fa-check"></i>');
@@ -620,9 +631,14 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
           }
           const priceTd = tr.querySelector('.td-precio');
           if (priceTd) {
-            priceTd.textContent = (price !== null && !isNaN(price))
-              ? '$ ' + Number(price).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            const numPrice = (price !== null && !isNaN(price)) ? parseFloat(price) : -1;
+            priceTd.setAttribute('data-order', numPrice);
+            priceTd.textContent = (numPrice >= 0)
+              ? '$ ' + Number(numPrice).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
               : '-';
+            if (typeof table !== 'undefined' && table) {
+              table.cell(priceTd).invalidate();
+            }
           }
         }
 
@@ -676,7 +692,10 @@ $bookmarks_json = json_encode(array_map(function($bk) use ($db_favs) {
     responsive: true,
     dom: 'Bfrtip',
     orderCellsTop: true,
-    columnDefs: [{ orderable: false, targets: [0, 6] }],
+    columnDefs: [
+      { orderable: false, targets: [0, 6] },
+      { type: 'num', targets: 4 }
+    ],
     buttons: [
       {extend:'copy',  className:'btn btn-darkblue', text:'<i class="fa-regular fa-copy"></i> Copiar'},
       {extend:'excel', className:'btn btn-green',    text:'<i class="fa-regular fa-file-excel"></i> Excel'},
