@@ -101,7 +101,33 @@ try {
             $stmt->bind_param("i", $parametro[1]);
             break;
         case 'itemlist':
-            $sql = "SELECT drawers_category.category_name, drawers_category.category_color, drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_image, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_category, drawers_items.item_owner, drawers_items.item_update, drawers_items.item_date FROM drawers_items INNER JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id WHERE item_drawer = ? AND item_owner = ? AND item_delete = 0 ORDER BY item_name ASC";
+            $sql = "SELECT 
+                        drawers_category.category_name, 
+                        drawers_category.category_color, 
+                        drawers_items.item_id, 
+                        drawers_items.item_drawer, 
+                        drawers_items.item_name, 
+                        drawers_items.item_image, 
+                        drawers_items.item_amount, 
+                        drawers_items.item_price, 
+                        drawers_items.item_description, 
+                        drawers_items.item_category, 
+                        drawers_items.item_owner, 
+                        drawers_items.item_update, 
+                        drawers_items.item_date,
+                        drawers_items.item_delete,
+                        drawers_reason.reason_name
+                    FROM drawers_items 
+                    INNER JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id 
+                    LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id
+                    LEFT JOIN drawers_reason ON drawers_items.item_delete = drawers_reason.reason_id
+                    WHERE drawers_items.item_drawer = ? 
+                      AND drawers_items.item_owner = ? 
+                      AND (
+                            drawers_items.item_delete = 0 
+                            OR (LOWER(drawers_drawer.drawer_name) = 'regalos' AND (LOWER(drawers_reason.reason_name) = 'regalado' OR drawers_items.item_delete = 2))
+                          )
+                    ORDER BY drawers_items.item_name ASC";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ii", $parametro[1], $parametro[2]);
             break;

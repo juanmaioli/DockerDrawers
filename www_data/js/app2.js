@@ -268,7 +268,12 @@ async function drawerItems($drawerId, usuarioId) {
         'targets': 1,
         'data': 'item_name',
         'render': function ( data, type, row) {
-          const respuesta = `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-decoration-none text-reset fw-bold">${row['item_name']}</a>`
+          let reasonHtml = '';
+          if (parseInt(row['item_delete']) > 0) {
+            const reason = row['reason_name'] || 'Regalado';
+            reasonHtml = `<br><small class="text-danger fst-italic">(${reason})</small>`;
+          }
+          const respuesta = `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-decoration-none text-reset fw-bold">${row['item_name']}</a>${reasonHtml}`
           return respuesta
         }
       },
@@ -693,7 +698,11 @@ async function getStatistics(usuarioId,totalRecords) {
   const urlPrice = `./api/totalprice-${totalRecords}`
   const responsePrice = await fetch(urlPrice)
   const priceToJson = await responsePrice.json()
-  statisticsPrice.innerHTML = `<h1 class="text-white display-3"><i class="fa-regular fa-sack-dollar"></i>&nbsp;Valor Total: <br>$${priceToJson[0].total}</h1>`
+  statisticsPrice.innerHTML = `
+    <div class="d-flex flex-column justify-content-center h-100 py-1">
+      <span class="text-white text-uppercase fw-bold mb-1" style="font-size: 1.15rem;">Valor Total</span>
+      <h2 class="text-white fw-bold" style="font-size: 3.125rem; line-height: 1.05;"><i class="fa-regular fa-sack-dollar me-1"></i>$${priceToJson[0].total}</h2>
+    </div>`
 
   const urlCategoryPrice  = `./api/categoryprice-${totalRecords}`
   const responseCategoryPrice = await fetch(urlCategoryPrice)

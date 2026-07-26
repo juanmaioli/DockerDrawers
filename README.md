@@ -90,6 +90,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.23.0` | 🚀 Visualización de ítems regalados exclusivamente dentro del cajón 'Regalos', rediseño y ampliación tipográfica de las tarjetas de estadísticas en `index.php` con texto 100% blanco puro |
 | `v0.22.0` | 🚀 Cálculo y visualización en tiempo real del gasto total acumulado en U$S para ítems con motivo 'Regalado' en el filtro de borrados (`items.php`), exportación DDL en `./.dev/admin_drawers.sql` y corrección de márgenes con el footer |
 | `v0.21.0` | 🚀 Incorporación de nuevos motivos en `drawers_reason` ('Averiado', 'Recomprado', 'En Uso', 'Mal Cargado'), función para cambiar motivo de eliminación y deshacer borrado en `item_view.php`, y despliegue del motivo en itálica en `items.php` |
 | `v0.20.0` | 🚀 Creación de la tabla `drawers_reason`, selector con motivo de eliminación en `item_view.php` y switch de filtro `Borrados` (`form-switch`) en `items.php` |

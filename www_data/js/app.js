@@ -332,7 +332,12 @@ async function drawerItems($drawerId, usuarioId) {
         'targets': 1,
         'data': 'item_name',
         'render': function ( data, type, row) {
-          const respuesta = `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-decoration-none text-reset fw-bold">${row['item_name']}</a>`
+          let reasonHtml = '';
+          if (parseInt(row['item_delete']) > 0) {
+            const reason = row['reason_name'] || 'Regalado';
+            reasonHtml = `<br><small class="text-danger fst-italic">(${reason})</small>`;
+          }
+          const respuesta = `<a href="item_view.php?id=${row['item_id']}&did=${row['item_drawer']}" class="text-decoration-none text-reset fw-bold">${row['item_name']}</a>${reasonHtml}`
           return respuesta
         }
       },
@@ -882,11 +887,22 @@ async function getStatistics(usuarioId,totalRecords) {
   const fullValuePesos = fullValue * (window.valorDolar || 1000.00)
   
   statisticsPrice.innerHTML = `
-    <h5 class="text-white mb-1">Valor Total del Inventario</h5>
-    <h1 class="text-white display-4 fw-bold mb-1"><i class="fa-regular fa-sack-dollar"></i>&nbsp;${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'USD'})}</h1>
-    <h5 class="text-white-75 mb-2">AR${fullValuePesos.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'})}</h5>
-    <h5 class="text-white mb-1">Inventario Total</h5>
-    <h2 class="text-white display-5 fw-bold"><i class="fa-regular fa-boxes-stacked"></i>&nbsp;${totalItems.toLocaleString('es-AR')} Ítems</h2>`
+    <div class="d-flex flex-column justify-content-around h-100 py-1">
+      <div>
+        <span class="text-white text-uppercase fw-bold d-block mb-1" style="font-size: 1.15rem;">Valor Total del Inventario</span>
+        <h2 class="text-white fw-bold mb-0 text-truncate" style="font-size: 3.125rem; line-height: 1.05;" title="${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'USD'})}">
+          <i class="fa-regular fa-sack-dollar me-1"></i>${fullValue.toLocaleString('es-AR', {style: 'currency', currency: 'USD'})}
+        </h2>
+        <span class="text-white d-block mt-1" style="font-size: 1.1rem;">AR${fullValuePesos.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'})}</span>
+      </div>
+      <hr class="my-1 border-white opacity-100">
+      <div>
+        <span class="text-white text-uppercase fw-bold d-block mb-1" style="font-size: 1.15rem;">Inventario Total</span>
+        <h3 class="text-white fw-bold mb-0" style="font-size: 2.7rem; line-height: 1.05;">
+          <i class="fa-regular fa-boxes-stacked me-1"></i>${totalItems.toLocaleString('es-AR')} Ítems
+        </h3>
+      </div>
+    </div>`
 
   // Value by Category
   const urlCategoryPrice  = `./api/api_drawers.php?id=categoryprice-${totalRecords}`
