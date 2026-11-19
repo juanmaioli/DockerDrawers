@@ -8,12 +8,12 @@ services:
       - ./db_data:/var/lib/mysql
     restart: always
     environment:
-      - MARIADB_ROOT_PASSWORD=Lasflores506
-      - MARIADB_DATABASE=admin_drawers
-      - MARIADB_USER=juan
-      - MARIADB_PASSWORD=Lasflores506
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
     healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "--password=Lasflores506"]
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost --password=$$MARIADB_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -38,11 +38,11 @@ services:
       - ./apache_data:/etc/apache2
       - ./php_data/php.ini:/usr/local/etc/php/php.ini
     environment:
-      - DB_SERVER=drawers_mariadb
-      - DB_USER=juan
-      - DB_PASS=Lasflores506
-      - DB_NAME=admin_drawers
-      - DB_PORT=3306
+      - DB_SERVER=${DB_SERVER:-drawers_mariadb}
+      - DB_USER=${MARIADB_USER}
+      - DB_PASS=${MARIADB_PASSWORD}
+      - DB_NAME=${MARIADB_DATABASE}
+      - DB_PORT=${DB_PORT:-3306}
     ports:
       - "8443:443"
     deploy:

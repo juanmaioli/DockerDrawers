@@ -24,7 +24,7 @@ $usrExiste = "";
 
 $conn = get_db_connection();
 
-$sql = "SELECT usr_id, usr_email, usr_pass, usr_right, usr_image FROM " . $table_pre . "usr WHERE usr_email = ?";
+$sql = "SELECT usr_id, usr_email, usr_pass, usr_right, usr_image FROM " . $table_pre . "usr WHERE usr_email = ? AND usr_delete = 0";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $usr_email);
 $stmt->execute();
@@ -41,15 +41,34 @@ if($result->num_rows > 0 )
         $usr_image = $row["usr_image"];
         $usr_right = $row["usr_right"];
 
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        session_regenerate_id(true);
         $_SESSION["usuario_id"] = $usr_id;
         $_SESSION["usuario"] = $usr_email;
         $_SESSION["avatar"] = $usr_image;
         $_SESSION["right"] = $usr_right;
         $_SESSION["loggedin"] = true;
+        $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+
+        // Token criptográfico seguro para cookie "Remember Me"
+        $raw_token = bin2hex(random_bytes(32));
+        $hashed_token = hash('sha256', $raw_token);
+        $stmt_tok = $conn->prepare("UPDATE " . $table_pre . "usr SET usr_token = ? WHERE usr_id = ?");
+        $stmt_tok->bind_param("si", $hashed_token, $usr_id);
+        $stmt_tok->execute();
+        $stmt_tok->close();
 
         $secure_cookie = ($www_https === "on");
-        setcookie($site_cookie, hash('sha256', $usr_email) . ":" . $usr_id, time() + (60 * 60 * 24 * $usr_remember), '/', $www_host, $secure_cookie, true);
+        setcookie($site_cookie, $raw_token . ":" . $usr_id, [
+            'expires'  => time() + (60 * 60 * 24 * $usr_remember),
+            'path'     => '/',
+            'domain'   => $www_host,
+            'secure'   => $secure_cookie,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
 
         $sql_sess = "INSERT INTO " . $table_pre . "session(sess_usr, sess_ip, sess_date, sess_action) VALUES(?, ?, ?, 1)";
         $stmt_sess = $conn->prepare($sql_sess);

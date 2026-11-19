@@ -3,6 +3,7 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 include("config.php");
+require_auth();
 validate_csrf();
 $conn = get_db_connection();
 

@@ -20,6 +20,14 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("iss", $usuarioId, $ip, $dateShow);
 $stmt->execute();
 $stmt->close();
+
+// Invalidar token "Remember Me" en base de datos
+if ($usuarioId > 0) {
+    $stmt_tok = $conn->prepare("UPDATE " . $table_pre . "usr SET usr_token = NULL WHERE usr_id = ?");
+    $stmt_tok->bind_param("i", $usuarioId);
+    $stmt_tok->execute();
+    $stmt_tok->close();
+}
 $conn->close();
 
 // Clear session
@@ -34,7 +42,14 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // Clear "Remember Me" cookie properly
-setcookie($site_cookie, '', time() - 3600, '/', $www_host);
+setcookie($site_cookie, '', [
+    'expires'  => time() - 3600,
+    'path'     => '/',
+    'domain'   => $www_host,
+    'secure'   => ($www_https === "on"),
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
 
 header('Location: login.php');
 exit();

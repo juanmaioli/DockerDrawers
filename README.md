@@ -26,11 +26,11 @@
 -   **📈 Optimización de Rendimiento:** API refactorizada con `JOINs` complejos e índices `FULLTEXT` para búsquedas instantáneas.
 -   **⚡ Alta Velocidad:** Habilitación de OPcache en PHP y optimizaciones en la base de datos MariaDB.
 -   **🛡️ Seguridad Reforzada:** 
+    -   Autenticación obligatoria (`require_auth` / `require_admin`), validación de propiedad de recursos (anti-IDOR) y cookies "Remember Me" con tokens criptográficos aleatorios en base de datos + regeneración de sesión.
+    -   API (`api_drawers.php`) autenticada, sin `CORS *`, con acciones de escritura protegidas vía `POST` + CSRF (`hash_equals`).
     -   Validación estricta de tipos MIME en subida de archivos (prevención de RCE).
     -   Capa global de escape Anti-XSS en frontend (JS) y backend (PHP).
-    -   Protección completa contra ataques CSRF en todos los formularios (incluyendo Login) y acciones AJAX.
-    -   Sistema de borrado seguro mediante peticiones POST validadas.
-    -   Consultas protegidas con sentencias preparadas (PDO/MySQLi).
+    -   Consultas protegidas con sentencias preparadas (`MySQLi` con `utf8mb4`) y credenciales gestionadas por variables de entorno (`.env`).
 -   **🔐 Seguridad SSL:** Soporte para dominios locales `*.drawers.docker` en el puerto `8443`.
 -   **📸 Gestión de Imágenes:** Soporte para fotos de cajones e ítems.
 
@@ -44,6 +44,9 @@
 
 ### Inicio Rápido:
 ```bash
+# Copiar el archivo de variables de entorno y completar credenciales
+cp .env.example .env
+
 # Iniciar todos los servicios
 docker compose up -d
 
@@ -90,6 +93,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.23.2` | 🐛 Refuerzo integral de seguridad: cookie "Remember Me" con token aleatorio en DB y `session_regenerate_id`, autenticación y anti-IDOR en `api_drawers.php` y endpoints de escritura/borrado/imágenes, protección CSRF con `hash_equals`, corrección de XSS en `index.php`, migración a `utf8mb4`, eliminación de `info.php` y paso de credenciales de `compose.yml` a `.env` |
 | `v0.23.1` | 🐛 Corrección en el ordenamiento numérico de la columna de precios en `favoritos_ml.php` mediante el atributo `data-order` e invalidación dinámica de celdas |
 | `v0.23.0` | 🚀 Visualización de ítems regalados exclusivamente dentro del cajón 'Regalos', rediseño y ampliación tipográfica de las tarjetas de estadísticas en `index.php` con texto 100% blanco puro |
 | `v0.22.0` | 🚀 Cálculo y visualización en tiempo real del gasto total acumulado en U$S para ítems con motivo 'Regalado' en el filtro de borrados (`items.php`), exportación DDL en `./.dev/admin_drawers.sql` y corrección de márgenes con el footer |

@@ -4,16 +4,19 @@ if(file_exists("config.php"))
 {include("config.php");} else {
   // header( "Location: install.php" );
 }
-session_start();
-
-// CSRF Verification
-if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die("CSRF token validation failed.");
-}
+require_auth();
+validate_csrf();
 
 include("func_img.php");
 
-$usr_id = $_POST['image_usr_id'];
+$usr_id = (int)($_POST['image_usr_id'] ?? 0);
+$session_uid = (int)$_SESSION['usuario_id'];
+$is_admin = ((int)($_SESSION['right'] ?? 0) === 1);
+
+if ($usr_id <= 0 || ($usr_id !== $session_uid && !$is_admin)) {
+    header('HTTP/1.1 403 Forbidden');
+    die("Acceso denegado.");
+}
 $destination_dir = "images/usr/";
 
 $nuevo_nombre = process_image_upload('file-upload', $destination_dir, "usr_" . $usr_id, 750, 750, false);

@@ -4,7 +4,7 @@ if(empty($_GET['id']))
 {
   $categoryId = 0;
 }else{
-  $categoryId =$_GET["id"];
+  $categoryId = (int)$_GET["id"];
 }
 ?>
 <!-- Container -->

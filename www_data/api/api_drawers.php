@@ -1,6 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=utf-8");
+header("Cache-Control: no-store");
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
@@ -9,6 +9,8 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $usr_timezone = -3;
 include("../config.php");
+require_auth(true);
+$sessionUserId = (int)$_SESSION['usuario_id'];
 
 try {
     $conn = get_db_connection();
@@ -16,7 +18,7 @@ try {
     $date = new DateTime($fecha);
     $date->setTimezone(new DateTimeZone($usr_timezone));
     
-    $tipoSql = $_GET['id'] ?? '';
+    $tipoSql = $_POST['id'] ?? $_GET['id'] ?? '';
     $parametro = explode("-", $tipoSql);
     $tarea = $parametro[0];
     $stmt = null;
@@ -54,17 +56,19 @@ try {
             if(($parametro[2] ?? 0) == 0){
                 $sql = $sql_base . " ORDER BY d.drawer_name";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $parametro[1]);
+                $stmt->bind_param("i", $sessionUserId);
             }else{
+                $catParam = (int)$parametro[2];
                 $sql = $sql_base . " AND d.drawer_category = ? ORDER BY d.drawer_name";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ii", $parametro[1], $parametro[2]);
+                $stmt->bind_param("ii", $sessionUserId, $catParam);
             }
             break;
         case 'view':
-            $sql = "SELECT drawers_drawer.drawer_id, drawers_drawer.drawer_name, drawers_drawer.drawer_category, drawers_drawer.drawer_owner, drawers_drawer.drawer_location, drawers_drawer.drawer_description, drawers_drawer.drawer_image, drawers_drawer.drawer_image_full, drawers_drawer.drawer_date, drawers_drawer.drawer_update, drawers_drawer.drawer_delete, drawers_category.category_name, drawers_category.category_color FROM drawers_drawer INNER JOIN drawers_category ON drawers_drawer.drawer_category = drawers_category.category_id WHERE drawer_id = ?";
+            $drawerParam = (int)($parametro[1] ?? 0);
+            $sql = "SELECT drawers_drawer.drawer_id, drawers_drawer.drawer_name, drawers_drawer.drawer_category, drawers_drawer.drawer_owner, drawers_drawer.drawer_location, drawers_drawer.drawer_description, drawers_drawer.drawer_image, drawers_drawer.drawer_image_full, drawers_drawer.drawer_date, drawers_drawer.drawer_update, drawers_drawer.drawer_delete, drawers_category.category_name, drawers_category.category_color FROM drawers_drawer INNER JOIN drawers_category ON drawers_drawer.drawer_category = drawers_category.category_id WHERE drawer_id = ? AND drawers_drawer.drawer_owner = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $parametro[1]);
+            $stmt->bind_param("ii", $drawerParam, $sessionUserId);
             break;
         case 'categorylist':
             $sql = "SELECT 
@@ -96,11 +100,13 @@ try {
             $stmt->bind_param("i", $parametro[1]);
             break;
         case 'itemview':
-            $sql = "SELECT drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_image, drawers_items.item_owner, drawers_items.item_category, drawers_items.item_brand, drawers_items.item_model, drawers_items.item_rating, drawers_items.item_delete, drawers_category.category_name, drawers_category.category_color, drawers_drawer.drawer_name, drawers_reason.reason_name FROM drawers_items LEFT JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id LEFT JOIN drawers_reason ON drawers_items.item_delete = drawers_reason.reason_id WHERE item_id = ?";
+            $itemParam = (int)($parametro[1] ?? 0);
+            $sql = "SELECT drawers_items.item_id, drawers_items.item_drawer, drawers_items.item_name, drawers_items.item_amount, drawers_items.item_price, drawers_items.item_description, drawers_items.item_image, drawers_items.item_owner, drawers_items.item_category, drawers_items.item_brand, drawers_items.item_model, drawers_items.item_rating, drawers_items.item_delete, drawers_category.category_name, drawers_category.category_color, drawers_drawer.drawer_name, drawers_reason.reason_name FROM drawers_items LEFT JOIN drawers_category ON drawers_items.item_category = drawers_category.category_id LEFT JOIN drawers_drawer ON drawers_items.item_drawer = drawers_drawer.drawer_id LEFT JOIN drawers_reason ON drawers_items.item_delete = drawers_reason.reason_id WHERE item_id = ? AND drawers_items.item_owner = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $parametro[1]);
+            $stmt->bind_param("ii", $itemParam, $sessionUserId);
             break;
         case 'itemlist':
+            $drawerParam = (int)($parametro[1] ?? 0);
             $sql = "SELECT 
                         drawers_category.category_name, 
                         drawers_category.category_color, 
@@ -129,10 +135,10 @@ try {
                           )
                     ORDER BY drawers_items.item_name ASC";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ii", $parametro[1], $parametro[2]);
+            $stmt->bind_param("ii", $drawerParam, $sessionUserId);
             break;
         case 'itemsall':
-            $owner = (int)($parametro[1] ?? 0);
+            $owner = $sessionUserId;
             $catId = (int)($parametro[2] ?? 0);
             $filter = $parametro[3] ?? '0';
 
@@ -186,7 +192,7 @@ try {
             $stmt->bind_param($types, ...$params);
             break;
         case 'totalprice':
-            $owner = (int)($parametro[1] ?? 0);
+            $owner = $sessionUserId;
             $sql = "SELECT SUM(i.item_amount * i.item_price) as total, SUM(i.item_amount) as total_items FROM drawers_items i WHERE i.item_owner = ? AND i.item_delete = 0";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $owner);
@@ -222,6 +228,8 @@ try {
             $result = $conn->query($sql);
             break;
         case 'deleteBookmark':
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(["error" => true, "message" => "Method Not Allowed"]); exit; }
+            validate_csrf();
             $sql = "UPDATE drawers_fav SET fav_delete = 1 WHERE fav_mla = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("s", $parametro[1]);
@@ -229,6 +237,8 @@ try {
             echo json_encode(["status" => "success"]);
             exit;
         case 'restoreBookmark':
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(["error" => true, "message" => "Method Not Allowed"]); exit; }
+            validate_csrf();
             $sql = "UPDATE drawers_fav SET fav_delete = 0 WHERE fav_mla = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("s", $parametro[1]);
@@ -236,6 +246,8 @@ try {
             echo json_encode(["status" => "success"]);
             exit;
         case 'clearBookmark':
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(["error" => true, "message" => "Method Not Allowed"]); exit; }
+            validate_csrf();
             $sql = "TRUNCATE TABLE drawers_fav";
             $conn->query($sql);
             echo json_encode(["status" => "success"]);
@@ -246,21 +258,21 @@ try {
             break;
         case 'lastitems':
             $limit = (int)($parametro[1] ?? 5);
-            $owner = (int)($parametro[2] ?? 0);
+            $owner = $sessionUserId;
             $sql = "SELECT item_id, item_name, item_image, item_date, category_color, item_drawer FROM drawers_items LEFT JOIN drawers_category ON item_category = category_id WHERE item_owner = ? AND item_delete = 0 ORDER BY item_date DESC LIMIT ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ii", $owner, $limit);
             break;
         case 'fullestdrawers':
             $limit = (int)($parametro[1] ?? 5);
-            $owner = (int)($parametro[2] ?? 0);
+            $owner = $sessionUserId;
             $sql = "SELECT d.drawer_id, d.drawer_name, d.drawer_image, c.category_color, SUM(i.item_amount) as total_items FROM drawers_drawer d LEFT JOIN drawers_items i ON d.drawer_id = i.item_drawer LEFT JOIN drawers_category c ON d.drawer_category = c.category_id WHERE d.drawer_owner = ? AND d.drawer_delete = 0 AND i.item_delete = 0 GROUP BY d.drawer_id ORDER BY total_items DESC LIMIT ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ii", $owner, $limit);
             break;
         case 'search':
             $term = "%" . ($parametro[1] ?? '') . "%";
-            $owner = (int)($parametro[2] ?? 0);
+            $owner = $sessionUserId;
             $rawdata = array();
 
             // Search Items
@@ -286,7 +298,7 @@ try {
             exit;
         case 'autocomplete':
             $term = "%" . ($parametro[1] ?? '') . "%";
-            $owner = (int)($parametro[2] ?? 0);
+            $owner = $sessionUserId;
             $rawdata = array();
 
             $sql = "SELECT DISTINCT name FROM (

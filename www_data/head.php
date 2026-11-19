@@ -22,8 +22,9 @@ if (empty($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
             if ($result->num_rows === 1) {
                 $row = $result->fetch_assoc();
-                // Validate hash
-                if (hash('sha256', $row["usr_email"]) === $cookie_hash) {
+                // Validar token aleatorio almacenado en base de datos
+                if (!empty($row["usr_token"]) && hash_equals($row["usr_token"], hash('sha256', $cookie_hash))) {
+                    session_regenerate_id(true);
                     $_SESSION["usuario_id"] = $row["usr_id"];
                     $_SESSION["usuario"] = $row["usr_email"];
                     $_SESSION["avatar"] = $row["usr_image"];
@@ -139,7 +140,6 @@ if ($usr_right == 1) {
   <link rel="stylesheet" type="text/css" href="js/dataTables/buttons.bootstrap5.min.css">
   <link rel="stylesheet" type="text/css" href="js/dataTables/searchPanes.bootstrap5.min.css">
   <link rel="stylesheet" type="text/css" href="js/dataTables/select.bootstrap5.min.css">
-  <link rel="stylesheet" type="text/css" href="js/dataTables/select.bootstrap5.min.css">
   <link rel="stylesheet" type="text/css" href="js/dataTables/rowReorder.bootstrap5.min.css">
   <link rel="stylesheet" type="text/css" href="js/dataTables/rowGroup.bootstrap5.min.css">
   <!-- Select2 Css -->
@@ -180,7 +180,7 @@ if ($usr_right == 1) {
   </div>
   <!-- /Logo -->
   <!-- Navigation -->
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top"">
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top">
     <div class=" container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
       <span class="navbar-toggler-icon"></span>

@@ -1084,18 +1084,24 @@ function mmToFractionInches(mm) {
   fractionOut.innerHTML = `Fracción de Pulgada: <span class="">${mminch(mm).toInch()} "<span class="">`
 }
 async function deleteBookmark(article) {
-  const url = `./api/api_drawers.php?id=deleteBookmark-${article}`
-  const response = await fetch(url)
+  const formData = new FormData()
+  formData.append('id', `deleteBookmark-${article}`)
+  formData.append('csrf_token', window.csrfToken)
+  await fetch('./api/api_drawers.php', { method: 'POST', body: formData })
   bookmarksTable()
 }
 async function restoreBookmark(article) {
-  const url = `./api/rapi_drawers.php?id=estoreBookmark-${article}`
-  const response = await fetch(url)
+  const formData = new FormData()
+  formData.append('id', `restoreBookmark-${article}`)
+  formData.append('csrf_token', window.csrfToken)
+  await fetch('./api/api_drawers.php', { method: 'POST', body: formData })
   bookmarksTable()
 }
 async function clearBookmark() {
-  const url = `./api/api_drawers.php?id=clearBookmark-0`
-  const response = await fetch(url)
+  const formData = new FormData()
+  formData.append('id', 'clearBookmark-0')
+  formData.append('csrf_token', window.csrfToken)
+  await fetch('./api/api_drawers.php', { method: 'POST', body: formData })
   bookmarksTable()
 }
 async function priceBookmark() {

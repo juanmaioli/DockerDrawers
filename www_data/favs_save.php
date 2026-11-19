@@ -3,6 +3,7 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 include("config.php");
+require_auth(true);
 validate_csrf();
 $conn = get_db_connection();
 
@@ -41,7 +42,7 @@ if ($data !== null) {
     }else{
       $sql = "UPDATE drawers_fav SET fav_desc = ?, fav_link = ?, fav_img = ?, fav_price = ?, fav_date = ? WHERE fav_mla = ?";
       $stmt = $conn->prepare($sql);
-      $stmt->bind_param("sss dss", $titulo, $link, $imagen, $precio, $dateShow, $mlaID);
+      $stmt->bind_param("sssdss", $titulo, $link, $imagen, $precio, $dateShow, $mlaID);
     }
     $stmt->execute();
     $stmt->close();

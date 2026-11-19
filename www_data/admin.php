@@ -80,19 +80,21 @@ if (mysqli_num_rows($result) == true) {
       $usr_token = $row["usr_token"];
       $usr_timezone = $row["usr_timezone"];
       $usr_right = $row["usr_right"];
-      $usr_image = "<img class='rounded-circle border border-primary' src=". $usr_image . " width=50px  alt=''>";
+      $usr_image = "<img class='rounded-circle border border-primary' src='". h($usr_image) . "' width='50px' alt=''>";
       $tabla_usr .="<tr><td class='text-center'>" . $usr_image . "</td>
-      <td>" . $usr_lastname . " " . $usr_name  . "</td>
-      <td>" . $usr_email . "</td>
+      <td>" . h($usr_lastname . " " . $usr_name) . "</td>
+      <td>" . h($usr_email) . "</td>
       <td class='text-center'>
       
         <form action='usr_edit.php' method='post'>
-        <input type='hidden' name='id' id='id' value='". $usr_id."'>
-        <button type='submit' id='btnGuardar' class='btn btn-outline-primary btn-sm'><i class='fas fa-edit'></i></button>
+        <input type='hidden' name='csrf_token' value='" . h($csrf_token) . "'>
+        <input type='hidden' name='id' value='". (int)$usr_id ."'>
+        <button type='submit' class='btn btn-outline-primary btn-sm'><i class='fas fa-edit'></i></button>
         </form></td><td class='text-center'>
         <form action='usr_del.php' method='post'>
-        <input type='hidden' name='id' id='id' value='". $usr_id."'>
-        <button type='submit' id='btnGuardar' class='btn btn-outline-danger btn-sm'><i class='fas fa-trash'></i></button>
+        <input type='hidden' name='csrf_token' value='" . h($csrf_token) . "'>
+        <input type='hidden' name='id' value='". (int)$usr_id ."'>
+        <button type='submit' class='btn btn-outline-danger btn-sm'><i class='fas fa-trash'></i></button>
         </form></td></tr>";
     }
 }

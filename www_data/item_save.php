@@ -3,11 +3,12 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 include("config.php");
+require_auth();
 validate_csrf();
 $conn = get_db_connection();
 
-$item_id_status = $_POST["item_id_status"];
-$item_owner = $_POST["item_owner"];
+$item_id_status = (int)($_POST["item_id_status"] ?? 0);
+$item_owner = (int)$_SESSION["usuario_id"];
 $item_name = $_POST["item_name"];
 $item_amount = $_POST["item_amount"];
 $item_description = $_POST["item_description"] ?? $_POST["item_descriptinon"] ?? "";
@@ -37,9 +38,9 @@ if($item_id_status == 0){
   header('Location: item_view.php?id='.$item_id.'&did='. $item_drawer);
 
 }else{
-  $sql_Update = "UPDATE drawers_items SET item_name=?, item_amount = ?, item_description = ?, item_category = ?, item_drawer = ?, item_price = ?, item_brand = ?, item_model = ?, item_rating = ? WHERE item_id = ?";
+  $sql_Update = "UPDATE drawers_items SET item_name=?, item_amount = ?, item_description = ?, item_category = ?, item_drawer = ?, item_price = ?, item_brand = ?, item_model = ?, item_rating = ? WHERE item_id = ? AND item_owner = ?";
   $stmt = $conn->prepare($sql_Update);
-  $stmt->bind_param("sisiidisii", $item_name, $item_amount, $item_description, $item_category, $item_drawer, $item_price, $item_brand, $item_model, $item_rating, $item_id_status);
+  $stmt->bind_param("sisiidisiii", $item_name, $item_amount, $item_description, $item_category, $item_drawer, $item_price, $item_brand, $item_model, $item_rating, $item_id_status, $item_owner);
   $stmt->execute();
   $stmt->close();
 
