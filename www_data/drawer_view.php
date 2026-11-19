@@ -1,6 +1,6 @@
 <?php
 include("head.php");
-$drawerId = $_GET['id'];
+$drawerId = (int)($_GET['id'] ?? 0);
 ?>
 
 <!-- Container -->
@@ -10,9 +10,10 @@ $drawerId = $_GET['id'];
     <section class="col-md-12">
       <article class="card" id="drawer_card">
         <section class="card-header">
-          <article class="row">
-            <section class="col-md-6 text-start">
-              <h3 class="" id="drawer_title">Detalle del Cajón</h3>
+          <article class="row align-items-center">
+            <section class="col-md-6 text-start d-flex align-items-baseline gap-2 flex-wrap">
+              <h3 class="mb-0" id="drawer_title">Detalle del Cajón</h3>
+              <h3 class="fst-italic text-muted mb-0 fs-5 d-none" id="drawer-total-price"></h3>
             </section>
             <section class="col-md-6 text-end"><a href="index.php" class="btn btn-primary"><i class="fa-regular fa-circle-chevron-left"></i>&nbsp;Volver</a></section>
           </article>

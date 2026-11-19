@@ -93,6 +93,7 @@ Para contribuir o modificar el sistema:
 
 | Versión | Descripción |
 | :--- | :--- |
+| `v0.24.0` | 🚀 Visualización del precio total en U$S junto al título en `drawer_view.php` con actualización reactiva al filtrar en DataTables |
 | `v0.23.2` | 🐛 Refuerzo integral de seguridad: cookie "Remember Me" con token aleatorio en DB y `session_regenerate_id`, autenticación y anti-IDOR en `api_drawers.php` y endpoints de escritura/borrado/imágenes, protección CSRF con `hash_equals`, corrección de XSS en `index.php`, migración a `utf8mb4`, eliminación de `info.php` y paso de credenciales de `compose.yml` a `.env` |
 | `v0.23.1` | 🐛 Corrección en el ordenamiento numérico de la columna de precios en `favoritos_ml.php` mediante el atributo `data-order` e invalidación dinámica de celdas |
 | `v0.23.0` | 🚀 Visualización de ítems regalados exclusivamente dentro del cajón 'Regalos', rediseño y ampliación tipográfica de las tarjetas de estadísticas en `index.php` con texto 100% blanco puro |

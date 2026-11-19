@@ -373,7 +373,23 @@ async function drawerItems($drawerId, usuarioId) {
           return respuesta
         }
       }
-    ]
+    ],
+    drawCallback: function () {
+      const api = this.api()
+      let totalDrawerPrice = 0
+      api.rows({ search: 'applied' }).data().each(function (row) {
+        totalDrawerPrice += (parseFloat(row.item_amount) || 0) * (parseFloat(row.item_price) || 0)
+      })
+      const totalEl = document.querySelector('#drawer-total-price')
+      if (totalEl) {
+        const formatted = totalDrawerPrice.toLocaleString('es-AR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })
+        totalEl.textContent = `(U$S ${formatted})`
+        totalEl.classList.remove('d-none')
+      }
+    }
   })
 }
 
